@@ -48,7 +48,14 @@ export default function ChirpedThemeWrapper() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Chirped />
+      <div style={{ 
+        width: '100%', 
+        height: '100vh', 
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.default 
+      }}>
+        <Chirped />
+      </div>
     </ThemeProvider>
   );
 }
