@@ -1,0 +1,39 @@
+.projects {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.projectMedia {
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.projectMedia:hover {
+  transform: scale(1.05);
+}
+
+.projectLink {
+  text-decoration: none;
+  display: block;
+  position: relative;
+}
+
+.projectLink:hover {
+  text-decoration: none;
+}
+
+.projectTitle {
+  color: inherit;
+  text-decoration: none;
+}
+
+.projectTitle:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
