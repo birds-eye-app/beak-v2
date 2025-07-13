@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { SpeciesFilter, VisibleSpeciesWithLocation } from "./BirdMap";
+import React, { useState } from 'react';
+import { SpeciesFilter, VisibleSpeciesWithLocation } from './BirdMap';
 
 export const SpeciesSelectionList = ({
   visibleSpeciesWithLocation,
@@ -23,14 +23,14 @@ export const SpeciesSelectionList = ({
   });
 
   const [preConfirmCheckedCodes, setPreConfirmCheckedCodes] =
-    useState<SpeciesFilter>("all");
-  const [checkedCodes, setCheckedCodes] = useState<SpeciesFilter>("all");
+    useState<SpeciesFilter>('all');
+  const [checkedCodes, setCheckedCodes] = useState<SpeciesFilter>('all');
   const updateCode = (code: string) => {
-    if (checkedCodes === "all") {
+    if (checkedCodes === 'all') {
       // if it's currently all codes, we now want to remove this code
       setCheckedCodes(allCodes.filter((c) => c !== code));
     } else if (
-      typeof checkedCodes === "object" &&
+      typeof checkedCodes === 'object' &&
       checkedCodes.includes(code)
     ) {
       setCheckedCodes(checkedCodes.filter((c) => c !== code));
@@ -61,11 +61,11 @@ export const SpeciesSelectionList = ({
           Confirm
         </button>
         <button
-          disabled={checkedCodes === "all"}
+          disabled={checkedCodes === 'all'}
           onClick={() => {
-            onUpdateToCheckedCodes("all");
-            setCheckedCodes("all");
-            setPreConfirmCheckedCodes("all");
+            onUpdateToCheckedCodes('all');
+            setCheckedCodes('all');
+            setPreConfirmCheckedCodes('all');
           }}
         >
           Reset
@@ -73,10 +73,10 @@ export const SpeciesSelectionList = ({
       </div>
       <div>
         <h2>
-          {allCodes.length} species |{" "}
+          {allCodes.length} species |{' '}
           {Object.values(visibleSpeciesWithLocation)
             .flatMap((x) => x.lifers.length)
-            .reduce((a, b) => a + b, 0)}{" "}
+            .reduce((a, b) => a + b, 0)}{' '}
           observations
         </h2>
       </div>
@@ -89,16 +89,16 @@ export const SpeciesSelectionList = ({
                 <div
                   key={code}
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                     gap: 10,
                   }}
                 >
                   <input
                     type="checkbox"
                     checked={
-                      checkedCodes === "all" || checkedCodes.includes(code)
+                      checkedCodes === 'all' || checkedCodes.includes(code)
                     }
                     id={code}
                     name={code}
@@ -108,12 +108,12 @@ export const SpeciesSelectionList = ({
                     }}
                   />
                   <label
-                    style={{ flex: 1, flexDirection: "row", display: "flex" }}
+                    style={{ flex: 1, flexDirection: 'row', display: 'flex' }}
                     htmlFor={code}
                   >
                     <div style={{ flex: 1 }}>{info.species.common_name} </div>
                     <div>
-                      {info.lifers.length} /{" "}
+                      {info.lifers.length} /{' '}
                       {
                         new Set(info.lifers.map((lifer) => lifer.location_id))
                           .size
@@ -132,7 +132,7 @@ export const SpeciesSelectionList = ({
                 </div>
               ))}
             </div>
-          ),
+          )
         )}
       </div>
     </div>

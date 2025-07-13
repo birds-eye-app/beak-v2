@@ -1,14 +1,14 @@
-import Papa from "papaparse";
-import { parse } from "date-fns";
-import { Taxonomy } from "./taxonomy/parse";
-import { fetchTaxonomyForSpecies } from "./taxonomy/fetch";
+import Papa from 'papaparse';
+import { parse } from 'date-fns';
+import { Taxonomy } from './taxonomy/parse';
+import { fetchTaxonomyForSpecies } from './taxonomy/fetch';
 
 export interface Observation {
   submissionId: string;
   commonName: string;
   scientificName: string;
   taxonomicOrder: number;
-  count: number | "X"; // Can be 'X' or a number
+  count: number | 'X'; // Can be 'X' or a number
   stateProvince: string;
   county: string;
   locationId: string;
@@ -33,49 +33,49 @@ export interface Observation {
 
 // Submission ID,Common Name,Scientific Name,Taxonomic Order,Count,State/Province,County,Location ID,Location,Latitude,Longitude,Date,Time,Protocol,Duration (Min),All Obs Reported,Distance Traveled (km),Area Covered (ha),Number of Observers,Breeding Code,Observation Details,Checklist Comments,ML Catalog Numbers
 const expectedHeaders = [
-  "Submission ID",
-  "Common Name",
-  "Scientific Name",
-  "Taxonomic Order",
-  "Count",
-  "State/Province",
-  "County",
-  "Location ID",
-  "Location",
-  "Latitude",
-  "Longitude",
-  "Date",
-  "Time",
-  "Protocol",
-  "Duration (Min)",
-  "All Obs Reported",
-  "Distance Traveled (km)",
-  "Area Covered (ha)",
-  "Number of Observers",
-  "Breeding Code",
-  "Observation Details",
-  "Checklist Comments",
-  "ML Catalog Numbers",
+  'Submission ID',
+  'Common Name',
+  'Scientific Name',
+  'Taxonomic Order',
+  'Count',
+  'State/Province',
+  'County',
+  'Location ID',
+  'Location',
+  'Latitude',
+  'Longitude',
+  'Date',
+  'Time',
+  'Protocol',
+  'Duration (Min)',
+  'All Obs Reported',
+  'Distance Traveled (km)',
+  'Area Covered (ha)',
+  'Number of Observers',
+  'Breeding Code',
+  'Observation Details',
+  'Checklist Comments',
+  'ML Catalog Numbers',
 ];
 
 export async function parseObservations(
-  fileContents: string,
+  fileContents: string
 ): Promise<Observation[]> {
   return new Promise((resolve, reject) => {
     if (!fileContents) {
       return [];
     }
 
-    const lines = fileContents.split("\n");
-    const headers = lines[0].split(",");
+    const lines = fileContents.split('\n');
+    const headers = lines[0].split(',');
     if (!expectedHeaders.every((header, i) => header === headers[i])) {
-      throw new Error("Invalid headers in CSV");
+      throw new Error('Invalid headers in CSV');
     }
 
     const observations: Observation[] = [];
 
     const parsed = Papa.parse(fileContents, {
-      delimiter: ",",
+      delimiter: ',',
       skipEmptyLines: true,
     });
 
@@ -85,18 +85,18 @@ export async function parseObservations(
 
     for (const record of parsed.data as string[][]) {
       // ignore header
-      if (record[0] === "Submission ID") {
+      if (record[0] === 'Submission ID') {
         continue;
       }
       let time = record[12];
-      if (time === "") {
+      if (time === '') {
         // ebird casual observations frequently come in with no time
-        time = "12:00 PM";
+        time = '12:00 PM';
       }
       const dateTime = parse(
         `${record[11]} ${time}`,
-        "yyyy-MM-dd hh:mm a",
-        new Date(),
+        'yyyy-MM-dd hh:mm a',
+        new Date()
       );
       if (isNaN(dateTime.getTime())) {
         console.warn(`Invalid date/time: ${record[11]} ${record[12]}`);
@@ -110,7 +110,7 @@ export async function parseObservations(
         commonName: record[1],
         scientificName: record[2],
         taxonomicOrder: parseInt(record[3], 10),
-        count: record[4] === "X" ? "X" : parseInt(record[4], 10),
+        count: record[4] === 'X' ? 'X' : parseInt(record[4], 10),
         stateProvince: record[5],
         county: record[6],
         locationId: record[7],
@@ -122,7 +122,7 @@ export async function parseObservations(
         dateTime: dateTime,
         protocol: record[13],
         durationMinutes: parseInt(record[14], 10),
-        allObsReported: record[15] === "1",
+        allObsReported: record[15] === '1',
         distanceTraveledKm: record[16] ? parseFloat(record[16]) : undefined,
         areaCoveredHa: record[17] ? parseFloat(record[17]) : undefined,
         numberOfObservers: parseInt(record[18], 10),

@@ -95,7 +95,7 @@
   .statsGrid {
     grid-template-columns: 1fr;
   }
-  
+
   .liferItem {
     flex-direction: column;
     align-items: flex-start;

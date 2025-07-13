@@ -1,33 +1,33 @@
-import { Feature, GeoJsonProperties, Geometry } from "geojson";
-import mapboxgl from "mapbox-gl";
-import { GeoJSONSource, Map } from "mapbox-gl";
+import { Feature, GeoJsonProperties, Geometry } from 'geojson';
+import mapboxgl from 'mapbox-gl';
+import { GeoJSONSource, Map } from 'mapbox-gl';
 
-import { RootLayerIDs, SubLayerIDs } from "./constants";
-import { Lifer } from "./api";
+import { RootLayerIDs, SubLayerIDs } from './constants';
+import { Lifer } from './api';
 
 export function addSourceAndLayer(
   mapRef: Map,
   sourceId: RootLayerIDs,
   features: Feature<Geometry, GeoJsonProperties>[],
-  visibility: "visible" | "none",
+  visibility: 'visible' | 'none'
 ) {
   console.debug(
-    `Adding source and layer for ${sourceId}, visibility: ${visibility}`,
+    `Adding source and layer for ${sourceId}, visibility: ${visibility}`
   );
   mapRef.addSource(sourceId, {
-    type: "geojson",
+    type: 'geojson',
     data: {
-      type: "FeatureCollection",
+      type: 'FeatureCollection',
       features: features,
     },
     cluster: true,
     clusterMaxZoom: 14,
     clusterRadius: 50,
     clusterProperties: {
-      sum: ["+", ["get", "liferCount", ["properties"]]],
+      sum: ['+', ['get', 'liferCount', ['properties']]],
       species_codes: [
-        "concat",
-        ["concat", ["get", "speciesCodes", ["properties"]], ","],
+        'concat',
+        ['concat', ['get', 'speciesCodes', ['properties']], ','],
       ],
     },
   });
@@ -38,33 +38,33 @@ export function addSourceAndLayer(
 
   mapRef.addLayer({
     id: `${sourceId}.${SubLayerIDs.ClusterCircles}`,
-    type: "circle",
+    type: 'circle',
     source: sourceId,
-    filter: ["has", "point_count"],
+    filter: ['has', 'point_count'],
     paint: {
-      "circle-stroke-color": "black",
-      "circle-stroke-width": 2,
-      "circle-stroke-opacity":
+      'circle-stroke-color': 'black',
+      'circle-stroke-width': 2,
+      'circle-stroke-opacity':
         sourceId === RootLayerIDs.HistoricalLifers ? 1 : 0,
-      "circle-color": [
-        "interpolate",
-        ["linear", 0.5],
-        ["get", "sum"],
+      'circle-color': [
+        'interpolate',
+        ['linear', 0.5],
+        ['get', 'sum'],
         15,
-        "#fadd00",
+        '#fadd00',
         250,
-        "#ff70ba",
+        '#ff70ba',
       ],
-      "circle-radius": [
-        "interpolate",
-        ["linear"],
-        ["get", "sum"],
+      'circle-radius': [
+        'interpolate',
+        ['linear'],
+        ['get', 'sum'],
         10,
         15,
         250,
         40,
       ],
-      "circle-opacity": sourceId === RootLayerIDs.HistoricalLifers ? 1 : 0,
+      'circle-opacity': sourceId === RootLayerIDs.HistoricalLifers ? 1 : 0,
     },
     layout: {
       visibility: visibility,
@@ -73,41 +73,41 @@ export function addSourceAndLayer(
 
   mapRef.addLayer({
     id: `${sourceId}.${SubLayerIDs.ClusterCount}`,
-    type: "symbol",
+    type: 'symbol',
     source: sourceId,
-    filter: ["has", "point_count"],
+    filter: ['has', 'point_count'],
     layout: {
-      "text-field": ["get", "sum"],
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12,
-      visibility: sourceId === RootLayerIDs.NewLifers ? "none" : visibility,
+      'text-field': ['get', 'sum'],
+      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+      'text-size': 12,
+      visibility: sourceId === RootLayerIDs.NewLifers ? 'none' : visibility,
     },
   });
 
   mapRef.addLayer({
     id: `${sourceId}.${SubLayerIDs.UnclusteredPointsCircle}`,
-    type: "circle",
+    type: 'circle',
     source: sourceId,
-    filter: ["!", ["has", "point_count"]],
+    filter: ['!', ['has', 'point_count']],
     layout: {
       visibility: visibility,
     },
     paint: {
-      "circle-stroke-color": "black",
-      "circle-stroke-width": 2,
-      "circle-color": [
-        "interpolate",
-        ["linear", 0.5],
-        ["get", "liferCount"],
+      'circle-stroke-color': 'black',
+      'circle-stroke-width': 2,
+      'circle-color': [
+        'interpolate',
+        ['linear', 0.5],
+        ['get', 'liferCount'],
         15,
-        "#fadd00",
+        '#fadd00',
         250,
-        "#ff70ba",
+        '#ff70ba',
       ],
-      "circle-radius": [
-        "interpolate",
-        ["linear"],
-        ["get", "liferCount"],
+      'circle-radius': [
+        'interpolate',
+        ['linear'],
+        ['get', 'liferCount'],
         10,
         10,
         250,
@@ -118,35 +118,35 @@ export function addSourceAndLayer(
 
   mapRef.addLayer({
     id: `${sourceId}.${SubLayerIDs.UnclusteredPointsCount}`,
-    type: "symbol",
+    type: 'symbol',
     source: sourceId,
-    filter: ["!", ["has", "point_count"]],
+    filter: ['!', ['has', 'point_count']],
     layout: {
-      "text-field": ["get", "liferCount"],
-      "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-      "text-size": 12,
+      'text-field': ['get', 'liferCount'],
+      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+      'text-size': 12,
       visibility: visibility,
     },
   });
 
   mapRef.addLayer({
     id: `${sourceId}.${SubLayerIDs.UnclusteredPointsLabel}`,
-    type: "symbol",
-    filter: ["!", ["has", "point_count"]],
+    type: 'symbol',
+    filter: ['!', ['has', 'point_count']],
     source: sourceId,
     layout: {
-      "text-field": ["get", "title"],
-      "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-      "text-offset": [0, 1.25],
-      "text-size": 15,
-      "text-anchor": "top",
-      "icon-size": 0.5,
+      'text-field': ['get', 'title'],
+      'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+      'text-offset': [0, 1.25],
+      'text-size': 15,
+      'text-anchor': 'top',
+      'icon-size': 0.5,
       visibility: visibility,
     },
   });
 
   // inspect a cluster on click
-  mapRef.on("click", `${sourceId}.${SubLayerIDs.ClusterCircles}`, (e) => {
+  mapRef.on('click', `${sourceId}.${SubLayerIDs.ClusterCircles}`, (e) => {
     const features = mapRef.queryRenderedFeatures(e.point, {
       layers: [`${sourceId}.${SubLayerIDs.ClusterCircles}`],
     });
@@ -165,7 +165,7 @@ export function addSourceAndLayer(
   });
 
   mapRef.on(
-    "click",
+    'click',
     `${sourceId}.${SubLayerIDs.UnclusteredPointsCircle}`,
     (e) => {
       // @ts-expect-error untyped event
@@ -180,7 +180,7 @@ export function addSourceAndLayer(
       }
 
       const html: string[] = [
-        "<div class=hotspot-popup-container >",
+        '<div class=hotspot-popup-container >',
         `<a class=ebird-hotspot-link href="https://ebird.org/hotspot/${lifers[0].location_id}/" target="_blank">eBird↗</a>`,
       ];
       lifers
@@ -191,19 +191,19 @@ export function addSourceAndLayer(
         .map((lifer: Lifer) => {
           const date = new Date(lifer.date);
           const localeDate = date.toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "short",
-            day: "2-digit",
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
           });
 
           html.push(`<div>${localeDate} - ${lifer.common_name} </div>`);
         });
-      html.push("</div>");
+      html.push('</div>');
 
       new mapboxgl.Popup()
         .setLngLat(coordinates)
-        .setHTML(html.join("\n"))
+        .setHTML(html.join('\n'))
         .addTo(mapRef);
-    },
+    }
   );
 }

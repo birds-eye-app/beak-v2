@@ -1,6 +1,6 @@
-import { promises as fs } from "fs";
-import Papa from "papaparse";
-import * as path from "path";
+import { promises as fs } from 'fs';
+import Papa from 'papaparse';
+import * as path from 'path';
 
 // SCIENTIFIC_NAME,COMMON_NAME,SPECIES_CODE,CATEGORY,TAXON_ORDER,COM_NAME_CODES,SCI_NAME_CODES,BANDING_CODES,ORDER,FAMILY_COM_NAME,FAMILY_SCI_NAME,REPORT_AS,EXTINCT,EXTINCT_YEAR,FAMILY_CODE
 // Struthio camelus,Common Ostrich,ostric2,species,2.0,COOS,STCA,,Struthioniformes,Ostriches,Struthionidae,,,,struth1
@@ -30,37 +30,37 @@ export interface Taxonomy {
 }
 
 const expectedHeaders = [
-  "SCIENTIFIC_NAME",
-  "COMMON_NAME",
-  "SPECIES_CODE",
-  "CATEGORY",
-  "TAXON_ORDER",
-  "COM_NAME_CODES",
-  "SCI_NAME_CODES",
-  "BANDING_CODES",
-  "ORDER",
-  "FAMILY_COM_NAME",
-  "FAMILY_SCI_NAME",
-  "REPORT_AS",
-  "EXTINCT",
-  "EXTINCT_YEAR",
-  "FAMILY_CODE",
+  'SCIENTIFIC_NAME',
+  'COMMON_NAME',
+  'SPECIES_CODE',
+  'CATEGORY',
+  'TAXON_ORDER',
+  'COM_NAME_CODES',
+  'SCI_NAME_CODES',
+  'BANDING_CODES',
+  'ORDER',
+  'FAMILY_COM_NAME',
+  'FAMILY_SCI_NAME',
+  'REPORT_AS',
+  'EXTINCT',
+  'EXTINCT_YEAR',
+  'FAMILY_CODE',
 ];
 
 // read the local taxonomy file into the interface type
 // then save it disk as json that we can embed into the app
 export const parseTaxonomy = async () => {
-  const filePath = path.join(__dirname, "taxonomy.csv");
-  const fileContents = await fs.readFile(filePath, "utf8");
+  const filePath = path.join(__dirname, 'taxonomy.csv');
+  const fileContents = await fs.readFile(filePath, 'utf8');
   const results: Taxonomy[] = [];
 
   const parsed = Papa.parse(fileContents, {
-    delimiter: ",",
+    delimiter: ',',
     skipEmptyLines: true,
   });
 
   if (parsed.errors.length > 0) {
-    throw new Error("Error parsing taxonomy file" + parsed.errors);
+    throw new Error('Error parsing taxonomy file' + parsed.errors);
   }
 
   (parsed.data as string[][]).forEach((record: string[], index) => {
@@ -83,7 +83,7 @@ export const parseTaxonomy = async () => {
     ] = record;
     if (index === 0) {
       if (!expectedHeaders.every((header, i) => header === record[i])) {
-        throw new Error("Invalid headers in CSV");
+        throw new Error('Invalid headers in CSV');
       }
 
       return;
@@ -102,9 +102,9 @@ export const parseTaxonomy = async () => {
       familyComName,
       familySciName,
       reportAs,
-      extinct: extinct === "TRUE",
+      extinct: extinct === 'TRUE',
       extinctYear:
-        extinctYear.trim() !== "" ? parseInt(extinctYear) : undefined,
+        extinctYear.trim() !== '' ? parseInt(extinctYear) : undefined,
       familyCode,
     });
   });
@@ -128,10 +128,10 @@ export const parseTaxonomyToJson = async () => {
     uniqueKeys.add(result.scientificName);
   });
   if (uniqueKeys.size !== results.length) {
-    throw new Error("Duplicate scientific names found");
+    throw new Error('Duplicate scientific names found');
   }
 
-  const filePath = path.join(__dirname, "taxonomy.json");
+  const filePath = path.join(__dirname, 'taxonomy.json');
 
   await fs.writeFile(filePath, JSON.stringify(taxonomyMap, null, 2));
 };

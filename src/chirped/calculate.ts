@@ -1,9 +1,9 @@
-import { ChirpedContextType } from "./contexts/Chirped";
-import { makeNewChirpedContext } from "./helpers";
-import { Observation } from "./parseEbirdExport";
+import { ChirpedContextType } from './contexts/Chirped';
+import { makeNewChirpedContext } from './helpers';
+import { Observation } from './parseEbirdExport';
 
 function isSpuh(observation: Observation) {
-  return observation.commonName.includes("sp.");
+  return observation.commonName.includes('sp.');
 }
 
 export function shouldIncludeInSpeciesCounts(observation: Observation) {
@@ -11,7 +11,7 @@ export function shouldIncludeInSpeciesCounts(observation: Observation) {
   // we won't include:
   // - spuhs: `gull sp.` or `sparrow sp.`
   // - hybrids: `Mallard x American Black Duck`
-  if (isSpuh(observation) || observation.commonName.includes("(hybrid)")) {
+  if (isSpuh(observation) || observation.commonName.includes('(hybrid)')) {
     return false;
   }
 
@@ -21,9 +21,9 @@ export function shouldIncludeInSpeciesCounts(observation: Observation) {
   // - subspecies (genus species subspecies)
   // - slashes (Empidonax alnorum/traillii)
   if (
-    observation.scientificName.includes("[") ||
-    observation.scientificName.includes("/") ||
-    observation.scientificName.trim().split(" ").length > 2
+    observation.scientificName.includes('[') ||
+    observation.scientificName.includes('/') ||
+    observation.scientificName.trim().split(' ').length > 2
   ) {
     return false;
   }
@@ -33,23 +33,23 @@ export function shouldIncludeInSpeciesCounts(observation: Observation) {
 
 export function shouldIncludeObservationForYear(
   observation: Observation,
-  currentYear: number,
+  currentYear: number
 ) {
   return observation.dateTime.getFullYear() === currentYear;
 }
 
 // this is a mapping of the species code to the observation
 export type LifeList = Record<string, Observation>;
-const categoriesToIncludeInLifeList = ["species", "issf"];
+const categoriesToIncludeInLifeList = ['species', 'issf'];
 
-const feralRockPigeon = "Columba livia (Feral Pigeon)";
+const feralRockPigeon = 'Columba livia (Feral Pigeon)';
 
 // to calculate the life list, we need to go through each
 // observation and see if we've already seen it before
 // this gets a little nuanced when it comes to things like subspecies
 export function calculateLifeList(
   observations: Observation[],
-  currentYear: number,
+  currentYear: number
 ): LifeList {
   const lifeList: LifeList = {};
 
@@ -95,12 +95,12 @@ export type HotSpotStatsRanking = HotSpotStats[];
 
 export async function performChirpedCalculations(
   allObservations: Observation[],
-  currentYear: number,
+  currentYear: number
 ): Promise<ChirpedContextType> {
   const chirpedObservations = makeNewChirpedContext();
 
   const sortedObservations = allObservations.sort(
-    (a, b) => a.dateTime.getTime() - b.dateTime.getTime(),
+    (a, b) => a.dateTime.getTime() - b.dateTime.getTime()
   );
 
   const speciesForYear = new Set<string>();
@@ -119,7 +119,7 @@ export async function performChirpedCalculations(
       chirpedObservations.yearStats.numberOfSpuhs += 1;
     }
 
-    if (typeof observation.count === "number" && !isNaN(observation.count)) {
+    if (typeof observation.count === 'number' && !isNaN(observation.count)) {
       chirpedObservations.yearStats.totalBirdsCounted += observation.count;
     }
 
@@ -139,13 +139,13 @@ export async function performChirpedCalculations(
       }
 
       switch (observation.protocol) {
-        case "eBird - Casual Observation":
+        case 'eBird - Casual Observation':
           chirpedObservations.yearStats.checklistsByType.incidental += 1;
           break;
-        case "eBird - Stationary Count":
+        case 'eBird - Stationary Count':
           chirpedObservations.yearStats.checklistsByType.stationary += 1;
           break;
-        case "eBird - Traveling Count":
+        case 'eBird - Traveling Count':
           chirpedObservations.yearStats.checklistsByType.traveling += 1;
           break;
       }
@@ -175,7 +175,7 @@ export async function performChirpedCalculations(
 
     // species stats
     const speciesStatsForSpecies = speciesStats.get(observation.commonName);
-    const count = observation.count === "X" ? 0 : observation.count || 0;
+    const count = observation.count === 'X' ? 0 : observation.count || 0;
     if (speciesStatsForSpecies) {
       speciesStatsForSpecies.totalObservations += 1;
       speciesStatsForSpecies.totalCounts += count;
@@ -191,7 +191,7 @@ export async function performChirpedCalculations(
   const lifeList = calculateLifeList(allObservations, currentYear);
   chirpedObservations.lifeList = Object.values(lifeList);
 
-  // figure out which new lifers occured this year
+  // figure out which new lifers occurred this year
   Object.values(lifeList).forEach((observation) => {
     if (shouldIncludeObservationForYear(observation, currentYear)) {
       chirpedObservations.yearStats.newLifersCount += 1;
@@ -201,7 +201,7 @@ export async function performChirpedCalculations(
   // find most observed species
   const speciesStatsArray = Array.from(speciesStats.entries());
   speciesStatsArray.sort(
-    (a, b) => b[1].totalObservations - a[1].totalObservations,
+    (a, b) => b[1].totalObservations - a[1].totalObservations
   );
   // set the top 5 most observed species
   chirpedObservations.rankings.mostObservedByChecklistFrequency =
@@ -211,21 +211,21 @@ export async function performChirpedCalculations(
   speciesStatsArray.sort((a, b) => b[1].totalCounts - a[1].totalCounts);
   // set the top 5 most observed species
   chirpedObservations.rankings.mostObservedByTotalCount = speciesStatsArray.map(
-    ([, stats]) => stats,
+    ([, stats]) => stats
   );
 
   // find top hotspots by checklist count
   const locationCountArray = Array.from(locationStatsMapping.entries());
   locationCountArray.sort((a, b) => b[1].checklistCount - a[1].checklistCount);
   chirpedObservations.rankings.topHotspotsByChecklists = locationCountArray.map(
-    ([, stats]) => stats,
+    ([, stats]) => stats
   );
   // find top hotspots by time spent
   locationCountArray.sort(
-    (a, b) => b[1].timeSpentMinutes - a[1].timeSpentMinutes,
+    (a, b) => b[1].timeSpentMinutes - a[1].timeSpentMinutes
   );
   chirpedObservations.rankings.topHotspotsByTimeSpent = locationCountArray.map(
-    ([, stats]) => stats,
+    ([, stats]) => stats
   );
 
   // calculate number of families and genera
@@ -233,7 +233,7 @@ export async function performChirpedCalculations(
   const genera = new Set<string>();
   chirpedObservations.yearObservations.forEach((observation) => {
     families.add(observation.taxonomy.familyCode);
-    const genus = observation.taxonomy.scientificName.trim().split(" ")[0];
+    const genus = observation.taxonomy.scientificName.trim().split(' ')[0];
     genera.add(genus);
   });
 

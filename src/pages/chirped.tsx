@@ -1,5 +1,5 @@
 import React from 'react';
-import type {ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import Head from '@docusaurus/Head';
 
@@ -8,7 +8,10 @@ export default function ChirpedPage(): ReactNode {
     <>
       <Head>
         <title>Chirped - eBird Data Analysis</title>
-        <meta name="description" content="Upload your eBird data to get insights about your birding activities" />
+        <meta
+          name="description"
+          content="Upload your eBird data to get insights about your birding activities"
+        />
         <style>{`
           /* Hide Docusaurus elements for standalone experience */
           .navbar,
@@ -38,15 +41,24 @@ export default function ChirpedPage(): ReactNode {
         `}</style>
       </Head>
       <div className="chirped-standalone-container">
-        <BrowserOnly fallback={<div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh',
-          color: 'var(--chirped-text-color, #000)'
-        }}>Loading Chirped...</div>}>
+        <BrowserOnly
+          fallback={
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                color: 'var(--chirped-text-color, #000)',
+              }}
+            >
+              Loading Chirped...
+            </div>
+          }
+        >
           {() => {
-            const ChirpedThemeWrapper = require('@site/src/components/ChirpedThemeWrapper').default;
+            const ChirpedThemeWrapper =
+              require('@site/src/components/ChirpedThemeWrapper').default;
             return <ChirpedThemeWrapper />;
           }}
         </BrowserOnly>

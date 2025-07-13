@@ -1,32 +1,37 @@
-import React, { createContext, useState, ReactNode } from "react";
-import { QualitativeQuestionData } from "../components/slides/QualitativeInput";
+import React, { createContext, useState, ReactNode } from 'react';
+import { QualitativeQuestionData } from '../components/slides/QualitativeInput';
 
 export type UserSelections = {
-  hotspotRanking: "checklists" | "timeSpent";
+  hotspotRanking: 'checklists' | 'timeSpent';
   qualitativeQuestions: QualitativeQuestionData[];
-  setHotspotRanking: (ranking: "checklists" | "timeSpent") => void;
+  setHotspotRanking: (ranking: 'checklists' | 'timeSpent') => void;
   setQualitativeQuestions: (questions: QualitativeQuestionData[]) => void;
 };
 
 export const UserSelectionsContext = createContext<UserSelections>({
-  hotspotRanking: "checklists",
+  hotspotRanking: 'checklists',
   qualitativeQuestions: [],
   setHotspotRanking: () => {},
   setQualitativeQuestions: () => {},
 });
 
-const defaultQuestions = process.env.NODE_ENV === "development"
-  ? [
-      { question: "What was your favorite hotspot?", answer: "My backyard" },
-      { question: "What was your favorite bird?", answer: "Eastern Phoebe" },
-    ]
-  : [];
+const defaultQuestions =
+  process.env.NODE_ENV === 'development'
+    ? [
+        { question: 'What was your favorite hotspot?', answer: 'My backyard' },
+        { question: 'What was your favorite bird?', answer: 'Eastern Phoebe' },
+      ]
+    : [];
 
-export const UserSelections = ({ children }: { children: ReactNode }) => {
+export const UserSelectionsProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [userSelections, setUserSelections] = useState<UserSelections>({
-    hotspotRanking: "checklists",
+    hotspotRanking: 'checklists',
     qualitativeQuestions: defaultQuestions,
-    setHotspotRanking: (ranking: "checklists" | "timeSpent") => {
+    setHotspotRanking: (ranking: 'checklists' | 'timeSpent') => {
       setUserSelections((prevState) => ({
         ...prevState,
         hotspotRanking: ranking,

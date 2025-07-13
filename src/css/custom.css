@@ -44,13 +44,13 @@
 }
 
 /* Hide navbar on blog pages */
-[data-route="/blog"] .navbar,
-[data-route^="/blog/"] .navbar {
+[data-route='/blog'] .navbar,
+[data-route^='/blog/'] .navbar {
   display: none !important;
 }
 
 /* Add top margin to blog content when navbar is hidden */
-[data-route="/blog"] .main-wrapper,
-[data-route^="/blog/"] .main-wrapper {
+[data-route='/blog'] .main-wrapper,
+[data-route^='/blog/'] .main-wrapper {
   margin-top: 2rem;
 }

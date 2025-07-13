@@ -5,18 +5,18 @@ const INITIAL_CENTER = {
 const INITIAL_ZOOM = 10.12;
 
 enum RootLayerIDs {
-  HistoricalLifers = "historical_lifers",
-  NewLifers = "new_lifers",
+  HistoricalLifers = 'historical_lifers',
+  NewLifers = 'new_lifers',
 }
 
 const allLayerIdRoots = [RootLayerIDs.HistoricalLifers, RootLayerIDs.NewLifers];
 
 enum SubLayerIDs {
-  ClusterCircles = "cluster_circles",
-  ClusterCount = "cluster_count",
-  UnclusteredPointsLabel = "unclustered_points_label",
-  UnclusteredPointsCircle = "unclustered_point_circle",
-  UnclusteredPointsCount = "unclustered_point_count",
+  ClusterCircles = 'cluster_circles',
+  ClusterCount = 'cluster_count',
+  UnclusteredPointsLabel = 'unclustered_points_label',
+  UnclusteredPointsCircle = 'unclustered_point_circle',
+  UnclusteredPointsCount = 'unclustered_point_count',
 }
 
 const allSubLayerIds = [

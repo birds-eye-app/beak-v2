@@ -1,4 +1,4 @@
-import React, {type ReactNode, useCallback} from 'react';
+import React, { type ReactNode } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import Heading from '@theme/Heading';
@@ -19,8 +19,8 @@ const ProjectList: ProjectItem[] = [
     mediaSrc: '/img/chirped.mp4',
     description: (
       <>
-        Spotify "Wrapped" like tool for birders that uses your eBird data to 
-        show fun statistics and insights about your birding from 2024.
+        Spotify &quot;Wrapped&quot; like tool for birders that uses your eBird
+        data to show fun statistics and insights about your birding from 2024.
       </>
     ),
     link: '/chirped',
@@ -31,8 +31,8 @@ const ProjectList: ProjectItem[] = [
     mediaSrc: '/img/birds-eye-demo.mp4',
     description: (
       <>
-        Mapbox-powered geographic visualization tool for eBird sightings
-        showing you where you added historical lifers and where you can find new ones.
+        Mapbox-powered geographic visualization tool for eBird sightings showing
+        you where you added historical lifers and where you can find new ones.
       </>
     ),
     link: '/birds-eye',
@@ -42,21 +42,26 @@ const ProjectList: ProjectItem[] = [
     mediaType: 'image',
     mediaSrc: '/img/undraw_docusaurus_tree.svg',
     description: (
-      <>
-        Personal blog with posts about birding, technology, and more
-      </>
+      <>Personal blog with posts about birding, technology, and more</>
     ),
     link: '/blog',
   },
 ];
 
-function Project({title, mediaType, mediaSrc, description, link}: ProjectItem) {
+function Project({
+  title,
+  mediaType,
+  mediaSrc,
+  description,
+  link,
+}: ProjectItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
         <Link to={link} className={styles.projectLink}>
           {mediaType === 'video' ? (
-            <video autoPlay
+            <video
+              autoPlay
               className={styles.projectMedia}
               muted={true}
               loop

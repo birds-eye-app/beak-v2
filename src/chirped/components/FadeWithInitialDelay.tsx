@@ -1,5 +1,5 @@
-import React from "react";
-import { Fade } from "@mui/material";
+import React from 'react';
+import { Fade } from '@mui/material';
 
 export type FadeInWithInitialDelayProps = {
   in?: boolean;

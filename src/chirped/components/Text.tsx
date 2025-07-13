@@ -1,6 +1,6 @@
-import React from "react";
-import { Typography, TypographyProps } from "@mui/material";
-import { FadeInWithInitialDelay } from "./FadeWithInitialDelay";
+import React from 'react';
+import { Typography, TypographyProps } from '@mui/material';
+import { FadeInWithInitialDelay } from './FadeWithInitialDelay';
 
 export type TypographyWithFadeInProps = TypographyProps & {
   in?: boolean;

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import ReactModal from "react-modal";
-import { checkHealthy, uploadCsv } from "./api";
-import { BarLoader } from "react-spinners";
+import React, { useState } from 'react';
+import ReactModal from 'react-modal';
+import { checkHealthy, uploadCsv } from './api';
+import { BarLoader } from 'react-spinners';
 
 export const WaitAndUploadModal = ({
   showModal,
@@ -32,17 +32,17 @@ export const WaitAndUploadModal = ({
       isOpen={showModal}
       contentLabel="WaitAndUploadModal"
       shouldCloseOnOverlayClick={true}
-      style={{ 
+      style={{
         overlay: { zIndex: 10000, backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-        content: { 
+        content: {
           position: 'relative',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '400px',
           height: '300px',
-          padding: '20px'
-        }
+          padding: '20px',
+        },
       }}
       ariaHideApp={false}
     >
@@ -52,7 +52,7 @@ export const WaitAndUploadModal = ({
         </button>
         <p>
           🦉👁️ Welcome to Birdseye! To get started, you&apos;ll need to upload
-          your eBird CSV export. You can request an export from eBird here:{" "}
+          your eBird CSV export. You can request an export from eBird here:{' '}
           <a
             href="https://ebird.org/downloadMyData"
             target="_blank"
@@ -71,7 +71,7 @@ export const WaitAndUploadModal = ({
           {healthCheck === null &&
             "🛌 Waiting to hear from the server... this might take a minute or 2 if it's starting up. (Seriously!)"}
           {healthCheck === false &&
-            "🚨 Server is unhealthy! Please try again later."}
+            '🚨 Server is unhealthy! Please try again later.'}
           {healthCheck === true && (
             <>
               <label htmlFor="file">📄 Upload your eBird export here:</label>
@@ -92,4 +92,3 @@ export const WaitAndUploadModal = ({
     </ReactModal>
   );
 };
-

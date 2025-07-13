@@ -1,22 +1,22 @@
-import { Button, Container, ListItem } from "@mui/material";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import React, { useContext } from "react";
-import OutlinedCard from "../../Card";
-import { CurrentYear } from "../../Chirped";
-import { ChirpedContext } from "../../contexts/Chirped";
-import { UserSelectionsContext } from "../../contexts/UserSelections";
-import { FadeInWithInitialDelay } from "../FadeWithInitialDelay";
-import { TypographyWithFadeIn } from "../Text";
+import { Button, Container, ListItem } from '@mui/material';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import React, { useContext } from 'react';
+import OutlinedCard from '../../Card';
+import { CurrentYear } from '../../Chirped';
+import { ChirpedContext } from '../../contexts/Chirped';
+import { UserSelectionsContext } from '../../contexts/UserSelections';
+import { FadeInWithInitialDelay } from '../FadeWithInitialDelay';
+import { TypographyWithFadeIn } from '../Text';
 
 const Hotspots = ({ isActive }: { isActive: boolean }) => {
   const chirped = useContext(ChirpedContext);
   const { hotspotRanking, setHotspotRanking } = useContext(
-    UserSelectionsContext,
+    UserSelectionsContext
   );
   const yearStats = chirped.yearStats;
   const ranking =
-    hotspotRanking === "checklists"
+    hotspotRanking === 'checklists'
       ? chirped.rankings.topHotspotsByChecklists
       : chirped.rankings.topHotspotsByTimeSpent;
   return (
@@ -25,9 +25,9 @@ const Hotspots = ({ isActive }: { isActive: boolean }) => {
         in={isActive}
         initialDelay={500}
         variant="h5"
-        sx={{ mb: 2, textAlign: "center" }}
+        sx={{ mb: 2, textAlign: 'center' }}
       >
-        You visited <b>{yearStats.numberOfHotspots}</b> hotspots in{" "}
+        You visited <b>{yearStats.numberOfHotspots}</b> hotspots in{' '}
         {CurrentYear}.
       </TypographyWithFadeIn>
       <TypographyWithFadeIn in={isActive} initialDelay={2000} variant="body2">
@@ -35,30 +35,30 @@ const Hotspots = ({ isActive }: { isActive: boolean }) => {
       </TypographyWithFadeIn>
       <br />
 
-      {hotspotRanking === "checklists" ? (
+      {hotspotRanking === 'checklists' ? (
         <TypographyWithFadeIn in={isActive} initialDelay={3500} variant="body1">
           <b>{chirped.rankings.topHotspotsByChecklists[0].locationName}</b> was
-          your most frequently visited hotspot with{" "}
+          your most frequently visited hotspot with{' '}
           <b>
             {chirped.rankings.topHotspotsByChecklists[0].checklistCount.toLocaleString()}
-          </b>{" "}
-          checklists. You spent a total of{" "}
+          </b>{' '}
+          checklists. You spent a total of{' '}
           <b>
             {chirped.rankings.topHotspotsByChecklists[0].timeSpentMinutes.toLocaleString()}
-          </b>{" "}
+          </b>{' '}
           minutes here.
         </TypographyWithFadeIn>
       ) : (
         <TypographyWithFadeIn in={isActive} initialDelay={3500} variant="body1">
           <b>{chirped.rankings.topHotspotsByTimeSpent[0].locationName}</b> kept
-          you the longest with{" "}
+          you the longest with{' '}
           <b>
             {chirped.rankings.topHotspotsByTimeSpent[0].timeSpentMinutes.toLocaleString()}
-          </b>{" "}
-          minutes spent here. You visited this hotspot{" "}
+          </b>{' '}
+          minutes spent here. You visited this hotspot{' '}
           <b>
             {chirped.rankings.topHotspotsByTimeSpent[0].checklistCount.toLocaleString()}
-          </b>{" "}
+          </b>{' '}
           times.
         </TypographyWithFadeIn>
       )}
@@ -74,9 +74,9 @@ const Hotspots = ({ isActive }: { isActive: boolean }) => {
       <Container
         disableGutters
         sx={{
-          width: "100%",
+          width: '100%',
           maxHeight: 150,
-          overflowY: "auto",
+          overflowY: 'auto',
         }}
       >
         <FadeInWithInitialDelay in={isActive} initialDelay={7000}>
@@ -85,7 +85,7 @@ const Hotspots = ({ isActive }: { isActive: boolean }) => {
               <ListItem disableGutters disablePadding key={hotspot.locationID}>
                 <Container
                   disableGutters
-                  sx={{ flexDirection: "row", display: "flex" }}
+                  sx={{ flexDirection: 'row', display: 'flex' }}
                 >
                   <Typography
                     variant="body2"
@@ -93,14 +93,14 @@ const Hotspots = ({ isActive }: { isActive: boolean }) => {
                       marginRight: 1,
                     }}
                   >
-                    {index + 1}.{" "}
+                    {index + 1}.{' '}
                   </Typography>
                   <Typography variant="body2">
                     {hotspot.locationName}
                   </Typography>
                   <Container sx={{ flex: 1 }} />
                   <Typography variant="body2">
-                    {hotspotRanking === "checklists"
+                    {hotspotRanking === 'checklists'
                       ? hotspot.checklistCount.toLocaleString()
                       : hotspot.timeSpentMinutes.toLocaleString()}
                   </Typography>
@@ -120,12 +120,12 @@ const Hotspots = ({ isActive }: { isActive: boolean }) => {
           color="secondary"
           onClick={() =>
             setHotspotRanking(
-              hotspotRanking === "checklists" ? "timeSpent" : "checklists",
+              hotspotRanking === 'checklists' ? 'timeSpent' : 'checklists'
             )
           }
         >
-          Display by{" "}
-          {hotspotRanking === "checklists" ? "minutes" : "checklists"}
+          Display by{' '}
+          {hotspotRanking === 'checklists' ? 'minutes' : 'checklists'}
         </Button>
       </FadeInWithInitialDelay>
     </OutlinedCard>

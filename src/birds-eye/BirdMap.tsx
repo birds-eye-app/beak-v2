@@ -1,14 +1,20 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import mapboxgl, { GeoJSONSource, Map, Marker } from "mapbox-gl";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import mapboxgl, { GeoJSONSource, Map, Marker } from 'mapbox-gl';
 
-import "mapbox-gl/dist/mapbox-gl.css";
-import "./App.css";
+import 'mapbox-gl/dist/mapbox-gl.css';
+import './App.css';
 
-import { Feature, GeoJsonProperties, Geometry } from "geojson";
-import { BarLoader } from "react-spinners";
-import { useDebounce } from "use-debounce";
-import { SpeciesSelectionList } from "./SpeciesSelectionList";
-import { WaitAndUploadModal } from "./WaitAndUploadModal";
+import { Feature, GeoJsonProperties, Geometry } from 'geojson';
+import { BarLoader } from 'react-spinners';
+import { useDebounce } from 'use-debounce';
+import { SpeciesSelectionList } from './SpeciesSelectionList';
+import { WaitAndUploadModal } from './WaitAndUploadModal';
 import {
   fetchLifers,
   fetchRegionalAndNearbyLifers,
@@ -17,15 +23,15 @@ import {
   LocationByLiferResponse,
   nearbyObservationsToGeoJson,
   Species,
-} from "./api";
+} from './api';
 import {
   allLayerIdRoots,
   allSubLayerIds,
   INITIAL_CENTER,
   INITIAL_ZOOM,
   RootLayerIDs,
-} from "./constants";
-import { addSourceAndLayer } from "./map";
+} from './constants';
+import { addSourceAndLayer } from './map';
 
 const MODE = 'production'; // 'development' or 'production' - hardcoded for Docusaurus
 
@@ -50,10 +56,10 @@ const LayerToggle = ({
 
 function filterResponseToSpecies(
   response: LocationByLiferResponse,
-  speciesFilter: SpeciesFilter,
+  speciesFilter: SpeciesFilter
 ) {
-  if (speciesFilter === "all") return response;
-  if (speciesFilter === "none") return {};
+  if (speciesFilter === 'all') return response;
+  if (speciesFilter === 'none') return {};
   const filteredData: LocationByLiferResponse = {};
   Object.entries(response).forEach(([key, value]) => {
     const matchingLifers = value.lifers.filter((lifer) => {
@@ -71,7 +77,7 @@ function filterResponseToSpecies(
   return filteredData;
 }
 
-export type SpeciesFilter = "all" | "none" | string[];
+export type SpeciesFilter = 'all' | 'none' | string[];
 
 export function BirdMap() {
   const mapRef = useRef<Map>();
@@ -82,29 +88,30 @@ export function BirdMap() {
   const [debouncedCenter] = useDebounce(center, 500);
 
   const [activeLayerId, setActiveLayerId] = useState(
-    RootLayerIDs.HistoricalLifers,
+    RootLayerIDs.HistoricalLifers
   );
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [fileId, setFileId] = useState("");
+  const [fileId, setFileId] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(true);
-  const [speciesFilter, setSpeciesFilter] = useState<SpeciesFilter>("all");
+  const [speciesFilter, setSpeciesFilter] = useState<SpeciesFilter>('all');
   const [visibleSpecies, setVisibleSpecies] = useState<Lifer[]>([]);
   // debouncing this since it seems to flicker a lot due to rendering?
   const [debouncedVisibleSpecies] = useDebounce(visibleSpecies, 50);
 
   useEffect(() => {
-    if (fileId === "") return;
-    
+    if (fileId === '') return;
+
     // Set Mapbox token - in Docusaurus, we'll use a direct assignment for now
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZGF2aWR0bWVhZG93cyIsImEiOiJjbTF0djNteTgwNzYzMnFvbGJrdjU3YzMzIn0.3sZJbLI9SKeK4Zs2ZFsuaA';
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoiZGF2aWR0bWVhZG93cyIsImEiOiJjbTF0djNteTgwNzYzMnFvbGJrdjU3YzMzIn0.3sZJbLI9SKeK4Zs2ZFsuaA';
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current!,
       center: INITIAL_CENTER,
       zoom: INITIAL_ZOOM,
     });
 
-    mapRef.current!.on("load", () => {
+    mapRef.current!.on('load', () => {
       fetchLifers(INITIAL_CENTER.lat, INITIAL_CENTER.lng, fileId).then(
         (data) => {
           const lifersFeatures = lifersToGeoJson(data);
@@ -112,26 +119,24 @@ export function BirdMap() {
             mapRef.current!,
             RootLayerIDs.HistoricalLifers,
             lifersFeatures,
-            activeLayerId === RootLayerIDs.HistoricalLifers
-              ? "visible"
-              : "none",
+            activeLayerId === RootLayerIDs.HistoricalLifers ? 'visible' : 'none'
           );
-        },
+        }
       );
 
       fetchRegionalAndNearbyLifers(
         INITIAL_CENTER.lat,
         INITIAL_CENTER.lng,
-        fileId,
+        fileId
       ).then((data) => {
         if (!data) return;
         addSourceAndLayer(
           mapRef.current!,
           RootLayerIDs.NewLifers,
           nearbyObservationsToGeoJson(
-            filterResponseToSpecies(data, speciesFilter),
+            filterResponseToSpecies(data, speciesFilter)
           ),
-          activeLayerId === RootLayerIDs.NewLifers ? "visible" : "none",
+          activeLayerId === RootLayerIDs.NewLifers ? 'visible' : 'none'
         );
       });
 
@@ -139,7 +144,7 @@ export function BirdMap() {
     });
 
     // update map state on move so that we can use the lat/long values elsewhere (fetching data, etc)
-    mapRef.current!.on("move", () => {
+    mapRef.current!.on('move', () => {
       const mapCenter = mapRef.current!.getCenter();
       const mapZoom = mapRef.current!.getZoom();
 
@@ -162,7 +167,7 @@ export function BirdMap() {
 
     const updateVisibleSpecies = () => {
       const source = mapRef.current?.getSource(
-        RootLayerIDs.NewLifers,
+        RootLayerIDs.NewLifers
       ) as GeoJSONSource;
       if (!source) return;
 
@@ -192,7 +197,7 @@ export function BirdMap() {
               aFeatures:
                 | Feature<Geometry, GeoJsonProperties>[]
                 | null
-                | undefined,
+                | undefined
             ): void {
               if (err) return;
               if (!aFeatures) return;
@@ -203,11 +208,11 @@ export function BirdMap() {
                 .flat();
               clusterIdToLifers[clusterId] = lifersForCluster;
               visibleSpeciesTemp.push(...lifersForCluster);
-            },
+            }
           );
         } else {
           visibleSpeciesTemp.push(
-            ...(JSON.parse(feature.properties.lifers) as Lifer[]),
+            ...(JSON.parse(feature.properties.lifers) as Lifer[])
           );
         }
 
@@ -263,7 +268,7 @@ export function BirdMap() {
     };
 
     // after the GeoJSON data is loaded, update markers on the screen on every frame
-    mapRef.current!.on("render", () => {
+    mapRef.current!.on('render', () => {
       if (!mapRef.current!.isSourceLoaded(activeLayerId)) return;
       updateVisibleSpecies();
       updateMarkers();
@@ -279,13 +284,13 @@ export function BirdMap() {
 
     allLayerIdRoots.forEach((rootLayerId) => {
       const layerIds = allSubLayerIds.map(
-        (subLayerId) => `${rootLayerId}.${subLayerId}`,
+        (subLayerId) => `${rootLayerId}.${subLayerId}`
       );
       layerIds.forEach((layerId) => {
         if (mapRef.current!.getLayer(layerId)) {
-          const visibility = activeLayerId === rootLayerId ? "visible" : "none";
+          const visibility = activeLayerId === rootLayerId ? 'visible' : 'none';
           console.debug(`Setting visibility for ${layerId} to ${visibility}`);
-          mapRef.current!.setLayoutProperty(layerId, "visibility", visibility);
+          mapRef.current!.setLayoutProperty(layerId, 'visibility', visibility);
         }
       });
     });
@@ -306,18 +311,18 @@ export function BirdMap() {
     fetchRegionalAndNearbyLifers(
       debouncedCenter.lat,
       debouncedCenter.lng,
-      fileId,
+      fileId
     )
       .then((data) => {
         if (!data) return;
         const lifersSource = mapRef.current!.getSource(
-          RootLayerIDs.NewLifers,
+          RootLayerIDs.NewLifers
         ) as GeoJSONSource | undefined;
         if (!lifersSource) return;
         lifersSource.setData({
-          type: "FeatureCollection",
+          type: 'FeatureCollection',
           features: nearbyObservationsToGeoJson(
-            filterResponseToSpecies(data, speciesFilter),
+            filterResponseToSpecies(data, speciesFilter)
           ),
         });
       })
@@ -349,7 +354,7 @@ export function BirdMap() {
           setFileId(fileId);
           setShowUploadModal(false);
         }}
-        canClose={fileId !== ""}
+        canClose={fileId !== ''}
       />
       <div className="topBar">
         <LayerToggle
@@ -372,9 +377,9 @@ export function BirdMap() {
         ref={mapContainerRef!}
       />
       {showLoading && <BarLoader className="loadingBar" width={200} />}
-      {MODE === "development" && (
+      {MODE === 'development' && (
         <div className="sidebar">
-          Longitude: {center.lng.toFixed(4)} | Latitude: {center.lat.toFixed(4)}{" "}
+          Longitude: {center.lng.toFixed(4)} | Latitude: {center.lat.toFixed(4)}{' '}
           | Zoom: {zoom.toFixed(2)} | Mode: {MODE}
         </div>
       )}
@@ -396,7 +401,7 @@ export type VisibleSpeciesWithLocation = {
 };
 
 function groupVisibleSpeciesByLocation(
-  visibleSpecies: Lifer[],
+  visibleSpecies: Lifer[]
 ): VisibleSpeciesWithLocation {
   const visibleSpeciesWithLocation: VisibleSpeciesWithLocation = {};
   visibleSpecies.forEach((lifer) => {
@@ -418,8 +423,8 @@ function groupVisibleSpeciesByLocation(
 }
 
 function parseSpeciesCodeStringToSet(speciesCodes: string) {
-  return [...new Set(speciesCodes.split(","))].filter(
-    (code) => code.trim().length > 1,
+  return [...new Set(speciesCodes.split(','))].filter(
+    (code) => code.trim().length > 1
   );
 }
 
@@ -428,29 +433,29 @@ function createCustomHTMLMarker(props: {
   species_codes: string;
 }) {
   const speciesCodes = parseSpeciesCodeStringToSet(
-    props.species_codes as string,
+    props.species_codes as string
   );
 
-  let classification = "";
+  let classification = '';
   if (speciesCodes.length <= 10) {
-    classification = "small";
+    classification = 'small';
   } else if (speciesCodes.length <= 50) {
-    classification = "medium";
+    classification = 'medium';
   } else {
-    classification = "large";
+    classification = 'large';
   }
   let radius = 30;
-  let backgroundColor = "#fadd00";
+  let backgroundColor = '#fadd00';
   switch (classification) {
-    case "small":
+    case 'small':
       break;
-    case "medium":
+    case 'medium':
       radius = 30;
-      backgroundColor = "#F2C74D";
+      backgroundColor = '#F2C74D';
       break;
-    case "large":
+    case 'large':
       radius = 50;
-      backgroundColor = "#ff70ba";
+      backgroundColor = '#ff70ba';
       break;
   }
   const width = radius;
@@ -464,7 +469,7 @@ function createCustomHTMLMarker(props: {
         </circle>
       </div>`;
 
-  const el = document.createElement("div");
+  const el = document.createElement('div');
   el.innerHTML = html;
   return el.firstChild!;
 }

@@ -1,23 +1,23 @@
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import React, { forwardRef, useEffect, useRef } from "react";
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import React, { forwardRef, useEffect, useRef } from 'react';
 
 const OutlinedCard = forwardRef(function OutlinedCard(
   {
-    justifyContent = "center",
+    justifyContent = 'center',
     minHeight,
     children,
     disableScroll = false,
-    maxHeight = "80%",
+    maxHeight = '80%',
   }: {
-    justifyContent?: "center" | "flex-start" | "flex-end";
+    justifyContent?: 'center' | 'flex-start' | 'flex-end';
     minHeight?: number;
     children: React.ReactNode;
     disableScroll?: boolean;
     maxHeight?: number | string;
   },
-  ref: React.Ref<HTMLDivElement>,
+  ref: React.Ref<HTMLDivElement>
 ) {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -31,10 +31,10 @@ const OutlinedCard = forwardRef(function OutlinedCard(
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         maxWidth: 400,
         minHeight: minHeight || 400,
         maxHeight: maxHeight,
@@ -44,21 +44,21 @@ const OutlinedCard = forwardRef(function OutlinedCard(
     >
       <Card
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
           flex: 1,
-          overflowY: disableScroll ? "hidden" : "auto",
+          overflowY: disableScroll ? 'hidden' : 'auto',
         }}
         ref={cardRef}
       >
         <CardContent
           sx={{
-            display: "flex",
-            flexDirection: "column",
+            display: 'flex',
+            flexDirection: 'column',
             justifyContent,
-            alignItems: "center",
+            alignItems: 'center',
             flex: 1,
             paddingBottom: 5,
           }}

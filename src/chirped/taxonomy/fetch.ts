@@ -1,6 +1,6 @@
-import { Taxonomy } from "./parse";
+import { Taxonomy } from './parse';
 
-import parsedTaxonomy from "./taxonomy.json" with { type: "json" };
+import parsedTaxonomy from './taxonomy.json' with { type: 'json' };
 
 export const eBirdTaxonomy = parsedTaxonomy as Record<string, Taxonomy>;
 

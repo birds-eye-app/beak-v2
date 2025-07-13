@@ -1,11 +1,11 @@
-import { Feature, GeoJsonProperties, Geometry } from "geojson";
+import { Feature, GeoJsonProperties, Geometry } from 'geojson';
 // For now, use hardcoded values since process.env is not available in Docusaurus browser environment
 const viteBaseURL = 'http://localhost:8000/';
 
-// hard code route to render backend... probably just wanna move this over to vercel or 
+// hard code route to render backend... probably just wanna move this over to vercel or
 // fix render site hosting at some point
 const isDevelopment = false; // Set to true for local development
-const apiBaseUrl = isDevelopment ? viteBaseURL : 'https://cloaca.onrender.com/'
+const apiBaseUrl = isDevelopment ? viteBaseURL : 'https://cloaca.onrender.com/';
 
 export type Lifer = {
   common_name: string;
@@ -43,16 +43,16 @@ export type LocationByLiferResponse = {
 export function lifersToGeoJson(response: LocationByLiferResponse) {
   return Object.values(response).map((l) => {
     return {
-      type: "Feature",
+      type: 'Feature',
       geometry: {
-        type: "Point",
+        type: 'Point',
         coordinates: [l.location.longitude, l.location.latitude],
       },
       properties: {
         title: l.location.location_name,
         lifers: l.lifers,
         liferCount: l.lifers.length,
-        speciesCodes: l.lifers.map((lifer) => lifer.species_code).join(","),
+        speciesCodes: l.lifers.map((lifer) => lifer.species_code).join(','),
       },
     } as Feature<Geometry, GeoJsonProperties>;
   });
@@ -82,21 +82,21 @@ export function lifersListToLocation(lifersList: Lifer[]) {
   return locationByLiferResponse;
 }
 export function nearbyObservationsToGeoJson(
-  lifers: LocationByLiferResponse,
+  lifers: LocationByLiferResponse
 ): Feature<Geometry, GeoJsonProperties>[] {
   if (!lifers) return [];
   return Object.values(lifers).flatMap((entry) => {
     const feature = {
-      type: "Feature",
+      type: 'Feature',
       geometry: {
-        type: "Point",
+        type: 'Point',
         coordinates: [entry.location.longitude, entry.location.latitude],
       },
       properties: {
         title: entry.location.location_name,
         lifers: entry.lifers,
         liferCount: entry.lifers.length,
-        speciesCodes: entry.lifers.map((lifer) => lifer.species_code).join(","),
+        speciesCodes: entry.lifers.map((lifer) => lifer.species_code).join(','),
       },
     };
 
@@ -107,13 +107,13 @@ export function nearbyObservationsToGeoJson(
 export async function fetchRegionalAndNearbyLifers(
   latitude: number,
   longitude: number,
-  fileId: string,
+  fileId: string
 ) {
   const regionalLifers = await fetchRegionalLifers(latitude, longitude, fileId);
   const nearbyObservations = await fetchNearbyObservations(
     latitude,
     longitude,
-    fileId,
+    fileId
   );
 
   if (!regionalLifers || !nearbyObservations) {
@@ -121,7 +121,7 @@ export async function fetchRegionalAndNearbyLifers(
   }
 
   console.debug(
-    `[fetchRegionalAndNearbyLifers] regionalLifers: ${regionalLifers?.length}, nearbyObservations: ${Object.keys(nearbyObservations).length}`,
+    `[fetchRegionalAndNearbyLifers] regionalLifers: ${regionalLifers?.length}, nearbyObservations: ${Object.keys(nearbyObservations).length}`
   );
 
   regionalLifers.forEach((lifer) => {
@@ -130,7 +130,7 @@ export async function fetchRegionalAndNearbyLifers(
       // only add it if we don't already have it
       const existingObservation = existingLocation.lifers.find(
         // todo: maybe use a unique id?
-        (l) => l.species_code === lifer.species_code && l.date === lifer.date,
+        (l) => l.species_code === lifer.species_code && l.date === lifer.date
       );
       if (!existingObservation) {
         existingLocation.lifers.push(lifer);
@@ -153,17 +153,17 @@ export async function fetchRegionalAndNearbyLifers(
 
 // todo: dedupe all of this
 export const uploadCsv = async (file: File) => {
-  console.debug("Uploading file:", file);
+  console.debug('Uploading file:', file);
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append('file', file);
 
   const response = await fetch(`${apiBaseUrl}v1/upload_lifers_csv`, {
-    method: "POST",
+    method: 'POST',
     body: formData,
   });
 
   const data = await response.json();
-  console.debug("Upload response:", data);
+  console.debug('Upload response:', data);
   return data as { key: string };
 };
 
@@ -174,7 +174,7 @@ export const checkHealthy = async () => {
     const response = await fetch(`${apiBaseUrl}v1/health`);
     return response.ok;
   } catch (error) {
-    console.error("Health check error:", error);
+    console.error('Health check error:', error);
     return false;
   }
 };
@@ -182,7 +182,7 @@ export const checkHealthy = async () => {
 export const fetchLifers = async (
   latitude: number,
   longitude: number,
-  fileId: string,
+  fileId: string
 ) => {
   const baseUrl = `${apiBaseUrl}v1/lifers_by_location`;
 
@@ -203,14 +203,14 @@ export const fetchLifers = async (
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error('Fetch error:', error);
   }
 };
 
 export const fetchNearbyObservations = async (
   latitude: number,
   longitude: number,
-  fileId: string,
+  fileId: string
 ): Promise<LocationByLiferResponse | undefined> => {
   const baseUrl = `${apiBaseUrl}v1/nearby_observations`;
 
@@ -233,14 +233,14 @@ export const fetchNearbyObservations = async (
     const data = (await response.json()) as LocationByLiferResponse;
     return data;
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error('Fetch error:', error);
   }
 };
 
 export const fetchRegionalLifers = async (
   latitude: number,
   longitude: number,
-  fileId: string,
+  fileId: string
 ): Promise<Lifer[] | undefined> => {
   const baseUrl = `${apiBaseUrl}v1/regional_new_potential_lifers`;
 
@@ -263,6 +263,6 @@ export const fetchRegionalLifers = async (
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error('Fetch error:', error);
   }
 };

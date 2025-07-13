@@ -1,4 +1,4 @@
-import { Share } from "@mui/icons-material";
+import { Share } from '@mui/icons-material';
 import {
   Alert,
   Box,
@@ -18,15 +18,15 @@ import {
   TableContainer,
   TableRow,
   Typography,
-} from "@mui/material";
-import List from "@mui/material/List";
-import React, { useContext, useRef, useState } from "react";
-import OutlinedCard from "../../Card";
-import { CurrentYear } from "../../Chirped";
-import { ChirpedContext } from "../../contexts/Chirped";
-import { UserSelectionsContext } from "../../contexts/UserSelections";
-import { shareComponent } from "../../sharing";
-import { FadeInWithInitialDelay } from "../FadeWithInitialDelay";
+} from '@mui/material';
+import List from '@mui/material/List';
+import React, { useContext, useRef, useState } from 'react';
+import OutlinedCard from '../../Card';
+import { CurrentYear } from '../../Chirped';
+import { ChirpedContext } from '../../contexts/Chirped';
+import { UserSelectionsContext } from '../../contexts/UserSelections';
+import { shareComponent } from '../../sharing';
+import { FadeInWithInitialDelay } from '../FadeWithInitialDelay';
 
 const BigNumberWithLabelBelow = ({
   number,
@@ -35,9 +35,9 @@ const BigNumberWithLabelBelow = ({
   number: number;
   label: string;
 }) => (
-  <Container disableGutters sx={{ textAlign: "center" }}>
+  <Container disableGutters sx={{ textAlign: 'center' }}>
     <Typography variant="h5">{number.toLocaleString()}</Typography>
-    <Typography variant="body1" sx={{ color: "text.secondary" }}>
+    <Typography variant="body1" sx={{ color: 'text.secondary' }}>
       {label}
     </Typography>
   </Container>
@@ -63,19 +63,19 @@ export const ShareButton = ({
       disableGutters
       // floating footer button
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        position: "fixed",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        position: 'fixed',
         bottom: 20,
         zIndex: 3,
       }}
     >
       {shareSuccessful !== null && (
-        <Alert severity={shareSuccessful ? "success" : "error"} sx={{ mb: 2 }}>
+        <Alert severity={shareSuccessful ? 'success' : 'error'} sx={{ mb: 2 }}>
           {shareSuccessful
-            ? "Successfully shared!"
-            : "Failed to share. Maybe try taking a screenshot of this page instead."}
+            ? 'Successfully shared!'
+            : 'Failed to share. Maybe try taking a screenshot of this page instead.'}
         </Alert>
       )}
       <Button
@@ -101,11 +101,11 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
   const { hotspotRanking } = useContext(UserSelectionsContext);
   const shareRef = useRef<HTMLDivElement>(null);
   const [showBreakdownBy, setShowBreakdownBy] = useState<
-    "data" | "qualitative"
-  >("data");
+    'data' | 'qualitative'
+  >('data');
 
   const topHotspots =
-    hotspotRanking === "checklists"
+    hotspotRanking === 'checklists'
       ? chirped.rankings.topHotspotsByChecklists
       : chirped.rankings.topHotspotsByTimeSpent;
 
@@ -118,33 +118,33 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
     <Container
       disableGutters
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        overFlowY: "auto",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        overFlowY: 'auto',
       }}
     >
       <Container
         disableGutters
-        sx={{ padding: 0, position: "fixed", top: 20, zIndex: 3 }}
+        sx={{ padding: 0, position: 'fixed', top: 20, zIndex: 3 }}
       >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
             maxHeight: 50,
           }}
         >
-          <Card sx={{ justifyContent: "center", alignItems: "center" }}>
+          <Card sx={{ justifyContent: 'center', alignItems: 'center' }}>
             <CardContent
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
                 padding: 1,
                 maxHeight: 30,
                 marginBottom: -2,
@@ -153,16 +153,16 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
             >
               <FormControl
                 sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}
               >
                 <FormLabel
                   sx={{ marginRight: 2 }}
                   id="view-by-radio-group-label"
                 >
-                  Show:{" "}
+                  Show:{' '}
                 </FormLabel>
                 <RadioGroup
                   row
@@ -170,7 +170,7 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                   name="view-by-radio-group"
                   value={showBreakdownBy}
                   onChange={(e) =>
-                    setShowBreakdownBy(e.target.value as "data" | "qualitative")
+                    setShowBreakdownBy(e.target.value as 'data' | 'qualitative')
                   }
                 >
                   <FormControlLabel
@@ -203,7 +203,7 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
             </Typography>
             <Container
               disableGutters
-              sx={{ display: "flex", flexDirection: "row" }}
+              sx={{ display: 'flex', flexDirection: 'row' }}
             >
               <BigNumberWithLabelBelow
                 number={yearStats.species}
@@ -220,7 +220,7 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
             </Container>
             <Container
               disableGutters
-              sx={{ display: "flex", flexDirection: "row" }}
+              sx={{ display: 'flex', flexDirection: 'row' }}
             >
               <BigNumberWithLabelBelow
                 number={yearStats.checklists}
@@ -236,16 +236,16 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
               />
             </Container>
             <br />
-            {showBreakdownBy === "data" && (
+            {showBreakdownBy === 'data' && (
               <FadeInWithInitialDelay in={isActive} initialDelay={0}>
                 <Container
                   disableGutters
                   sx={{
-                    width: "100%",
+                    width: '100%',
                     maxHeight: 400,
-                    display: "flex",
-                    flexDirection: "row",
-                    overflow: "hidden",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    overflow: 'hidden',
                   }}
                 >
                   <Container disableGutters sx={{ flex: 1, padding: 0 }}>
@@ -255,7 +255,7 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                     <Container
                       disableGutters
                       sx={{
-                        width: "100%",
+                        width: '100%',
                         maxHeight: 300,
                       }}
                     >
@@ -270,7 +270,7 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                             >
                               <Container
                                 disableGutters
-                                sx={{ flexDirection: "row", display: "flex" }}
+                                sx={{ flexDirection: 'row', display: 'flex' }}
                               >
                                 <Typography
                                   variant="body2"
@@ -279,7 +279,7 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                                     marginRight: 1,
                                   }}
                                 >
-                                  {index + 1}.{" "}
+                                  {index + 1}.{' '}
                                 </Typography>
                                 <Typography fontSize={12} variant="body2">
                                   {species.species}
@@ -297,7 +297,7 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                     <Container
                       disableGutters
                       sx={{
-                        width: "100%",
+                        width: '100%',
                         maxHeight: 300,
                       }}
                     >
@@ -310,7 +310,7 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                           >
                             <Container
                               disableGutters
-                              sx={{ flexDirection: "row", display: "flex" }}
+                              sx={{ flexDirection: 'row', display: 'flex' }}
                             >
                               <Typography
                                 variant="body2"
@@ -319,14 +319,14 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                                   marginRight: 1,
                                 }}
                               >
-                                {index + 1}.{" "}
+                                {index + 1}.{' '}
                               </Typography>
                               <Typography
                                 variant="body2"
                                 fontSize={12}
                                 sx={{
                                   maxHeight: 100,
-                                  overflow: "hidden",
+                                  overflow: 'hidden',
                                 }}
                               >
                                 {hotspot.locationName}
@@ -340,15 +340,15 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                 </Container>
               </FadeInWithInitialDelay>
             )}
-            {showBreakdownBy === "qualitative" && (
+            {showBreakdownBy === 'qualitative' && (
               <FadeInWithInitialDelay in={isActive} initialDelay={0}>
                 <Container
                   disableGutters
                   sx={{
-                    width: "100%",
-                    maxHeight: "40%",
-                    display: "flex",
-                    overflow: "hidden",
+                    width: '100%',
+                    maxHeight: '40%',
+                    display: 'flex',
+                    overflow: 'hidden',
                   }}
                 >
                   <TableContainer component={GutterLessContainer}>
@@ -358,13 +358,13 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                           <TableRow
                             key={index}
                             sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
+                              '&:last-child td, &:last-child th': { border: 0 },
                             }}
                           >
-                            <TableCell width={"50%"} component="th" scope="row">
+                            <TableCell width={'50%'} component="th" scope="row">
                               {row.question}
                             </TableCell>
-                            <TableCell width={"50%"} align="right">
+                            <TableCell width={'50%'} align="right">
                               {row.answer}
                             </TableCell>
                           </TableRow>
@@ -375,8 +375,8 @@ const Summary = ({ isActive }: { isActive: boolean }) => {
                 </Container>
               </FadeInWithInitialDelay>
             )}
-            <Typography color="success" sx={{ mt: 1, color: "warning" }}>
-              {"dtmeadows.me/chirped"}
+            <Typography color="success" sx={{ mt: 1, color: 'warning' }}>
+              {'dtmeadows.me/chirped'}
             </Typography>
           </Container>
         </FadeInWithInitialDelay>

@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { performChirpedCalculations } from "./calculate";
-import Upload from "./components/slides/Upload";
-import { ChirpedContext, ChirpedContextType } from "./contexts/Chirped";
-import { UserSelections } from "./contexts/UserSelections";
-import { makeNewChirpedContext } from "./helpers";
-import { parseObservations } from "./parseEbirdExport";
+import React, { useEffect, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { performChirpedCalculations } from './calculate';
+import Upload from './components/slides/Upload';
+import { ChirpedContext, ChirpedContextType } from './contexts/Chirped';
+import { UserSelections } from './contexts/UserSelections';
+import { makeNewChirpedContext } from './helpers';
+import { parseObservations } from './parseEbirdExport';
 
-import { Container } from "@mui/material";
-import "swiper/css";
-import "swiper/css/navigation";
-import { Navigation } from "swiper/modules";
-import Checklists from "./components/slides/Checklists";
-import Counts from "./components/slides/Counts";
-import Hotspots from "./components/slides/Hotspots";
-import Lifers from "./components/slides/Lifers";
-import QualitativeInput from "./components/slides/QualitativeInput";
-import Species from "./components/slides/Species";
-import Summary from "./components/slides/Summary";
-import Totals from "./components/slides/Totals";
-import "./styles.css";
+import { Container } from '@mui/material';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
+import Checklists from './components/slides/Checklists';
+import Counts from './components/slides/Counts';
+import Hotspots from './components/slides/Hotspots';
+import Lifers from './components/slides/Lifers';
+import QualitativeInput from './components/slides/QualitativeInput';
+import Species from './components/slides/Species';
+import Summary from './components/slides/Summary';
+import Totals from './components/slides/Totals';
+import './styles.css';
 
 export const CurrentYear = 2024;
 
-const swiperSlideStyle = { backgroundColor: "#555555" };
+const swiperSlideStyle = { backgroundColor: '#555555' };
 
 export function Chirped() {
-  const [fileContents, setFileContents] = useState("");
+  const [fileContents, setFileContents] = useState('');
   const [actualProcessingComplete, setActualProcessingComplete] =
     useState(false);
   const [fakeProcessingComplete, setFakeProcessingComplete] = useState(false);
@@ -42,7 +42,7 @@ export function Chirped() {
       const observations = await parseObservations(fileContents);
       const chirped = await performChirpedCalculations(
         observations,
-        CurrentYear,
+        CurrentYear
       );
       setChirpedObservations(chirped);
       setActualProcessingComplete(true);
@@ -56,12 +56,12 @@ export function Chirped() {
       <Container
         sx={{
           mt: 2,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-          width: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          width: '100%',
         }}
       >
         <Upload

@@ -1,5 +1,5 @@
 import React from 'react';
-import type {ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import Head from '@docusaurus/Head';
 
@@ -8,7 +8,10 @@ export default function BirdsEyePage(): ReactNode {
     <>
       <Head>
         <title>Birds Eye - eBird Mapping Tool</title>
-        <meta name="description" content="Interactive map to visualize your eBird life list and discover new birding locations" />
+        <meta
+          name="description"
+          content="Interactive map to visualize your eBird life list and discover new birding locations"
+        />
         <style>{`
           /* Hide Docusaurus elements for standalone experience */
           .navbar,
@@ -38,15 +41,24 @@ export default function BirdsEyePage(): ReactNode {
         `}</style>
       </Head>
       <div className="birds-eye-standalone-container">
-        <BrowserOnly fallback={<div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100vh',
-          color: 'var(--ifm-font-color-base, #000)'
-        }}>Loading Birds Eye...</div>}>
+        <BrowserOnly
+          fallback={
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                color: 'var(--ifm-font-color-base, #000)',
+              }}
+            >
+              Loading Birds Eye...
+            </div>
+          }
+        >
           {() => {
-            const BirdsEyeThemeWrapper = require('@site/src/components/BirdsEyeThemeWrapper').default;
+            const BirdsEyeThemeWrapper =
+              require('@site/src/components/BirdsEyeThemeWrapper').default;
             return <BirdsEyeThemeWrapper />;
           }}
         </BrowserOnly>

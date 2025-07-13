@@ -1,5 +1,4 @@
-import React, {type ReactNode, useState, useEffect} from 'react';
-import clsx from 'clsx';
+import React, { type ReactNode, useState, useEffect } from 'react';
 import styles from './styles.module.css';
 
 const photos = [

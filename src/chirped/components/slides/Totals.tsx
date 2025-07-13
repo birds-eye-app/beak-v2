@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import OutlinedCard from "../../Card";
-import { CurrentYear } from "../../Chirped";
-import { ChirpedContext } from "../../contexts/Chirped";
-import { TypographyWithFadeIn } from "../Text";
+import React, { useContext } from 'react';
+import OutlinedCard from '../../Card';
+import { CurrentYear } from '../../Chirped';
+import { ChirpedContext } from '../../contexts/Chirped';
+import { TypographyWithFadeIn } from '../Text';
 
 const Totals = ({ isActive }: { isActive: boolean }) => {
   const chirped = useContext(ChirpedContext);
@@ -13,7 +13,7 @@ const Totals = ({ isActive }: { isActive: boolean }) => {
       <br />
       <TypographyWithFadeIn in={isActive} variant="h5" initialDelay={500}>
         You submitted <b>{yearStats.checklists.toLocaleString()}</b> checklists
-        in {CurrentYear} and spent a total of{" "}
+        in {CurrentYear} and spent a total of{' '}
         <b>{yearStats.totalTimeSpentMinutes.toLocaleString()}</b> minutes
         birding!
       </TypographyWithFadeIn>

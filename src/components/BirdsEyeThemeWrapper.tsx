@@ -9,14 +9,19 @@ export default function BirdsEyeThemeWrapper() {
 
   useEffect(() => {
     // Check initial theme
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const isDark =
+      document.documentElement.getAttribute('data-theme') === 'dark';
     setIsDarkMode(isDark);
 
     // Listen for theme changes
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'data-theme'
+        ) {
+          const isDark =
+            document.documentElement.getAttribute('data-theme') === 'dark';
           setIsDarkMode(isDark);
         }
       });
@@ -51,12 +56,14 @@ export default function BirdsEyeThemeWrapper() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div style={{ 
-        width: '100%', 
-        height: '100vh', 
-        overflow: 'hidden',
-        backgroundColor: theme.palette.background.default 
-      }}>
+      <div
+        style={{
+          width: '100%',
+          height: '100vh',
+          overflow: 'hidden',
+          backgroundColor: theme.palette.background.default,
+        }}
+      >
         <BirdMap />
       </div>
     </ThemeProvider>
