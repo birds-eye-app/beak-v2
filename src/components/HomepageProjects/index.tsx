@@ -19,8 +19,8 @@ const ProjectList: ProjectItem[] = [
     mediaSrc: '/img/chirped.mp4',
     description: (
       <>
-        Interactive eBird data analysis tool that processes CSV exports
-        and displays analytics through an engaging slide deck interface.
+        Spotify "Wrapped" like tool for birders that uses your eBird data to 
+        show fun statistics and insights about your birding from 2024.
       </>
     ),
     link: '/chirped',
@@ -32,7 +32,7 @@ const ProjectList: ProjectItem[] = [
     description: (
       <>
         Mapbox-powered geographic visualization tool for eBird sightings
-        with interactive mapping and species filtering capabilities.
+        showing you where you added historical lifers and where you can find new ones.
       </>
     ),
     link: '/birds-eye',
@@ -43,8 +43,7 @@ const ProjectList: ProjectItem[] = [
     mediaSrc: '/img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        Personal blog with posts about birding, technology, and data analysis.
-        Built with Docusaurus and powered by MDX.
+        Personal blog with posts about birding, technology, and more
       </>
     ),
     link: '/blog',

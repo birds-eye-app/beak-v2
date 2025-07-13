@@ -1,19 +1,19 @@
-facebook:
-  label: Facebook
-  permalink: /facebook
-  description: Facebook tag description
+development:
+  label: Development
+  permalink: /development
+  description: Posts about software development
 
-hello:
-  label: Hello
-  permalink: /hello
-  description: Hello tag description
+ai:
+  label: AI
+  permalink: /ai
+  description: Posts about AI and machine learning
+
+birding:
+  label: Birding
+  permalink: /birding
+  description: Posts about birding and nature
 
 docusaurus:
   label: Docusaurus
   permalink: /docusaurus
-  description: Docusaurus tag description
-
-hola:
-  label: Hola
-  permalink: /hola
-  description: Hola tag description
+  description: Posts about Docusaurus

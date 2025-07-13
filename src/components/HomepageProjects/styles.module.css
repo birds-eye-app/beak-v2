@@ -3,6 +3,8 @@
   align-items: center;
   padding: 2rem 0;
   width: 100%;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
 }
 
 .projectMedia {
@@ -29,7 +31,7 @@
 }
 
 .projectTitle {
-  color: inherit;
+  color: var(--ifm-font-color-base);
   text-decoration: none;
 }
 

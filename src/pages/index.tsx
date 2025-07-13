@@ -1,54 +1,53 @@
-import type {ReactNode} from 'react';
-import clsx from 'clsx';
-import Link from '@docusaurus/Link';
+import React, {type ReactNode} from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageProjects from '@site/src/components/HomepageProjects';
-import Heading from '@theme/Heading';
+import PhotoGallery from '@site/src/components/PhotoGallery';
+import Stats from '@site/src/components/Stats';
+import TodoList from '@site/src/components/TodoList';
+import CustomFooter from '@site/src/components/CustomFooter';
 
-import styles from './index.module.css';
-
-function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
-  return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <Heading as="h1" className="hero__title">
-          {siteConfig.title}
-        </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/chirped">
-            Chirped
-          </Link>
-          <Link
-            className="button button--secondary button--lg"
-            to="/birds-eye">
-            Birds Eye 
-          </Link>
-          <Link
-            className="button button--secondary button--lg"
-            to="/blog">
-            Blog
-          </Link>
-        </div>
-      </div>
-    </header>
-  );
-}
 
 export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
-      <HomepageHeader />
-      <main>
-        <HomepageProjects />
-      </main>
+      title={siteConfig.title}
+      description={siteConfig.tagline}
+      noFooter={true}
+    >
+      <style>{`
+        .navbar {
+          display: none !important;
+        }
+        .footer {
+          display: none !important;
+        }
+        body {
+          background: var(--ifm-background-color) !important;
+        }
+        .main-wrapper {
+          background: var(--ifm-background-color) !important;
+        }
+      `}</style>
+      
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column',
+        background: 'var(--ifm-background-color)'
+      }}>
+        <PhotoGallery />
+        <main style={{ 
+          flex: 1,
+          background: 'var(--ifm-background-color)'
+        }}>
+          <HomepageProjects />
+          <Stats />
+          <TodoList />
+        </main>
+        <CustomFooter />
+      </div>
     </Layout>
   );
 }

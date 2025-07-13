@@ -1,0 +1,104 @@
+.statsSection {
+  padding: 4rem 0;
+  background: var(--ifm-background-color);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.statCard {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.statCard h3 {
+  margin: 0 0 1rem 0;
+  color: var(--ifm-color-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.liferList,
+.tripList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.liferItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.liferItem:last-child {
+  border-bottom: none;
+}
+
+.speciesName {
+  font-weight: 500;
+  color: var(--ifm-font-color-base);
+}
+
+.liferDate {
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.tripItem {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.tripItem:last-child {
+  border-bottom: none;
+}
+
+.tripLink {
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.tripLink:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.noData {
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+  margin: 0;
+}
+
+[data-theme='dark'] .statCard {
+  background: var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .liferItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
