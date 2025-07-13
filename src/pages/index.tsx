@@ -25,7 +25,7 @@ function HomepageHeader() {
           </Link>
           <Link
             className="button button--secondary button--lg"
-            to="/blog">
+            to="/birds-eye">
             Birds Eye 
           </Link>
           <Link

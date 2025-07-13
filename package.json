@@ -26,10 +26,12 @@
     "clsx": "^2.0.0",
     "date-fns": "^4.1.0",
     "html2canvas": "^1.4.1",
+    "mapbox-gl": "^3.13.0",
     "papaparse": "^5.5.3",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-modal": "^3.16.3",
     "react-spinners": "^0.17.0",
     "swiper": "^11.2.10",
     "use-debounce": "^10.0.5"
