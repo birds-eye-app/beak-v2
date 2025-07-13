@@ -27,4 +27,18 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  /* Chirped dark mode variables */
+  --chirped-bg-color: #1b1b1d;
+  --chirped-text-color: #ffffff;
+  --chirped-slide-bg: #2d2d30;
+  --chirped-border-color: #404040;
+}
+
+/* Chirped light mode variables */
+:root {
+  --chirped-bg-color: #eee;
+  --chirped-text-color: #000;
+  --chirped-slide-bg: #fff;
+  --chirped-border-color: #ddd;
 }

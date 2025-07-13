@@ -13,10 +13,10 @@
   }
   
   body {
-    background: #eee;
+    background: var(--chirped-bg-color);
     font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 14px;
-    color: #000;
+    color: var(--chirped-text-color);
     margin: 0;
     padding: 0;
   }
@@ -29,7 +29,8 @@
   .swiper-slide {
     text-align: center;
     font-size: 18px;
-    background: #fff;
+    background: var(--chirped-slide-bg);
+    color: var(--chirped-text-color);
   
     /* Center slide text vertically */
     display: flex;

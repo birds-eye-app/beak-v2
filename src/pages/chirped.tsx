@@ -11,8 +11,8 @@ export default function ChirpedPage(): ReactNode {
       <div style={{ padding: '20px', minHeight: '100vh' }}>
         <BrowserOnly fallback={<div>Loading Chirped...</div>}>
           {() => {
-            const { Chirped } = require('@site/src/chirped/Chirped');
-            return <Chirped />;
+            const ChirpedThemeWrapper = require('@site/src/components/ChirpedThemeWrapper').default;
+            return <ChirpedThemeWrapper />;
           }}
         </BrowserOnly>
       </div>
