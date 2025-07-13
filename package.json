@@ -17,11 +17,22 @@
   "dependencies": {
     "@docusaurus/core": "3.8.1",
     "@docusaurus/preset-classic": "3.8.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@mdx-js/react": "^3.0.0",
+    "@mui/icons-material": "^7.2.0",
+    "@mui/material": "^7.2.0",
+    "@types/papaparse": "^5.3.16",
     "clsx": "^2.0.0",
+    "date-fns": "^4.1.0",
+    "html2canvas": "^1.4.1",
+    "papaparse": "^5.5.3",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-spinners": "^0.17.0",
+    "swiper": "^11.2.10",
+    "use-debounce": "^10.0.5"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.8.1",
