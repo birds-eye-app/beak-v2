@@ -1,0 +1,272 @@
+#root {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.root-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#map-container {
+  display: flex;
+  flex: 1;
+  /* temporarily set the background color so we can tell where the map container is positioned */
+  background-color: lightgrey;
+}
+
+.topBar {
+  background-color: rgba(45, 57, 77, 0.95);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: monospace;
+  margin: 12px;
+  border-radius: 4px;
+  position: absolute;
+  top: 50;
+  left: 0;
+  z-index: 1;
+}
+.sidebar {
+  background-color: rgba(45, 57, 77, 0.95);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: monospace;
+  margin: 12px;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.loadingBar {
+  position: absolute;
+  bottom: 0;
+  left: 40vw;
+  z-index: 1;
+}
+.cluster-classification {
+  border: #000 2px solid;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: #000;
+}
+.debug-species-codes {
+  padding: 12px;
+  color: #000;
+  font-family: monospace;
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.mapboxgl-popup {
+  z-index: 2;
+}
+
+.mapboxgl-popup-content {
+  border: 1px solid rgba(45, 57, 77, 0.95);
+  background-color: rgb(250, 250, 251);
+  color: rgba(45, 57, 77, 0.95);
+  font:
+    400 12px "Source Sans Pro",
+    "Helvetica Neue",
+    sans-serif;
+  padding: 5px;
+  display: flex;
+}
+
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+  margin-top: 15px;
+}
+
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+  border-bottom-color: #91c949;
+}
+
+.hotspot-popup-container {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.ebird-hotspot-link {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.right-species-bar {
+  background-color: rgba(45, 57, 77, 0.95);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: monospace;
+}
+
+.checkbox-scroll-list {
+  overflow-y: auto;
+}
+
+@media only screen and (min-width: 768px) {
+  .right-species-bar {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    margin: 12px;
+    border-radius: 4px;
+  }
+
+  .checkbox-scroll-list {
+    max-height: 65vh;
+  }
+}
+
+/* if we're on mobile, put the species bar on the bottom */
+@media only screen and (max-width: 768px) {
+  .right-species-bar {
+    bottom: 0;
+    right: 0;
+  }
+
+  .checkbox-scroll-list {
+    max-height: 20vh;
+  }
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+button {
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  color: rgb(60, 66, 87);
+  background-color: rgb(255, 255, 255);
+  box-shadow:
+    rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+    rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+    rgb(0 0 0 / 12%) 0px 1px 1px 0px,
+    rgb(60 66 87 / 16%) 0px 0px 0px 1px,
+    rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+    rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+    rgb(60 66 87 / 8%) 0px 2px 5px 0px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  display: inline-block;
+  transition:
+    background-color 0.24s,
+    box-shadow 0.24s;
+  :hover {
+    box-shadow:
+      rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+      rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+      rgb(0 0 0 / 12%) 0px 1px 1px 0px,
+      rgb(60 66 87 / 16%) 0px 0px 0px 1px,
+      rgb(0 0 0 / 0%) 0px 0px 0px 0px,
+      rgb(60 66 87 / 8%) 0px 3px 9px 0px,
+      rgb(60 66 87 / 8%) 0px 2px 5px 0px;
+  }
+}
+
+button:disabled {
+  cursor: not-allowed;
+  background-color: rgb(240, 240, 240);
+  color: rgb(200, 200, 200);
+}
+
+input[type="checkbox"] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  /* Remove most all native input styles */
+  appearance: none;
+  /* For iOS < 15 */
+  background-color: rgb(250, 250, 251);
+  /* Not removed via appearance */
+  margin: 0;
+
+  font: inherit;
+  color: rgb(250, 250, 251);
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid rgb(120, 120, 133);
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+
+  display: grid;
+  place-content: center;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  transform: scale(0);
+  transform-origin: bottom left;
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em rgba(45, 57, 77, 0.95);
+  /* Windows High Contrast Mode */
+  background-color: rgba(45, 57, 77, 0.95);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+input[type="checkbox"]:focus {
+  outline: max(2px, 0.15em) solid rgb(250, 250, 251);
+  outline-offset: max(2px, 0.15em);
+}
+
+input[type="radio"] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  appearance: none;
+  /* For iOS < 15 to remove gradient background */
+  background-color: #fff;
+  /* Not removed via appearance */
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid rgb(250, 250, 251);
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  transform: translateY(-0.1em);
+}
+
+input[type="radio"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em rgb(120, 120, 133);
+  /* Windows High Contrast Mode */
+  background-color: CanvasText;
+}
+
+input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+.form-control {
+  line-height: 1.1;
+  display: grid;
+  grid-template-columns: 1em auto;
+  gap: 0.5em;
+  margin: 5px 0;
+}
