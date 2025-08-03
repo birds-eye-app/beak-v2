@@ -57,38 +57,38 @@ function Project({
 }: ProjectItem) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Link to={link} className={styles.projectLink}>
-          {mediaType === 'video' ? (
-            <video
-              autoPlay
-              className={styles.projectMedia}
-              muted={true}
-              loop
-              playsInline
-              preload="metadata"
-              controls={false}
-            >
-              <source src={mediaSrc} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ) : (
-            <img
-              className={styles.projectMedia}
-              src={mediaSrc}
-              alt={`${title} preview`}
-            />
-          )}
-        </Link>
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">
-          <Link to={link} className={styles.projectTitle}>
-            {title}
-          </Link>
-        </Heading>
-        <p>{description}</p>
-      </div>
+      <Link to={link} className={styles.projectCardLink}>
+        <div className={styles.projectCard}>
+          <div className="text--center">
+            {mediaType === 'video' ? (
+              <video
+                autoPlay
+                className={styles.projectMedia}
+                muted={true}
+                loop
+                playsInline
+                preload="metadata"
+                controls={false}
+              >
+                <source src={mediaSrc} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <img
+                className={styles.projectMedia}
+                src={mediaSrc}
+                alt={`${title} preview`}
+              />
+            )}
+          </div>
+          <div className="text--center padding-horiz--md">
+            <Heading as="h3" className={styles.projectTitle}>
+              {title}
+            </Heading>
+            <p>{description}</p>
+          </div>
+        </div>
+      </Link>
     </div>
   );
 }

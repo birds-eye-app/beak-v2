@@ -13,29 +13,39 @@
   object-fit: cover;
   border-radius: 8px;
   transition: transform 0.2s ease-in-out;
-  cursor: pointer;
 }
 
-.projectMedia:hover {
-  transform: scale(1.05);
-}
-
-.projectLink {
+.projectCardLink {
   text-decoration: none;
+  color: inherit;
   display: block;
-  position: relative;
 }
 
-.projectLink:hover {
+.projectCardLink:hover {
   text-decoration: none;
+  color: inherit;
 }
 
 .projectTitle {
   color: var(--ifm-font-color-base);
-  text-decoration: none;
+  margin: 0;
 }
 
-.projectTitle:hover {
-  color: var(--ifm-color-primary);
-  text-decoration: none;
+.projectCard {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: 100%;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+}
+
+.projectCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.projectCard:hover .projectMedia {
+  transform: scale(1.05);
 }
