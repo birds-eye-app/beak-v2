@@ -4,7 +4,7 @@ const viteBaseURL = 'http://localhost:8000/';
 
 // hard code route to render backend... probably just wanna move this over to vercel or
 // fix render site hosting at some point
-const isDevelopment = false; // Set to true for local development
+const isDevelopment = true; // Set to true for local development
 const apiBaseUrl = isDevelopment ? viteBaseURL : 'https://cloaca.onrender.com/';
 
 export type Lifer = {
@@ -38,6 +38,14 @@ export type LocationToLifers = {
 
 export type LocationByLiferResponse = {
   [key: string]: LocationToLifers;
+};
+
+export type HomeLocationInfo = {
+  location_id: string;
+  location_name: string;
+  latitude: number;
+  longitude: number;
+  checklist_count: number;
 };
 
 export function lifersToGeoJson(response: LocationByLiferResponse) {
@@ -164,7 +172,7 @@ export const uploadCsv = async (file: File) => {
 
   const data = await response.json();
   console.debug('Upload response:', data);
-  return data as { key: string };
+  return data as { key: string; home_location?: HomeLocationInfo };
 };
 
 export const checkHealthy = async () => {

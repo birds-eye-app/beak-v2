@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, {
   useCallback,
   useEffect,
@@ -23,6 +24,7 @@ import {
   LocationByLiferResponse,
   nearbyObservationsToGeoJson,
   Species,
+  HomeLocationInfo,
 } from './api';
 import {
   allLayerIdRoots,
@@ -80,8 +82,8 @@ function filterResponseToSpecies(
 export type SpeciesFilter = 'all' | 'none' | string[];
 
 export function BirdMap() {
-  const mapRef = useRef<Map>();
-  const mapContainerRef = useRef<HTMLElement>();
+  const mapRef = useRef<Map | undefined>(undefined);
+  const mapContainerRef = useRef<HTMLElement>(null);
 
   const [center, setCenter] = useState(INITIAL_CENTER);
   const [zoom, setZoom] = useState(INITIAL_ZOOM);
@@ -98,6 +100,9 @@ export function BirdMap() {
   const [visibleSpecies, setVisibleSpecies] = useState<Lifer[]>([]);
   // debouncing this since it seems to flicker a lot due to rendering?
   const [debouncedVisibleSpecies] = useDebounce(visibleSpecies, 50);
+  const [homeLocation, setHomeLocation] = useState<HomeLocationInfo | null>(
+    null
+  );
 
   useEffect(() => {
     if (fileId === '') return;
@@ -105,28 +110,38 @@ export function BirdMap() {
     // Set Mapbox token - in Docusaurus, we'll use a direct assignment for now
     mapboxgl.accessToken =
       'pk.eyJ1IjoiZGF2aWR0bWVhZG93cyIsImEiOiJjbTF0djNteTgwNzYzMnFvbGJrdjU3YzMzIn0.3sZJbLI9SKeK4Zs2ZFsuaA';
+
+    if (!homeLocation) {
+      console.warn('No home location set, using default initial center');
+    } else {
+      console.debug(
+        `Using home location: ${homeLocation.location_name} (${homeLocation.checklist_count} checklists)`
+      );
+    }
+    const initialCenter = homeLocation
+      ? { lng: homeLocation.longitude, lat: homeLocation.latitude }
+      : INITIAL_CENTER;
+
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current!,
-      center: INITIAL_CENTER,
+      center: initialCenter,
       zoom: INITIAL_ZOOM,
     });
 
     mapRef.current!.on('load', () => {
-      fetchLifers(INITIAL_CENTER.lat, INITIAL_CENTER.lng, fileId).then(
-        (data) => {
-          const lifersFeatures = lifersToGeoJson(data);
-          addSourceAndLayer(
-            mapRef.current!,
-            RootLayerIDs.HistoricalLifers,
-            lifersFeatures,
-            activeLayerId === RootLayerIDs.HistoricalLifers ? 'visible' : 'none'
-          );
-        }
-      );
+      fetchLifers(initialCenter.lat, initialCenter.lng, fileId).then((data) => {
+        const lifersFeatures = lifersToGeoJson(data);
+        addSourceAndLayer(
+          mapRef.current!,
+          RootLayerIDs.HistoricalLifers,
+          lifersFeatures,
+          activeLayerId === RootLayerIDs.HistoricalLifers ? 'visible' : 'none'
+        );
+      });
 
       fetchRegionalAndNearbyLifers(
-        INITIAL_CENTER.lat,
-        INITIAL_CENTER.lng,
+        initialCenter.lat,
+        initialCenter.lng,
         fileId
       ).then((data) => {
         if (!data) return;
@@ -157,7 +172,7 @@ export function BirdMap() {
       mapRef.current!.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fileId]);
+  }, [fileId, homeLocation]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -343,6 +358,52 @@ export function BirdMap() {
     setActiveLayerId(e.target.id as RootLayerIDs);
   }, []);
 
+  const getCurrentLocation = useCallback(() => {
+    if (navigator.geolocation && mapRef.current) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          mapRef.current!.flyTo({
+            center: [longitude, latitude],
+            zoom: 12,
+            essential: true,
+          });
+        },
+        (error) => {
+          console.error('Error getting current location:', error);
+          // eslint-disable-next-line no-undef
+          alert(
+            'Unable to get your current location. Please make sure location permissions are enabled.'
+          );
+        }
+      );
+    } else {
+      // eslint-disable-next-line no-undef
+      alert('Geolocation is not supported by this browser.');
+    }
+  }, []);
+
+  const flyToHomeLocation = useCallback(() => {
+    if (homeLocation && mapRef.current) {
+      mapRef.current.flyTo({
+        center: [homeLocation.longitude, homeLocation.latitude],
+        zoom: 12,
+        essential: true,
+      });
+    }
+  }, [homeLocation]);
+
+  const handleUploadComplete = useCallback(
+    (fileId: string, homeLocationData?: HomeLocationInfo) => {
+      setFileId(fileId);
+      setShowUploadModal(false);
+      if (homeLocationData) {
+        setHomeLocation(homeLocationData);
+      }
+    },
+    []
+  );
+
   return (
     <div className="root-container">
       <WaitAndUploadModal
@@ -350,10 +411,7 @@ export function BirdMap() {
         onClose={() => {
           setShowUploadModal(false);
         }}
-        onUploadComplete={(fileId: string) => {
-          setFileId(fileId);
-          setShowUploadModal(false);
-        }}
+        onUploadComplete={handleUploadComplete}
         canClose={fileId !== ''}
       />
       <div className="topBar">
@@ -370,6 +428,17 @@ export function BirdMap() {
           onClick={handleClick}
         />
         <button onClick={() => setShowUploadModal(true)}>Change CSV</button>
+        {homeLocation && (
+          <button
+            onClick={flyToHomeLocation}
+            title={`Home location: ${homeLocation.location_name} (${homeLocation.checklist_count} checklists) - Your home location is calculated as the hotspot where you've submitted the most checklists`}
+          >
+            🏠 Home
+          </button>
+        )}
+        <button onClick={getCurrentLocation} title="Go to current location">
+          📍 Current Location
+        </button>
       </div>
       <div
         id="map-container"
