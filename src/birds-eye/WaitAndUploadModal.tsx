@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactModal from 'react-modal';
-import { checkHealthy, uploadCsv } from './api';
+import { checkHealthy, uploadCsv, HomeLocationInfo } from './api';
 import { BarLoader } from 'react-spinners';
 
 export const WaitAndUploadModal = ({
@@ -11,7 +11,7 @@ export const WaitAndUploadModal = ({
 }: {
   showModal: boolean;
   onClose: () => void;
-  onUploadComplete: (key: string) => void;
+  onUploadComplete: (key: string, homeLocation?: HomeLocationInfo) => void;
   canClose: boolean;
 }) => {
   const [healthCheck, setHealthCheck] = useState<boolean | null>(null);
@@ -19,9 +19,9 @@ export const WaitAndUploadModal = ({
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setUploading(true);
-      const { key } = await uploadCsv(e.target.files[0]);
+      const { key, home_location } = await uploadCsv(e.target.files[0]);
       setUploading(false);
-      onUploadComplete(key);
+      onUploadComplete(key, home_location);
     }
   };
 
