@@ -9,6 +9,8 @@ Ever since I started birding, I’ve had an ever growing list of questions. Ques
 
 <!-- truncate -->
 
+## The Journey
+
 I love having this mounting list of questions as it’s one of the key drivers of a “mid life renaissance” of sorts in my curiosity. I’d love to write about that spark even more soon, but for now I’d like to talk about one of the avenues I’ve turned to both quench and deepen this curiosity. Soon after getting into birding, I started getting quite curious about the underlying data that birding both depends upon and also adds to. Birding, more so than any other hobby I’ve encountered, focuses on both the reading and contribution of data. Birders study weather forecasts, migration timelines and previous year’s records to answer questions like: “when are the first migrants of the year going to show up?”, “are the winds out of the South this weekend?” (a good sign here in New York in the spring that tropical migrants will be coming in, born along by the favorable winds) or “I just saw an owl species in Brooklyn. Which species might be most likely that matches the brief glimpse I got?” Just as interesting, and particularly compelling to many of us, is the fact that by recording our checklists, taking photos and recording audio that we’re also adding to the ever growing data set of birding observations (most commonly here in the US via Cornell’s eBird).
 
 As I got started into birding I was participating in both of these, but I was also starting to get curious about what the underlying data might look like. Soon into my birding journey I found out that eBird had an API you could use to access this data. I’ve already made more than a few fun projects off of that, but one of the limitations I ran into there is that an API like this is best suited for answering questions served by targeted, smaller data sets. It was great to see a list of the most recent species in an area or to get more information on hotspots around me. But, for questions that stretched across larger areas or across long time periods, it would take quite a long time (and more than likely hitting some rate limits) and not be that efficient to use an API for this. APIs like this are great at serving small-to-medium amounts of data very quickly based on specific filters or conditions. They’re not so great at providing deeper or richer datasets spanning thousands or millions of entries. And while my questions weren’t of the “millions” (yet), I was running into the limitations of the API when it came to many of my questions. Thankfully, eBird offers another route to accessing its data, via pre-packaged downloads of large swaths of data. This wouldn’t have the immediate, quick accessibility of the API, but would more than make up for it in its comprehensive and rich dataset.
@@ -27,7 +29,7 @@ URN:CornellLabOfOrnithology:EBIRD:OBS2933256785	2025-03-05 07:43:54.669907	21333
 URN:CornellLabOfOrnithology:EBIRD:OBS3009418896	2025-03-30 17:15:29.683739	21333	species	avibase-69544B59	American Crow	Corvus brachyrhynchos				3					United States	US	Alabama	US-AL	Tuscaloosa	US-AL-125		27			River Bend Turf	L5039140	H	33.1335213	-87.6534175	2025-03-30	15:11:00	obsr451424		S221934152	Traveling	Traveling	P22			60	13.532		2	1	G14355008	0	1	0
 ```
 
-That’s nice for general readability and it also makes working with this across a broad audience and technical background quite feasible. The downside here is that, in this form, this file is prohibitively large and also quite inefficient to use. I’m not going to go too deep into the technical reasons why, but suffice it to say that, by default, most any analysis of this file is going to require reading each and every line: all `LINE COUNT` of them for the full file. There are lots of different ways we could make this easier! Possibly the most commonly used method would be to throw it into a general purpose database like Postgres. This would certainly speed things up and reduce the size of the file. However, a database like this isn’t really suited for what I want to do here. I want to be able to ask near arbitrary types of questions without spending time before hand defining things like indexes which are basically telling the database which axes I want to analyze data along. I could define an index for the date of the observation and then looking only for observations on a certain date would be blazingly fast! But this comes with 2 downsides: first, I’d need to wait a lengthy amount of time for the database to create that index (it needs to sort through all the data to see where it lives on that axis) and, moreover, I’m interested in so many more axes than that!
+That’s nice for general readability and it also makes working with this across a broad audience and technical background quite feasible. The downside here is that, in this form, this file is prohibitively large and also quite inefficient to use. I’m not going to go too deep into the technical reasons why, but suffice it to say that, by default, most any analysis of this file is going to require reading each and every line: all 1,809,934,873 of them for the full file. There are lots of different ways we could make this easier! Possibly the most commonly used method would be to throw it into a general purpose database like Postgres. This would certainly speed things up and reduce the size of the file. However, a database like this isn’t really suited for what I want to do here. I want to be able to ask near arbitrary types of questions without spending time before hand defining things like indexes which are basically telling the database which axes I want to analyze data along. I could define an index for the date of the observation and then looking only for observations on a certain date would be blazingly fast! But this comes with 2 downsides: first, I’d need to wait a lengthy amount of time for the database to create that index (it needs to sort through all the data to see where it lives on that axis) and, moreover, I’m interested in so many more axes than that!
 
 The thing I really wanted was a columnar database! Not only would a columnar index not really require indexes, but it was perfectly suited for this kind of “Ask me anything” style approach. The thing that I didn’t know was that columnar databases can be used in any variety of uses cases: from the large corporate behemoths to me poking around to see where the best place to see an Eastern Phoebe in March was. The exact reason why columnar databases are so good is honestly still beyond me. But I do know one of their biggest advantages is how they treat the data they store. See, in a traditional database, all elements in one of the rows in that TSV are going to be stored together. That’s quite useful when you’re trying to do something like look at one specific observation or a few to see all the relevant details about it: the species, the date, the observer, the location etc. Columnar databases flip this idea on its head though and treat everything by column and not by row. In an analytics use case, I don’t care as much about all the details of one observation; instead, I’m far more interested in a few details about a large list of observations. By storing data by column, they make it far more efficient to analyze along these. So, instead of thinking of these entries as one row (“I saw an Eastern Phoebe, on May 1st at Prospect Park on this checklist”), it flips this to instead sort things by the species, or date, or location. (How do they do this so quickly? I still have no idea… I believe it has something to do with the fact that they’re storing all this data along an index by default?)
 
@@ -89,6 +91,77 @@ Speaking of which, boy is there more work to do here. I’ve loved being able to
 
 Here are some other outstanding tasks I’d love to look into: - All the questions around performance here. Could I use ordering for better indexing? https://duckdb.org/docs/stable/guides/performance/indexing#the-effect-of-ordering-on-zonemaps - Why is the first eBird checklist from Thailand on 1481-03-24 - Is there a form of Parquet compression that would reduce the size even more? - I should clean up data types more (move from integer to binary). This will reduce size more! Probably shifting things to enums could be massive too? - Convert column names to underscore to make them easier to auto_complete. - Figure out how to get x/y coords into data to perform distance analysis more quickly!
 
+:::info
+
 One post-writing note that I figured out a few days later: at a few points I mention that I needed to change the file format or data types to take advantage of DuckDB’s compression. This isn’t necessarily true. I found out subsequently that DuckDB is already quite smart at inferring the right data type for a column all on its own. So there’s less tuning needed at the onset (great!), but it also means there aren’t as many quick wins as I imagined.
+
+:::
+
+## Step-by-step guide on how to load the EBD into DuckDB
+
+### Ingredients
+
+- `pigz` or another tool for decompressing the EBD into a TSV. If you're not using a huge data set, you might can just use your native OS's decompression tool.
+- `duckdb`: [download instructions here](https://duckdb.org/docs/installation/?version=stable&environment=cli&platform=macos&download_method=direct)
+- the EBD! [Sign up and request data here](https://ebird.org/data/download?_gl=1*1l247ec*_gcl_au*MTgxMjQ2NTMyNy4xNzUyMDkzNzAy*_ga*MTcwOTAzNDM4Ny4xNzQxOTgzOTIx*_ga_QR4NVXZ8BM*czE3NTUzNzgxNzEkbzQwJGcxJHQxNzU1Mzc4MTc1JGo1NiRsMCRoMA..)
+
+### Steps
+
+#### Step 1: Download your Data
+
+This can take a few minutes or a few hours. Note, Cornell's download speeds seem to be capped at around 8-10MB/S so plan accordingly!
+
+#### Step 2: Decompress your data
+
+You can do this whatever tool you like. I liked using `pigz` for performance. Here's a handy snippet I used to use `pigz` with progress tracking:
+
+```bash
+pv ebd_relJan-2025.tsv.gz | pigz -d > ebd_relJan-2025.tsv
+```
+
+`pv` is used to monitor the progress of data coming through the pipe.
+
+At the end of this step you should have the "raw" TSV, looking something like this:
+
+```tsv
+URN:CornellLabOfOrnithology:EBIRD:OBS2919749158	2025-03-01 23:25:39.781016	21333	species	avibase-69544B59	American Crow	Corvus brachyrhynchos				2					United States	US	Alabama	US-AL	Tuscaloosa	US-AL-125		27			Lakefield Drive, Tuscaloosa	L10510092	H	33.1559565	-87.6336990	2025-03-01	06:21:00	obsr1073731		S215984764	Traveling	Traveling	P22			24	1.092		2	1	G14142220	0	1	0
+URN:CornellLabOfOrnithology:EBIRD:OBS2933256785	2025-03-05 07:43:54.669907	21333	species	avibase-69544B59	American Crow	Corvus brachyrhynchos				1					United States	US	Alabama	US-AL	Tuscaloosa	US-AL-125		27			23rd Street Area, Tuscaloosa	L12228602	P	33.1882745	-87.5396724	2025-03-05	06:27:00	obsr451424		S216708215	Stationary	Stationary	P21			15			1	1		0	1	0
+URN:CornellLabOfOrnithology:EBIRD:OBS3009418896	2025-03-30 17:15:29.683739	21333	species	avibase-69544B59	American Crow	Corvus brachyrhynchos				3					United States	US	Alabama	US-AL	Tuscaloosa	US-AL-125		27			River Bend Turf	L5039140	H	33.1335213	-87.6534175	2025-03-30	15:11:00	obsr451424		S221934152	Traveling	Traveling	P22			60	13.532		2	1	G14355008	0	1	0
+```
+
+#### Step 3: Load the data into DuckDB
+
+There's a wide variety of ways to do this. I'm including the simplest version I found here:
+
+```sql
+create TABLE ebd.full AS
+SELECT
+    *
+FROM
+    read_csv(
+        '/path/to/decompressed/ebd.tsv',
+        store_rejects = true,
+        quote = ''
+    );
+```
+
+The three things I'd call out there are:
+
+1. We're using `read_csv` to well, read the TSV. DuckDB is smart enough to detect the delimiter.
+2. We're storing the rejected lines. It's always good to review these to make sure everything went alright!
+3. The last, most important part is `quote = ''`. If you don't do this most if not all lines will get rejected for some reason...
+
+#### Step 4: Write a query against your data!
+
+The most fun part. Time to learn from the data!
+
+Here's a query to see the first observation in the EBD:
+
+```sql
+select *
+from ebd.full
+order by "OBSERVATION DATE"
+limit 1
+```
 
 ---
