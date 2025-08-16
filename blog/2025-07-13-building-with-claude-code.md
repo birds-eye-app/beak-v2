@@ -2,7 +2,7 @@
 slug: building-with-claude-code
 title: Building a Personal Site with Claude Code
 authors: [dtmeadows]
-tags: [development, ai, docusaurus]
+tags: [development, ai, claude-code]
 ---
 
 # Building a Personal Site with Claude Code
