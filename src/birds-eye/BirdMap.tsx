@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
 import mapboxgl, { GeoJSONSource, Map, Marker } from 'mapbox-gl';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './App.css';
@@ -18,13 +12,15 @@ import { SpeciesSelectionList } from './SpeciesSelectionList';
 import { WaitAndUploadModal } from './WaitAndUploadModal';
 import {
   fetchLifers,
+  fetchPopularHotspots,
   fetchRegionalAndNearbyLifers,
+  HomeLocationInfo,
+  hotspotsToGeoJson,
   Lifer,
   lifersToGeoJson,
   LocationByLiferResponse,
   nearbyObservationsToGeoJson,
   Species,
-  HomeLocationInfo,
 } from './api';
 import {
   allLayerIdRoots,
@@ -35,7 +31,7 @@ import {
 } from './constants';
 import { addSourceAndLayer } from './map';
 
-const MODE = 'production'; // 'development' or 'production' - hardcoded for Docusaurus
+const MODE: 'development' | 'production' = 'production'; // 'development' or 'production' - hardcoded for Docusaurus
 
 const LayerToggle = ({
   id,
@@ -53,6 +49,79 @@ const LayerToggle = ({
       <input type="radio" id={id} checked={checked} onChange={onClick} />
       {label}
     </label>
+  );
+};
+
+const MonthSelector = ({
+  selectedMonth,
+  onMonthChange,
+}: {
+  selectedMonth: number;
+  onMonthChange: (month: number) => void;
+}) => {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        gap: '8px',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        padding: '8px',
+        borderRadius: '4px',
+        border: '1px solid #ccc',
+      }}
+    >
+      <span
+        style={{ fontSize: '12px', fontWeight: 'bold', marginRight: '8px' }}
+      >
+        Month:
+      </span>
+      {months.map((month, index) => {
+        const monthNumber = index + 1;
+        return (
+          <label
+            key={monthNumber}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              fontSize: '11px',
+              padding: '4px 6px',
+              borderRadius: '3px',
+              backgroundColor:
+                selectedMonth === monthNumber ? '#4CAF50' : 'transparent',
+              color: selectedMonth === monthNumber ? 'white' : 'black',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <input
+              type="radio"
+              name="month"
+              value={monthNumber}
+              checked={selectedMonth === monthNumber}
+              onChange={() => onMonthChange(monthNumber)}
+              style={{ display: 'none' }}
+            />
+            {month}
+          </label>
+        );
+      })}
+    </div>
   );
 };
 
@@ -88,6 +157,7 @@ export function BirdMap() {
   const [center, setCenter] = useState(INITIAL_CENTER);
   const [zoom, setZoom] = useState(INITIAL_ZOOM);
   const [debouncedCenter] = useDebounce(center, 500);
+  const [debouncedZoom] = useDebounce(zoom, 500);
 
   const [activeLayerId, setActiveLayerId] = useState(
     RootLayerIDs.HistoricalLifers
@@ -103,6 +173,7 @@ export function BirdMap() {
   const [homeLocation, setHomeLocation] = useState<HomeLocationInfo | null>(
     null
   );
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
 
   useEffect(() => {
     if (fileId === '') return;
@@ -155,6 +226,27 @@ export function BirdMap() {
         );
       });
 
+      // Calculate dynamic radius based on zoom level and fetch popular hotspots
+      const currentZoom = mapRef.current!.getZoom();
+      const radiusKm = Math.max(
+        10,
+        Math.min(100, 200 / Math.pow(2, currentZoom - 8))
+      );
+      fetchPopularHotspots(
+        initialCenter.lat,
+        initialCenter.lng,
+        radiusKm,
+        selectedMonth
+      ).then((data) => {
+        if (!data) return;
+        addSourceAndLayer(
+          mapRef.current!,
+          RootLayerIDs.PopularHotspots,
+          hotspotsToGeoJson(data),
+          activeLayerId === RootLayerIDs.PopularHotspots ? 'visible' : 'none'
+        );
+      });
+
       setMapLoaded(true);
     });
 
@@ -181,6 +273,9 @@ export function BirdMap() {
     const markersOnScreen: { [key: string]: { [key: string]: Marker } } = {};
 
     const updateVisibleSpecies = () => {
+      // Only update visible species for NewLifers layer
+      if (activeLayerId !== RootLayerIDs.NewLifers) return;
+
       const source = mapRef.current?.getSource(
         RootLayerIDs.NewLifers
       ) as GeoJSONSource;
@@ -250,8 +345,7 @@ export function BirdMap() {
       const newMarkers: { [key: string]: Marker } = {};
       const features = mapRef.current!.querySourceFeatures(activeLayerId);
 
-      // for every cluster on the screen, create an HTML marker for it (if we didn't yet),
-      // and add it to the map if it's not there already
+      // Handle clustered lifers markers
       for (const feature of features) {
         // @ts-expect-error untyped feature
         const coords = feature.geometry.coordinates;
@@ -270,12 +364,16 @@ export function BirdMap() {
         }
         newMarkers[id] = marker;
 
-        if (!markersOnScreen[id]) marker.addTo(mapRef.current!);
+        if (!markersOnScreen[activeLayerId]?.[id])
+          marker.addTo(mapRef.current!);
       }
+
       // for every marker we've added previously, remove those that are no longer visible
-      for (const id in markersOnScreen[activeLayerId]) {
-        if (!newMarkers[id]) {
-          markersOnScreen[activeLayerId][id].remove();
+      if (markersOnScreen[activeLayerId]) {
+        for (const id in markersOnScreen[activeLayerId]) {
+          if (!newMarkers[id]) {
+            markersOnScreen[activeLayerId][id].remove();
+          }
         }
       }
 
@@ -354,6 +452,49 @@ export function BirdMap() {
     speciesFilter,
   ]);
 
+  // Effect to update hotspots when map moves or zooms
+  useEffect(() => {
+    if (!mapLoaded) return;
+    if (activeLayerId !== RootLayerIDs.PopularHotspots) return;
+    if (!fileId) return;
+
+    setShowLoading(true);
+    // Calculate dynamic radius based on debounced zoom level
+    const radiusKm = Math.max(
+      10,
+      Math.min(100, 200 / Math.pow(2, debouncedZoom - 8))
+    );
+
+    fetchPopularHotspots(
+      debouncedCenter.lat,
+      debouncedCenter.lng,
+      radiusKm,
+      selectedMonth
+    )
+      .then((data) => {
+        if (!data) return;
+        const hotspotsSource = mapRef.current!.getSource(
+          RootLayerIDs.PopularHotspots
+        ) as GeoJSONSource | undefined;
+        if (!hotspotsSource) return;
+        hotspotsSource.setData({
+          type: 'FeatureCollection',
+          features: hotspotsToGeoJson(data),
+        });
+      })
+      .finally(() => {
+        setShowLoading(false);
+      });
+  }, [
+    debouncedCenter.lat,
+    debouncedCenter.lng,
+    debouncedZoom,
+    mapLoaded,
+    fileId,
+    activeLayerId,
+    selectedMonth,
+  ]);
+
   const handleClick = useCallback((e: { target: { id: string } }) => {
     setActiveLayerId(e.target.id as RootLayerIDs);
   }, []);
@@ -427,6 +568,18 @@ export function BirdMap() {
           checked={activeLayerId === RootLayerIDs.NewLifers}
           onClick={handleClick}
         />
+        <LayerToggle
+          id={RootLayerIDs.PopularHotspots}
+          label="Show popular hotspots"
+          checked={activeLayerId === RootLayerIDs.PopularHotspots}
+          onClick={handleClick}
+        />
+        {activeLayerId === RootLayerIDs.PopularHotspots && (
+          <MonthSelector
+            selectedMonth={selectedMonth}
+            onMonthChange={setSelectedMonth}
+          />
+        )}
         <button onClick={() => setShowUploadModal(true)}>Change CSV</button>
         {homeLocation && (
           <button
