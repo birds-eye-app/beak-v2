@@ -124,13 +124,11 @@ export function addSourceAndLayer(
               ['linear'],
               ['get', 'checklist_count'],
               0,
-              '#8BC34A',
-              3,
-              '#4CAF50',
-              5,
-              '#2E7D32',
-              10,
-              '#1B5E20',
+              '#3F51B5', // Blue for low activity
+              200,
+              '#FF9800', // Orange for medium activity
+              1000,
+              '#F44336', // Red for high activity
             ]
           : [
               'interpolate',
@@ -149,12 +147,10 @@ export function addSourceAndLayer(
               ['get', 'checklist_count'],
               0,
               8,
-              3,
-              10,
-              5,
+              200,
               12,
-              10,
-              16,
+              1000,
+              18,
             ]
           : ['interpolate', ['linear'], ['get', 'liferCount'], 10, 10, 250, 40],
       'circle-opacity': sourceId === RootLayerIDs.PopularHotspots ? 0.8 : 1,

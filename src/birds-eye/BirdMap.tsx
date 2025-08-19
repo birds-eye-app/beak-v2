@@ -20,6 +20,7 @@ import {
   lifersToGeoJson,
   LocationByLiferResponse,
   nearbyObservationsToGeoJson,
+  PopularHotspot,
   Species,
 } from './api';
 import {
@@ -86,11 +87,6 @@ const MonthSelector = ({
         border: '1px solid #ccc',
       }}
     >
-      <span
-        style={{ fontSize: '12px', fontWeight: 'bold', marginRight: '8px' }}
-      >
-        Month:
-      </span>
       {months.map((month, index) => {
         const monthNumber = index + 1;
         return (
@@ -121,6 +117,58 @@ const MonthSelector = ({
           </label>
         );
       })}
+    </div>
+  );
+};
+
+const HotspotsList = ({
+  visibleHotspots,
+}: {
+  visibleHotspots: PopularHotspot[];
+}) => {
+  const topHotspots = visibleHotspots
+    .sort((a, b) => b.avg_weekly_checklists - a.avg_weekly_checklists)
+    .slice(0, 20);
+
+  if (topHotspots.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="right-species-bar">
+      <h3>Top Hotspots ({topHotspots.length})</h3>
+      <div className="checkbox-scroll-list">
+        {topHotspots.map((hotspot, index) => (
+          <div
+            key={hotspot.locality_id}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 10,
+              padding: '4px 0',
+              borderBottom: '1px solid rgba(255,255,255,0.1)',
+            }}
+          >
+            <span
+              style={{ fontSize: '12px', fontWeight: 'bold', minWidth: '25px' }}
+            >
+              #{index + 1}
+            </span>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <div
+                style={{ fontSize: '13px', fontWeight: 'bold' }}
+                title={hotspot.locality_name}
+              >
+                {hotspot.locality_name}
+              </div>
+              <div style={{ fontSize: '11px', opacity: 0.8 }}>
+                {Math.round(hotspot.avg_weekly_checklists)} weekly checklists
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -174,6 +222,8 @@ export function BirdMap() {
     null
   );
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [visibleHotspots, setVisibleHotspots] = useState<PopularHotspot[]>([]);
+  const [debouncedVisibleHotspots] = useDebounce(visibleHotspots, 50);
 
   useEffect(() => {
     if (fileId === '') return;
@@ -330,6 +380,45 @@ export function BirdMap() {
       });
     };
 
+    const updateVisibleHotspots = () => {
+      // Only update visible hotspots for PopularHotspots layer
+      if (activeLayerId !== RootLayerIDs.PopularHotspots) return;
+
+      const source = mapRef.current?.getSource(
+        RootLayerIDs.PopularHotspots
+      ) as GeoJSONSource;
+      if (!source) return;
+
+      const renderedFeatures =
+        mapRef.current!.querySourceFeatures(activeLayerId);
+
+      const hotspotMap: { [key: string]: PopularHotspot } = {};
+      renderedFeatures?.forEach((feature) => {
+        if (!feature.properties) return;
+
+        const coords = (feature.geometry as any)?.coordinates;
+        const locationId = feature.properties.location_id || '';
+
+        // Skip if we already have this hotspot (deduplicate)
+        if (hotspotMap[locationId]) return;
+
+        const hotspot: PopularHotspot = {
+          locality_id: locationId,
+          locality_name: feature.properties.title || 'Unknown Hotspot',
+          latitude: coords?.[1] || 0,
+          longitude: coords?.[0] || 0,
+          avg_weekly_checklists:
+            feature.properties.avg_weekly_checklists ||
+            feature.properties.checklist_count ||
+            0,
+        };
+
+        hotspotMap[locationId] = hotspot;
+      });
+
+      setVisibleHotspots(Object.values(hotspotMap));
+    };
+
     const updateMarkers = () => {
       if (activeLayerId !== RootLayerIDs.NewLifers) return;
       // reset markers on screen for other layers
@@ -384,6 +473,7 @@ export function BirdMap() {
     mapRef.current!.on('render', () => {
       if (!mapRef.current!.isSourceLoaded(activeLayerId)) return;
       updateVisibleSpecies();
+      updateVisibleHotspots();
       updateMarkers();
     });
   }, [activeLayerId]);
@@ -613,6 +703,9 @@ export function BirdMap() {
             setSpeciesFilter(checkedCodes);
           }}
         />
+      )}
+      {activeLayerId === RootLayerIDs.PopularHotspots && (
+        <HotspotsList visibleHotspots={debouncedVisibleHotspots} />
       )}
     </div>
   );
