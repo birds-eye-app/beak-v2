@@ -4,7 +4,7 @@ const viteBaseURL = 'http://localhost:8000/';
 
 // hard code route to render backend... probably just wanna move this over to vercel or
 // fix render site hosting at some point
-const isDevelopment = true; // Set to true for local development
+const isDevelopment = false; // Set to true for local development
 const apiBaseUrl = isDevelopment ? viteBaseURL : 'https://cloaca.onrender.com/';
 
 export type Lifer = {
