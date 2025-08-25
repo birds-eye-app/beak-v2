@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import { checkHealthy, uploadCsv, HomeLocationInfo } from './api';
 import { BarLoader } from 'react-spinners';
@@ -16,6 +16,14 @@ export const WaitAndUploadModal = ({
 }) => {
   const [healthCheck, setHealthCheck] = useState<boolean | null>(null);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    // Only check health when modal is actually shown
+    if (showModal && healthCheck === null) {
+      checkHealthy().then(setHealthCheck);
+    }
+  }, [showModal, healthCheck]);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setUploading(true);
@@ -24,8 +32,6 @@ export const WaitAndUploadModal = ({
       onUploadComplete(key, home_location);
     }
   };
-
-  checkHealthy().then(setHealthCheck);
 
   return (
     <ReactModal

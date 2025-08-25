@@ -7,9 +7,14 @@ const INITIAL_ZOOM = 10.12;
 enum RootLayerIDs {
   HistoricalLifers = 'historical_lifers',
   NewLifers = 'new_lifers',
+  PopularHotspots = 'popular_hotspots',
 }
 
-const allLayerIdRoots = [RootLayerIDs.HistoricalLifers, RootLayerIDs.NewLifers];
+const allLayerIdRoots = [
+  RootLayerIDs.HistoricalLifers,
+  RootLayerIDs.NewLifers,
+  RootLayerIDs.PopularHotspots,
+];
 
 enum SubLayerIDs {
   ClusterCircles = 'cluster_circles',

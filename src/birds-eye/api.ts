@@ -4,7 +4,7 @@ const viteBaseURL = 'http://localhost:8000/';
 
 // hard code route to render backend... probably just wanna move this over to vercel or
 // fix render site hosting at some point
-const isDevelopment = false; // Set to true for local development
+const isDevelopment = true; // Set to true for local development
 const apiBaseUrl = isDevelopment ? viteBaseURL : 'https://cloaca.onrender.com/';
 
 export type Lifer = {
@@ -46,6 +46,14 @@ export type HomeLocationInfo = {
   latitude: number;
   longitude: number;
   checklist_count: number;
+};
+
+export type PopularHotspot = {
+  locality_id: string;
+  locality_name: string;
+  latitude: number;
+  longitude: number;
+  avg_weekly_checklists: number;
 };
 
 export function lifersToGeoJson(response: LocationByLiferResponse) {
@@ -157,6 +165,24 @@ export async function fetchRegionalAndNearbyLifers(
   });
 
   return nearbyObservations;
+}
+
+export function hotspotsToGeoJson(hotspots: PopularHotspot[]) {
+  return hotspots.map((hotspot) => {
+    return {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [hotspot.longitude, hotspot.latitude],
+      },
+      properties: {
+        title: hotspot.locality_name,
+        location_id: hotspot.locality_id,
+        checklist_count: Math.round(hotspot.avg_weekly_checklists), // Round for display
+        avg_weekly_checklists: hotspot.avg_weekly_checklists,
+      },
+    } as Feature<Geometry, GeoJsonProperties>;
+  });
 }
 
 // todo: dedupe all of this
@@ -272,5 +298,43 @@ export const fetchRegionalLifers = async (
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
+  }
+};
+
+export const fetchPopularHotspots = async (
+  latitude: number,
+  longitude: number,
+  radiusKm: number,
+  month: number
+): Promise<PopularHotspot[] | undefined> => {
+  const baseUrl = `${apiBaseUrl}v1/popular_hotspots`;
+
+  const params = new URLSearchParams({
+    latitude: latitude.toString(),
+    longitude: longitude.toString(),
+    radius_km: radiusKm.toString(),
+    month: month.toString(),
+  });
+
+  const url = `${baseUrl}?${params}`;
+
+  try {
+    const response = await fetch(url, {});
+    if (!response.ok) {
+      console.error(`Popular hotspots API error! status: ${response.status}`);
+      return [];
+    }
+
+    const text = await response.text();
+    if (!text || text.trim() === '' || text === 'undefined') {
+      console.warn('Popular hotspots API returned empty or undefined response');
+      return [];
+    }
+
+    const data = JSON.parse(text);
+    return data;
+  } catch (error) {
+    console.error('Popular hotspots fetch error:', error);
+    return [];
   }
 };
