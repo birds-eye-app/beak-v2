@@ -280,7 +280,7 @@ export function BirdMap() {
       const currentZoom = mapRef.current!.getZoom();
       const radiusKm = Math.max(
         10,
-        Math.min(100, 200 / Math.pow(2, currentZoom - 8))
+        Math.min(1000, 200 / Math.pow(2, currentZoom - 8))
       );
       fetchPopularHotspots(
         initialCenter.lat,
@@ -552,7 +552,7 @@ export function BirdMap() {
     // Calculate dynamic radius based on debounced zoom level
     const radiusKm = Math.max(
       10,
-      Math.min(100, 200 / Math.pow(2, debouncedZoom - 8))
+      Math.min(1000, 200 / Math.pow(2, debouncedZoom - 8))
     );
 
     fetchPopularHotspots(
