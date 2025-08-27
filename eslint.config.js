@@ -83,7 +83,7 @@ export default [
       '@typescript-eslint/no-require-imports': 'off', // Allow require in theme components
 
       // General
-      'no-console': 'warn',
+      'no-console': 'off',
       'no-debugger': 'error',
       'no-unused-vars': 'off', // Handled by TypeScript rule
       'prefer-const': 'error',

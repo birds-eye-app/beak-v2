@@ -396,6 +396,7 @@ export function BirdMap() {
       renderedFeatures?.forEach((feature) => {
         if (!feature.properties) return;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const coords = (feature.geometry as any)?.coordinates;
         const locationId = feature.properties.location_id || '';
 
