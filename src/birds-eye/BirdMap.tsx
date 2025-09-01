@@ -123,20 +123,33 @@ const MonthSelector = ({
 
 const HotspotsList = ({
   visibleHotspots,
+  activeLayerId,
 }: {
   visibleHotspots: PopularHotspot[];
+  activeLayerId: RootLayerIDs;
 }) => {
   const topHotspots = visibleHotspots
-    .sort((a, b) => b.avg_weekly_checklists - a.avg_weekly_checklists)
+    .sort((a, b) =>
+      activeLayerId === RootLayerIDs.LikelyCommonSpecies
+        ? (b.likely_common_and_uncommon_species_count || 0) -
+          (a.likely_common_and_uncommon_species_count || 0)
+        : b.avg_weekly_checklists - a.avg_weekly_checklists
+    )
     .slice(0, 20);
 
   if (topHotspots.length === 0) {
     return null;
   }
 
+  const isLikelySpeciesLayer =
+    activeLayerId === RootLayerIDs.LikelyCommonSpecies;
+
   return (
     <div className="right-species-bar">
-      <h3>Top Hotspots ({topHotspots.length})</h3>
+      <h3>
+        {isLikelySpeciesLayer ? 'Top Species Diversity' : 'Top Hotspots'} (
+        {topHotspots.length})
+      </h3>
       <div className="checkbox-scroll-list">
         {topHotspots.map((hotspot, index) => (
           <div
@@ -163,7 +176,9 @@ const HotspotsList = ({
                 {hotspot.locality_name}
               </div>
               <div style={{ fontSize: '11px', opacity: 0.8 }}>
-                {Math.round(hotspot.avg_weekly_checklists)} weekly checklists
+                {isLikelySpeciesLayer
+                  ? `${hotspot.likely_common_and_uncommon_species_count || 0} likely species (±${(hotspot.likely_common_species_std_error || 0).toFixed(1)})`
+                  : `${Math.round(hotspot.avg_weekly_checklists)} weekly checklists`}
               </div>
             </div>
           </div>
@@ -295,6 +310,16 @@ export function BirdMap() {
           hotspotsToGeoJson(data),
           activeLayerId === RootLayerIDs.PopularHotspots ? 'visible' : 'none'
         );
+
+        // Also add the likely common species layer using the same data
+        addSourceAndLayer(
+          mapRef.current!,
+          RootLayerIDs.LikelyCommonSpecies,
+          hotspotsToGeoJson(data),
+          activeLayerId === RootLayerIDs.LikelyCommonSpecies
+            ? 'visible'
+            : 'none'
+        );
       });
 
       setMapLoaded(true);
@@ -381,12 +406,14 @@ export function BirdMap() {
     };
 
     const updateVisibleHotspots = () => {
-      // Only update visible hotspots for PopularHotspots layer
-      if (activeLayerId !== RootLayerIDs.PopularHotspots) return;
+      // Update visible hotspots for both PopularHotspots and LikelyCommonSpecies layers
+      if (
+        activeLayerId !== RootLayerIDs.PopularHotspots &&
+        activeLayerId !== RootLayerIDs.LikelyCommonSpecies
+      )
+        return;
 
-      const source = mapRef.current?.getSource(
-        RootLayerIDs.PopularHotspots
-      ) as GeoJSONSource;
+      const source = mapRef.current?.getSource(activeLayerId) as GeoJSONSource;
       if (!source) return;
 
       const renderedFeatures =
@@ -412,6 +439,10 @@ export function BirdMap() {
             feature.properties.avg_weekly_checklists ||
             feature.properties.checklist_count ||
             0,
+          likely_common_and_uncommon_species_count:
+            feature.properties.likely_common_and_uncommon_species_count || 0,
+          likely_common_species_std_error:
+            feature.properties.likely_common_species_std_error || 0,
         };
 
         hotspotMap[locationId] = hotspot;
@@ -546,7 +577,11 @@ export function BirdMap() {
   // Effect to update hotspots when map moves or zooms
   useEffect(() => {
     if (!mapLoaded) return;
-    if (activeLayerId !== RootLayerIDs.PopularHotspots) return;
+    if (
+      activeLayerId !== RootLayerIDs.PopularHotspots &&
+      activeLayerId !== RootLayerIDs.LikelyCommonSpecies
+    )
+      return;
     if (!fileId) return;
 
     setShowLoading(true);
@@ -564,14 +599,28 @@ export function BirdMap() {
     )
       .then((data) => {
         if (!data) return;
+
+        // Update popular hotspots source
         const hotspotsSource = mapRef.current!.getSource(
           RootLayerIDs.PopularHotspots
         ) as GeoJSONSource | undefined;
-        if (!hotspotsSource) return;
-        hotspotsSource.setData({
-          type: 'FeatureCollection',
-          features: hotspotsToGeoJson(data),
-        });
+        if (hotspotsSource) {
+          hotspotsSource.setData({
+            type: 'FeatureCollection',
+            features: hotspotsToGeoJson(data),
+          });
+        }
+
+        // Update likely common species source (uses same data)
+        const likelySpeciesSource = mapRef.current!.getSource(
+          RootLayerIDs.LikelyCommonSpecies
+        ) as GeoJSONSource | undefined;
+        if (likelySpeciesSource) {
+          likelySpeciesSource.setData({
+            type: 'FeatureCollection',
+            features: hotspotsToGeoJson(data),
+          });
+        }
       })
       .finally(() => {
         setShowLoading(false);
@@ -665,7 +714,14 @@ export function BirdMap() {
           checked={activeLayerId === RootLayerIDs.PopularHotspots}
           onClick={handleClick}
         />
-        {activeLayerId === RootLayerIDs.PopularHotspots && (
+        <LayerToggle
+          id={RootLayerIDs.LikelyCommonSpecies}
+          label="Show likely common species diversity"
+          checked={activeLayerId === RootLayerIDs.LikelyCommonSpecies}
+          onClick={handleClick}
+        />
+        {(activeLayerId === RootLayerIDs.PopularHotspots ||
+          activeLayerId === RootLayerIDs.LikelyCommonSpecies) && (
           <MonthSelector
             selectedMonth={selectedMonth}
             onMonthChange={setSelectedMonth}
@@ -705,8 +761,12 @@ export function BirdMap() {
           }}
         />
       )}
-      {activeLayerId === RootLayerIDs.PopularHotspots && (
-        <HotspotsList visibleHotspots={debouncedVisibleHotspots} />
+      {(activeLayerId === RootLayerIDs.PopularHotspots ||
+        activeLayerId === RootLayerIDs.LikelyCommonSpecies) && (
+        <HotspotsList
+          visibleHotspots={debouncedVisibleHotspots}
+          activeLayerId={activeLayerId}
+        />
       )}
     </div>
   );

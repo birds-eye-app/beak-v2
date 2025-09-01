@@ -15,9 +15,10 @@ export function addSourceAndLayer(
     `Adding source and layer for ${sourceId}, visibility: ${visibility}`
   );
 
-  // Popular hotspots don't need clustering
+  // Popular hotspots and likely common species don't need clustering
   const sourceConfig =
-    sourceId === RootLayerIDs.PopularHotspots
+    sourceId === RootLayerIDs.PopularHotspots ||
+    sourceId === RootLayerIDs.LikelyCommonSpecies
       ? {
           type: 'geojson' as const,
           data: {
@@ -50,7 +51,10 @@ export function addSourceAndLayer(
   // the downside is that this will render too much and also cause unnecessary collisions
 
   // Only add cluster layers for sources that support clustering
-  if (sourceId !== RootLayerIDs.PopularHotspots) {
+  if (
+    sourceId !== RootLayerIDs.PopularHotspots &&
+    sourceId !== RootLayerIDs.LikelyCommonSpecies
+  ) {
     mapRef.addLayer({
       id: `${sourceId}.${SubLayerIDs.ClusterCircles}`,
       type: 'circle',
@@ -87,7 +91,10 @@ export function addSourceAndLayer(
     });
   }
 
-  if (sourceId !== RootLayerIDs.PopularHotspots) {
+  if (
+    sourceId !== RootLayerIDs.PopularHotspots &&
+    sourceId !== RootLayerIDs.LikelyCommonSpecies
+  ) {
     mapRef.addLayer({
       id: `${sourceId}.${SubLayerIDs.ClusterCount}`,
       type: 'symbol',
@@ -112,7 +119,9 @@ export function addSourceAndLayer(
       'circle-sort-key':
         sourceId === RootLayerIDs.PopularHotspots
           ? ['-', ['get', 'checklist_count']] // Sort circles by popularity (negative for descending)
-          : ['-', ['get', 'liferCount']],
+          : sourceId === RootLayerIDs.LikelyCommonSpecies
+            ? ['-', ['get', 'likely_common_and_uncommon_species_count']] // Sort by likely species count
+            : ['-', ['get', 'liferCount']],
     },
     paint: {
       'circle-stroke-color': 'white',
@@ -130,15 +139,57 @@ export function addSourceAndLayer(
               1000,
               '#F44336', // Red for high activity
             ]
-          : [
-              'interpolate',
-              ['linear', 0.5],
-              ['get', 'liferCount'],
-              15,
-              '#fadd00',
-              250,
-              '#ff70ba',
-            ],
+          : sourceId === RootLayerIDs.LikelyCommonSpecies
+            ? [
+                'case',
+                ['>', ['get', 'likely_common_species_std_error'], 1.5],
+                // High error (>1.5): very desaturated colors based on species count
+                [
+                  'interpolate',
+                  ['linear'],
+                  ['get', 'likely_common_and_uncommon_species_count'],
+                  0,
+                  'hsl(60, 20%, 70%)', // Very desaturated yellow-gray for low count
+                  100,
+                  'hsl(30, 30%, 60%)', // Desaturated orange-gray for medium
+                  200,
+                  'hsl(0, 40%, 50%)', // Desaturated red for high count
+                ],
+                ['>', ['get', 'likely_common_species_std_error'], 1],
+                // Medium error (1-1.5): moderately saturated
+                [
+                  'interpolate',
+                  ['linear'],
+                  ['get', 'likely_common_and_uncommon_species_count'],
+                  0,
+                  'hsl(60, 50%, 60%)', // Moderately saturated yellow
+                  100,
+                  'hsl(30, 60%, 55%)', // Moderately saturated orange
+                  200,
+                  'hsl(0, 70%, 50%)', // Moderately saturated red
+                ],
+                // Low error (≤1): highly saturated colors
+                [
+                  'interpolate',
+                  ['linear'],
+                  ['get', 'likely_common_and_uncommon_species_count'],
+                  0,
+                  'hsl(60, 80%, 50%)', // Bright yellow for low count
+                  100,
+                  'hsl(30, 90%, 50%)', // Bright orange for medium count
+                  200,
+                  'hsl(0, 90%, 50%)', // Bright red for high count
+                ],
+              ]
+            : [
+                'interpolate',
+                ['linear', 0.5],
+                ['get', 'liferCount'],
+                15,
+                '#fadd00',
+                250,
+                '#ff70ba',
+              ],
       'circle-radius':
         sourceId === RootLayerIDs.PopularHotspots
           ? [
@@ -152,8 +203,32 @@ export function addSourceAndLayer(
               1000,
               18,
             ]
-          : ['interpolate', ['linear'], ['get', 'liferCount'], 10, 10, 250, 40],
-      'circle-opacity': sourceId === RootLayerIDs.PopularHotspots ? 0.8 : 1,
+          : sourceId === RootLayerIDs.LikelyCommonSpecies
+            ? [
+                'interpolate',
+                ['linear'],
+                ['get', 'likely_common_and_uncommon_species_count'],
+                0,
+                6, // Minimum radius for very low counts
+                100,
+                14, // Medium radius for 100 species (medium)
+                200,
+                20, // Large radius for 200 species (exceptional)
+              ]
+            : [
+                'interpolate',
+                ['linear'],
+                ['get', 'liferCount'],
+                10,
+                10,
+                250,
+                40,
+              ],
+      'circle-opacity':
+        sourceId === RootLayerIDs.PopularHotspots ||
+        sourceId === RootLayerIDs.LikelyCommonSpecies
+          ? 0.8
+          : 1,
     },
   });
 
@@ -166,22 +241,36 @@ export function addSourceAndLayer(
       'text-field':
         sourceId === RootLayerIDs.PopularHotspots
           ? ['get', 'checklist_count']
-          : ['get', 'liferCount'],
+          : sourceId === RootLayerIDs.LikelyCommonSpecies
+            ? ['get', 'likely_common_and_uncommon_species_count']
+            : ['get', 'liferCount'],
       'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-      'text-size': sourceId === RootLayerIDs.PopularHotspots ? 10 : 12,
+      'text-size':
+        sourceId === RootLayerIDs.PopularHotspots ||
+        sourceId === RootLayerIDs.LikelyCommonSpecies
+          ? 10
+          : 12,
       'symbol-sort-key':
         sourceId === RootLayerIDs.PopularHotspots
           ? ['-', ['get', 'checklist_count']] // Sort by popularity (negative for descending)
-          : ['-', ['get', 'liferCount']],
+          : sourceId === RootLayerIDs.LikelyCommonSpecies
+            ? ['-', ['get', 'likely_common_and_uncommon_species_count']] // Sort by likely species count
+            : ['-', ['get', 'liferCount']],
       'text-allow-overlap': false, // Prevent text overlap
       'text-ignore-placement': false, // Respect collision detection
       visibility: visibility,
     },
     paint: {
       'text-color':
-        sourceId === RootLayerIDs.PopularHotspots ? 'white' : 'black',
+        sourceId === RootLayerIDs.PopularHotspots ||
+        sourceId === RootLayerIDs.LikelyCommonSpecies
+          ? 'white'
+          : 'black',
       'text-halo-color':
-        sourceId === RootLayerIDs.PopularHotspots ? 'rgba(0,0,0,0.7)' : 'white',
+        sourceId === RootLayerIDs.PopularHotspots ||
+        sourceId === RootLayerIDs.LikelyCommonSpecies
+          ? 'rgba(0,0,0,0.7)'
+          : 'white',
       'text-halo-width': 1,
     },
   });
@@ -196,15 +285,24 @@ export function addSourceAndLayer(
       'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
       'text-offset': [
         0,
-        sourceId === RootLayerIDs.PopularHotspots ? 1.5 : 1.25,
+        sourceId === RootLayerIDs.PopularHotspots ||
+        sourceId === RootLayerIDs.LikelyCommonSpecies
+          ? 1.5
+          : 1.25,
       ],
-      'text-size': sourceId === RootLayerIDs.PopularHotspots ? 12 : 15,
+      'text-size':
+        sourceId === RootLayerIDs.PopularHotspots ||
+        sourceId === RootLayerIDs.LikelyCommonSpecies
+          ? 12
+          : 15,
       'text-anchor': 'top',
       'icon-size': 0.5,
       'symbol-sort-key':
         sourceId === RootLayerIDs.PopularHotspots
           ? ['-', ['get', 'checklist_count']] // Sort by popularity (negative for descending)
-          : ['-', ['get', 'liferCount']],
+          : sourceId === RootLayerIDs.LikelyCommonSpecies
+            ? ['-', ['get', 'likely_common_and_uncommon_species_count']] // Sort by likely species count
+            : ['-', ['get', 'liferCount']],
       'text-optional': true, // Allow text to be hidden when there's collision
       'text-allow-overlap': false, // Prevent label overlap
       'text-ignore-placement': false, // Respect collision detection
@@ -212,14 +310,20 @@ export function addSourceAndLayer(
     },
     paint: {
       'text-color':
-        sourceId === RootLayerIDs.PopularHotspots ? '#333' : 'black',
+        sourceId === RootLayerIDs.PopularHotspots ||
+        sourceId === RootLayerIDs.LikelyCommonSpecies
+          ? '#333'
+          : 'black',
       'text-halo-color': 'white',
       'text-halo-width': 1.5,
     },
   });
 
   // inspect a cluster on click (only for clustered layers)
-  if (sourceId !== RootLayerIDs.PopularHotspots) {
+  if (
+    sourceId !== RootLayerIDs.PopularHotspots &&
+    sourceId !== RootLayerIDs.LikelyCommonSpecies
+  ) {
     mapRef.on('click', `${sourceId}.${SubLayerIDs.ClusterCircles}`, (e) => {
       const features = mapRef.queryRenderedFeatures(e.point, {
         layers: [`${sourceId}.${SubLayerIDs.ClusterCircles}`],
@@ -265,6 +369,25 @@ export function addSourceAndLayer(
           '<div class=hotspot-popup-container>',
           `<h4>${locationName}</h4>`,
           `<p>${checklistCount} average weekly checklists</p>`,
+          `<a class=ebird-hotspot-link href="https://ebird.org/hotspot/${locationId}/" target="_blank">View on eBird ↗</a>`,
+          '</div>',
+        ].join('\n');
+
+        new mapboxgl.Popup().setLngLat(coordinates).setHTML(html).addTo(mapRef);
+      } else if (sourceId === RootLayerIDs.LikelyCommonSpecies) {
+        // Handle likely common species popup
+        const locationName = properties.title || 'Unknown Hotspot';
+        const locationId = properties.location_id;
+        const likelySpeciesCount =
+          properties.likely_common_and_uncommon_species_count || 0;
+        const stdError = properties.likely_common_species_std_error || 0;
+
+        const html = [
+          '<div class=hotspot-popup-container>',
+          `<h4>${locationName}</h4>`,
+          `<p>Likely common species: ${likelySpeciesCount}</p>`,
+          `<p>Standard error: ${stdError.toFixed(2)}</p>`,
+          `<p>Uncommon species: ${properties.uncommon_species_count || 0}</p>`,
           `<a class=ebird-hotspot-link href="https://ebird.org/hotspot/${locationId}/" target="_blank">View on eBird ↗</a>`,
           '</div>',
         ].join('\n');

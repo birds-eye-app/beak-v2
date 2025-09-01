@@ -54,6 +54,10 @@ export type PopularHotspot = {
   latitude: number;
   longitude: number;
   avg_weekly_checklists: number;
+  likely_common_species_count?: number;
+  likely_common_species_std_error?: number;
+  likely_uncommon_species_count?: number;
+  likely_common_and_uncommon_species_count?: number;
 };
 
 export function lifersToGeoJson(response: LocationByLiferResponse) {
@@ -180,6 +184,13 @@ export function hotspotsToGeoJson(hotspots: PopularHotspot[]) {
         location_id: hotspot.locality_id,
         checklist_count: Math.round(hotspot.avg_weekly_checklists), // Round for display
         avg_weekly_checklists: hotspot.avg_weekly_checklists,
+        likely_common_species_count: hotspot.likely_common_species_count || 0,
+        likely_common_species_std_error:
+          hotspot.likely_common_species_std_error || 0,
+        likely_uncommon_species_count:
+          hotspot.likely_uncommon_species_count || 0,
+        likely_common_and_uncommon_species_count:
+          hotspot.likely_common_and_uncommon_species_count || 0,
       },
     } as Feature<Geometry, GeoJsonProperties>;
   });

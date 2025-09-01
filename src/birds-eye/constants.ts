@@ -8,12 +8,14 @@ enum RootLayerIDs {
   HistoricalLifers = 'historical_lifers',
   NewLifers = 'new_lifers',
   PopularHotspots = 'popular_hotspots',
+  LikelyCommonSpecies = 'likely_common_species',
 }
 
 const allLayerIdRoots = [
   RootLayerIDs.HistoricalLifers,
   RootLayerIDs.NewLifers,
   RootLayerIDs.PopularHotspots,
+  RootLayerIDs.LikelyCommonSpecies,
 ];
 
 enum SubLayerIDs {
