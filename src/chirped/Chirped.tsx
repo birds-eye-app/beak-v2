@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { performChirpedCalculations } from './calculate';
 import Upload from './components/slides/Upload';
 import { ChirpedContext, ChirpedContextType } from './contexts/Chirped';
-import { UserSelections } from './contexts/UserSelections';
 import { makeNewChirpedContext } from './helpers';
 import { parseObservations } from './parseEbirdExport';
 
@@ -19,6 +18,7 @@ import QualitativeInput from './components/slides/QualitativeInput';
 import Species from './components/slides/Species';
 import Summary from './components/slides/Summary';
 import Totals from './components/slides/Totals';
+import { UserSelectionsProvider } from './contexts/UserSelections';
 import './styles.css';
 
 export const CurrentYear = 2024;
@@ -77,7 +77,7 @@ export function Chirped() {
   return (
     <>
       <ChirpedContext.Provider value={chirpedObservations}>
-        <UserSelections>
+        <UserSelectionsProvider>
           <Swiper
             navigation={chirpedObservations.allObservations.length !== 0}
             modules={[Navigation]}
@@ -109,7 +109,7 @@ export function Chirped() {
               {({ isActive }) => <Summary isActive={isActive} />}
             </SwiperSlide>
           </Swiper>
-        </UserSelections>
+        </UserSelectionsProvider>
       </ChirpedContext.Provider>
     </>
   );

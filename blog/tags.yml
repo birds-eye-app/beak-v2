@@ -13,6 +13,11 @@ birding:
   permalink: /birding
   description: Posts about birding and nature
 
+birds:
+  label: Birds
+  permalink: /birds
+  description: Posts about birds and birdwatching
+
 claude-code:
   label: Claude Code
   permalink: /claude-code

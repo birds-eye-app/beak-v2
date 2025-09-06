@@ -273,9 +273,7 @@ Output database: ./dbs/ebd_relJul-2025.db
 23.1GiB 0:11:20 [34.5MiB/s] [==>                 ]  11% ETA 1:25:42
 ```
 
-I'm pretty happy with how this script came together! It's much more efficient with disk space and quicker than doing this in 3 steps. It takes about 60-90 minutes to complete which is the difference between leaving it for a night vs leaving it for a run or a long walk. Here's the full version if you care to look:
-
-https://github.com/birds-eye-app/cloaca/blob/main/src/cloaca/swan_lake/scripts/parse_ebd.sh
+I'm pretty happy with how this script came together! It's much more efficient with disk space and quicker than doing this in 3 steps. It takes about 60-90 minutes to complete which is the difference between leaving it for a night vs leaving it for a run or a long walk. [Here's the full version if you care to look.](https://github.com/birds-eye-app/cloaca/blob/0ef1cd87a34da83de53bf5c52dda8120e1fbf53d/src/cloaca/swan_lake/scripts/parse_ebd.sh)
 
 It wasn't all success, though. One important goal I had for this refactor was to introduce better ordering at this stage. DuckDB really emphasizes in their docs and blogs the importance of table ordering for good performance, especially in this great article: https://duckdb.org/2025/05/14/sorting-for-fast-selective-queries.html. Naively, I thought I could just throw in an `order by observation_date` at the end of my new script and get this for free. However, this just resulted in all of the free disk space on my machine getting eaten up at an alarmingly fast pace. I think what was going on here is that DuckDB had to basically read in the entire contents of the DB into either memory or spillover disk space to determine the right order before it could begin to start committing anything into the more space-efficient DB.
 
@@ -333,6 +331,8 @@ In any case this worked, but leaves a lot to be improved upon in future iteratio
 - picking a better chunking strategy
 - figuring out how the raw TSV is sorted if at all. If it is it'd be great to use that for my chunking strategy
 - the dream: could I figure out a way to merge this step in with the prior one so that I'm iteratively sorting the data as I read it in from the TSV?
+
+[Here's the script if you care to take a look!](https://github.com/birds-eye-app/cloaca/blob/0ef1cd87a34da83de53bf5c52dda8120e1fbf53d/src/cloaca/swan_lake/scripts/sort_edb_in_place_sort_of.sh)
 
 ## Back to the real purpose
 
