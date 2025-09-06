@@ -177,6 +177,8 @@ Now, I had planned originally on making another table for this data, but I think
 
 But, let's just see how this looks now. I haven't talked much about the frontend side of displaying things in this series, and that's mostly cause I haven't thought too much about it. It's mostly been me (Claude) copy and pasting the existing map code I have here. I don't want to do this forever, but it's been "good enough" for now. So let's keep doing that.
 
+![image showing a pin on Floyd Bennet field with the number 103 on it and a tooltip on that showing "53 species"](../static/img/floyd_bennet_bug.png)
+
 So with a decent prompt, we're up and running... except these numbers are a bit off. Why is Floyd Bennet showing 109 on the map but 53 in the tooltip?
 
 Looking at the DB for that location and month:
@@ -229,7 +231,7 @@ For now I think I'm going to focus on the more core problem of making sure this 
 
 Adding those numbers in brings my numbers much closer to eBird's. I think it also makes since to display both in the tooltip. Maybe I can even add an option shortly to toggle the map from displaying either just common birds or both common and uncommon?
 
-image
+![image multiple pins around South Brooklyn with numbers on them](../static/img/richness_working.png)
 
 ## Scaling this up
 
@@ -241,21 +243,21 @@ The docs were helpful as always, but there weren't too many tricks I hadn't alre
 
 ### A long side quest on better data import
 
-Back in Part 1, was just trying to get to the point of being able to query the EBD in a DuckDB dataset. It was a slow but fun journey, but I'd only done this once. Thus, my methods of doing so were sloppy at best and I knew the next time I was going to do this I should take a few passes and cleaning up what I was going and also making it a bit more efficient. This latter part really piqued my interest this time around, almost certainly to a negative degree. I had the external disk space to just do this in a slow, but sure way, converting the compressed form into an uncompressed TSV and then into a DuckDB database. Still, that felt quite wasteful and slow (in reality it would just mean firing off two scripts before going to bed one night and then waking up to a fresh dataset ready for use). So, like many times before, I set off to spend a bunch of mostly unnecessary time speeding this up and making it more efficient.
+Back in Part 1, I was just trying to get to the point of being able to query the EBD in a DuckDB dataset. It was a slow but fun journey, but I'd only done this once. Thus, my methods of doing so were sloppy at best and I knew the next time I was going to do this I should take a few passes and cleaning up what I was going and also making it a bit more efficient. This latter part really piqued my interest this time around, almost certainly to a negative degree. I had the external disk space to just do this in a slow, but sure way, converting the compressed form into an uncompressed TSV and then into a DuckDB database. Still, that felt quite wasteful and slow (in reality it would just mean firing off two scripts before going to bed one night and then waking up to a fresh dataset ready for use). So, like many times before, I set off to spend a bunch of mostly unnecessary time speeding this up and making it more efficient.
 
 The core of what I didn't like about the old flow was the necessity of reading through the data 2 or even 3 times to get to a working DuckDB:
 
 1. Once to un-tar the files (I'm not entirely positive if this requires reading all of the underlying bytes)
 2. To decompress the compressed TSV file inside of that TAR
-3. To load that TSV file into
+3. To load that TSV file into DuckDB
 
-What would be great is if we could from the .tar file before Step 1 to the DuckDB file in one step. Theoretically I knew this was possible but I wasn't sure how feasible it would be with the existing tools I had. Something that gave me early confidence though was the fact that DuckDB can read directly from `stdin` when invoked from the command line like so:
+What would be great is if we could go from the .tar file to the full DB in one step. Theoretically I knew this was possible but I wasn't sure how feasible it would be with the existing tools I had. Something that gave me early confidence was the fact that DuckDB can read directly from `stdin` when invoked from the command line like so:
 
 ```bash
 cat ebird.tsv | duckdb -c "SELECT * FROM read_csv('/dev/stdin')"
 ```
 
-Neat! All that's really needed then is to selectively read and decompress the the compressed .gz file inside the .tar and pass that into DuckDB. Overall this was pretty straightforward and it wasn't long before I had a simple working solution. An interesting aside here is that I did all of this myself in bash as a first pass, but then opted to let Claude Code then take a pass at polishing the script to have more logging, a progress bar using `pv` and good timing tracking. Claude Code really seems at its best in moments like this where I have a very clear overall direction for what I want to do, but can rely on it to introduce extra details like args, or logging that would be finicky or frustrating for me to get just right with my intermediate bash knowledge. Here's how it looked once I had it up and running for real:
+Neat! All that's really needed then is to selectively read and decompress the .gz file inside the .tar and pass that into DuckDB. Overall this was pretty straightforward and it wasn't long before I had a simple working solution. One aside here is that I did all of this myself in bash as a first pass, but then opted to let Claude Code then take a pass at polishing the script to have more logging, a progress bar using `pv` and good timing tracking. Claude Code really seems at its best in moments like this where I have a very clear overall direction for what I want to do, but can rely on it to introduce extra details like args, or logging that would be finicky or frustrating for me to get just right with my intermediate bash knowledge. Here's how it looked once I had it up and running for real:
 
 ```bash
  % ./queries/parse_ebd.sh ebd_relJul-2025 ./dbs/ ./dbs/
@@ -271,9 +273,11 @@ Output database: ./dbs/ebd_relJul-2025.db
 23.1GiB 0:11:20 [34.5MiB/s] [==>                 ]  11% ETA 1:25:42
 ```
 
-I'm pretty happy with how this script came together! It's much more efficient with disk space and quicker than doing this in 3 steps. It takes about 60-90 minutes to complete which is the difference between leaving it for a night vs leaving it for a run or a long walk.
+I'm pretty happy with how this script came together! It's much more efficient with disk space and quicker than doing this in 3 steps. It takes about 60-90 minutes to complete which is the difference between leaving it for a night vs leaving it for a run or a long walk. Here's the full version if you care to look:
 
-It wasn't all successes though. One important goal I had for this refactor was to introduce better ordering at this stage. DuckDB really emphasizes in their docs and blogs the importance of table ordering for good performance, especially in this great article: https://duckdb.org/2025/05/14/sorting-for-fast-selective-queries.html. Naively, I thought I could just throw in an `order by observation_date` at the end of my new script and get this for free. However, this just resulted in all of the free disk space on my machine getting eaten up at an alarmingly fast pace. I think what was going on here is that DuckDB had to basically read in the entire contents of the DB into either memory or spillover disk space to determine the right order before it could begin to start committing anything into the more space-efficient DB. I'm still uncertain of the underlying cause, but eliminating the ordering made the query far more performant and ultimately successful.
+https://github.com/birds-eye-app/cloaca/blob/main/src/cloaca/swan_lake/scripts/parse_ebd.sh
+
+It wasn't all success, though. One important goal I had for this refactor was to introduce better ordering at this stage. DuckDB really emphasizes in their docs and blogs the importance of table ordering for good performance, especially in this great article: https://duckdb.org/2025/05/14/sorting-for-fast-selective-queries.html. Naively, I thought I could just throw in an `order by observation_date` at the end of my new script and get this for free. However, this just resulted in all of the free disk space on my machine getting eaten up at an alarmingly fast pace. I think what was going on here is that DuckDB had to basically read in the entire contents of the DB into either memory or spillover disk space to determine the right order before it could begin to start committing anything into the more space-efficient DB.
 
 ### Fresh data but no progress
 
@@ -322,7 +326,7 @@ Total execution time: 7m 16s
 10% ▕██████
 ```
 
-Un-thankfully, it's entirely inaccurate when you're adding sorting at the end. The first time I ran this I crashed my machine since I had very little storage left. Deleting a couple dozen broken DB's fixed this and the second time this ran to completion in about 90 mins. That's honestly a bit surprisingly slow, though a bit reason for that could be my quite silly chunking strategy. Another confusing thing is that the insertions get faster rather than slower in later batches. You can see there the first insertion took 7+ minutes while the last month took less than 5. I'm not entirely sure why this might be. I would have assumed DuckDB would have to do more work at the end to figure out the right insertion order?
+Un-thankfully, it's entirely inaccurate when you're adding sorting at the end. The first time I ran this I crashed my machine since I had very little storage left. Deleting a couple dozen old or broken DuckDB's fixed this and the second time this ran to completion in about 90 mins. That's honestly a bit surprisingly slow, though a bit reason for that could be my quite silly chunking strategy. Another confusing thing is that the insertions get faster rather than slower in later batches. You can see there the first insertion took 7+ minutes while the last month took less than 5. I'm not entirely sure why this might be. I would have assumed DuckDB would have to do more work at the end to figure out the right insertion order?
 
 In any case this worked, but leaves a lot to be improved upon in future iterations:
 
@@ -330,7 +334,7 @@ In any case this worked, but leaves a lot to be improved upon in future iteratio
 - figuring out how the raw TSV is sorted if at all. If it is it'd be great to use that for my chunking strategy
 - the dream: could I figure out a way to merge this step in with the prior one so that I'm iteratively sorting the data as I read it in from the TSV?
 
-## Back to the entire purpose
+## Back to the real purpose
 
 The prior few sections were over a few days of intermittent work, so I was a little fearful that all of that might have been a pointless adventure into premature optimization that went actually nowhere in terms of fixing the actual problem: being able to show species likelihood across the full data set.
 
@@ -346,6 +350,8 @@ Thankfully, the sorting did appear to pay off and the first run with the full da
 ```
 
 Nearly 10 minutes to create that one table, but that's a small price to pay to be able to see this many hotspots on a map at once!
+
+![image with hundreds if not thousands of pins on the Eastern US with numbers on them](../static/img/all_the_richness_pins.png)
 
 ## Conclusion
 
