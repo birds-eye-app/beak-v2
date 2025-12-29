@@ -93,10 +93,23 @@ export async function parseObservations(
         // ebird casual observations frequently come in with no time
         time = '12:00 PM';
       }
-      const dateTime = parse(
+      // Parse the date/time string as UTC to ensure consistent behavior
+      // across different timezones (local development vs CI)
+      const localDate = parse(
         `${record[11]} ${time}`,
         'yyyy-MM-dd hh:mm a',
-        new Date()
+        new Date('2000-01-01T00:00:00Z')
+      );
+      // Construct a UTC date by using the date components but interpreting them as UTC
+      const dateTime = new Date(
+        Date.UTC(
+          localDate.getFullYear(),
+          localDate.getMonth(),
+          localDate.getDate(),
+          localDate.getHours(),
+          localDate.getMinutes(),
+          localDate.getSeconds()
+        )
       );
       if (isNaN(dateTime.getTime())) {
         console.warn(`Invalid date/time: ${record[11]} ${record[12]}`);
