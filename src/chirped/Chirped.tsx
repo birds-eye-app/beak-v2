@@ -21,7 +21,7 @@ import Totals from './components/slides/Totals';
 import { UserSelectionsProvider } from './contexts/UserSelections';
 import './styles.css';
 
-export const CurrentYear = 2024;
+export const CurrentYear = 2025;
 
 const swiperSlideStyle = { backgroundColor: '#555555' };
 

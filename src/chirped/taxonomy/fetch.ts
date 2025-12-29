@@ -4,6 +4,8 @@ import parsedTaxonomy from './taxonomy.json' with { type: 'json' };
 
 export const eBirdTaxonomy = parsedTaxonomy as Record<string, Taxonomy>;
 
-export function fetchTaxonomyForSpecies(scientificName: string): Taxonomy {
+export function fetchTaxonomyForSpecies(
+  scientificName: string
+): Taxonomy | undefined {
   return eBirdTaxonomy[scientificName];
 }

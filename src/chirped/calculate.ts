@@ -167,6 +167,16 @@ export async function performChirpedCalculations(
     if (!shouldIncludeInSpeciesCounts(observation)) {
       continue;
     }
+
+    if (!observation.taxonomy) {
+      console.warn(
+        `No taxonomy found for ${observation.scientificName}. This will probably break things and indicates that you need to update the taxonomy data: 
+        
+          yarn update-taxonomy
+        `
+      );
+    }
+
     chirpedObservations.yearObservations.push(observation);
     if (!speciesForYear.has(observation.scientificName)) {
       chirpedObservations.yearStats.species += 1;

@@ -11,7 +11,7 @@ test('parseObservations', async () => {
   const csvData = fs.readFileSync(csvFilePath, 'utf8');
   const actual = await parseObservations(csvData);
 
-  expect(actual.length).toBe(4999);
+  expect(actual.length).toBe(9713);
   const first = actual[0];
 
   const expected: Observation = {
@@ -37,7 +37,7 @@ test('parseObservations', async () => {
     scientificName: 'Circus hudsonius',
     stateProvince: 'US-LA',
     submissionId: 'S131890239',
-    taxonomicOrder: 8228,
+    taxonomicOrder: 8324,
     taxonomy: {
       bandingCodes: 'NOHA',
       category: 'species',
@@ -52,7 +52,7 @@ test('parseObservations', async () => {
       sciNameCodes: 'CIHU',
       scientificName: 'Circus hudsonius',
       speciesCode: 'norhar2',
-      taxonOrder: 8228,
+      taxonOrder: 8324,
     },
     time: '',
   };

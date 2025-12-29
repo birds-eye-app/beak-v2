@@ -212,7 +212,7 @@ describe('performChirpedCalculations', () => {
 
       const result = await performChirpedCalculations(actual, currentYear);
 
-      expect(result.lifeList.length).toBe(601);
+      expect(result.lifeList.length).toBe(602);
     });
   });
 
@@ -308,21 +308,21 @@ describe('performChirpedCalculations', () => {
       const result = await performChirpedCalculations(actual, currentYear);
 
       const expectedStats: ChirpedContextType['yearStats'] = {
-        checklists: 365,
+        checklists: 366,
         checklistsByType: {
           incidental: 48,
-          stationary: 26,
-          traveling: 291,
+          stationary: 28,
+          traveling: 290,
         },
-        newLifersCount: 455,
+        newLifersCount: 456,
         numberOfSpuhs: 23,
-        species: 591,
-        totalBirdsCounted: 34120,
-        totalDistanceKm: 672.567,
-        totalTimeSpentMinutes: 23286,
+        species: 592,
+        totalBirdsCounted: 34138,
+        totalDistanceKm: 593.3450000000003,
+        totalTimeSpentMinutes: 23330,
         families: 78,
-        genera: 353,
-        numberOfHotspots: 201,
+        genera: 354,
+        numberOfHotspots: 200,
       };
 
       expect(result.yearStats).toEqual(expectedStats);
@@ -472,7 +472,7 @@ describe('calculateLifeList', () => {
     // make sure it includes the damn pigeon
     expect(result['rocpig']).toBeDefined();
 
-    expect(Object.entries(result).length).toBe(601);
+    expect(Object.entries(result).length).toBe(838);
   });
 
   test('it matches the ebird life list', async () => {
