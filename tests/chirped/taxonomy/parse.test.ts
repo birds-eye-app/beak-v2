@@ -7,7 +7,7 @@ import {
 
 test('parseTaxonomy', async () => {
   const results = await parseTaxonomy();
-  expect(results.length).toBe(17415);
+  expect(results.length).toBe(17891);
 
   // check if we can use sci name as a unique key
   const uniqueKeys = new Set<string>();
