@@ -23,7 +23,7 @@ test('parseObservations', async () => {
     count: 'X',
     county: 'St. Bernard',
     date: '2022-11-21',
-    dateTime: new Date('2022-11-21T17:00:00.000Z'),
+    dateTime: new Date('2022-11-21T12:00:00.000Z'),
     distanceTraveledKm: undefined,
     durationMinutes: NaN,
     latitude: 29.819019,
