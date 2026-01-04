@@ -2,6 +2,7 @@ import {
   Observation,
   parseObservations,
 } from '../../src/chirped/parseEbirdExport';
+import { calculateLifeList } from '../../src/chirped/calculate';
 import * as path from 'path';
 import * as fs from 'fs';
 import { expect, test } from 'vitest';
@@ -62,4 +63,32 @@ test('parseObservations', async () => {
   // check that all have their dates parsed correctly
   const invalidDates = actual.filter((obs) => isNaN(obs.dateTime.getTime()));
   expect(invalidDates.length).toBe(0);
+});
+
+test('parseObservations - LWM_bronx.csv', async () => {
+  const csvFilePath = path.join(__dirname, 'LWM_bronx.csv');
+  const csvData = fs.readFileSync(csvFilePath, 'utf8');
+  const actual = await parseObservations(csvData);
+
+  expect(actual.length).toBe(8454);
+
+  const invalidDates = actual.filter((obs) => isNaN(obs.dateTime.getTime()));
+  expect(invalidDates.length).toBe(0);
+
+  const lifeList = calculateLifeList(actual, 2025);
+  expect(Object.keys(lifeList).length).toBe(203);
+});
+
+test('parseObservations - LWM_full.csv', async () => {
+  const csvFilePath = path.join(__dirname, 'LWM_full.csv');
+  const csvData = fs.readFileSync(csvFilePath, 'utf8');
+  const actual = await parseObservations(csvData);
+
+  expect(actual.length).toBe(27117);
+
+  const invalidDates = actual.filter((obs) => isNaN(obs.dateTime.getTime()));
+  expect(invalidDates.length).toBe(0);
+
+  const lifeList = calculateLifeList(actual, 2025);
+  expect(Object.keys(lifeList).length).toBe(660);
 });
