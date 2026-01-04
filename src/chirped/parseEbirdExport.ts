@@ -66,10 +66,18 @@ export async function parseObservations(
       return [];
     }
 
-    const lines = fileContents.split('\n');
+    const lines = fileContents.split(/\r\n|\r|\n/);
     const headers = lines[0].split(',');
     if (!expectedHeaders.every((header, i) => header === headers[i])) {
-      throw new Error('Invalid headers in CSV');
+      const mismatched = expectedHeaders.flatMap((header, i) =>
+        header !== headers[i] ? [header, headers[i]] : []
+      );
+      console.error(`Invalid eBird export. Expected headers do not match.`, {
+        expected: expectedHeaders,
+        received: headers,
+        mismatched: mismatched,
+      });
+      throw new Error(`Invalid eBird export. Expected headers do not match.`);
     }
 
     const observations: Observation[] = [];
@@ -95,11 +103,32 @@ export async function parseObservations(
       }
       // Parse the date/time string as UTC to ensure consistent behavior
       // across different timezones (local development vs CI)
-      const localDate = parse(
-        `${record[11]} ${time}`,
+      // the default is something like: 2025-11-20	10:00 PM
+      // certain exports (eg Leo's) look like: 11-29-25 07:40 AM or 12-04-25 04:00:00 PM
+      const formats = [
+        'yyyy-MM-dd HH:mm',
         'yyyy-MM-dd hh:mm a',
-        new Date('2000-01-01T00:00:00Z')
-      );
+        'MM-dd-yy hh:mm a',
+        'MM-dd-yy hh:mm:ss a',
+      ];
+
+      let localDate: Date | null = null;
+      for (const format of formats) {
+        const parsedDate = parse(
+          `${record[11]} ${time}`,
+          format,
+          new Date('2000-01-01T00:00:00Z')
+        );
+        if (!isNaN(parsedDate.getTime())) {
+          localDate = parsedDate;
+          break;
+        }
+      }
+      if (!localDate) {
+        console.warn(`Invalid date/time: ${record[11]} ${record[12]}`);
+        continue;
+      }
+
       // Construct a UTC date by using the date components but interpreting them as UTC
       const dateTime = new Date(
         Date.UTC(
@@ -111,10 +140,6 @@ export async function parseObservations(
           localDate.getSeconds()
         )
       );
-      if (isNaN(dateTime.getTime())) {
-        console.warn(`Invalid date/time: ${record[11]} ${record[12]}`);
-        continue;
-      }
 
       const taxonomy = fetchTaxonomyForSpecies(record[2]);
 
