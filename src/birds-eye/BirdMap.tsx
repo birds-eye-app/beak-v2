@@ -1,4 +1,6 @@
 import InfoIcon from '@mui/icons-material/Info';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import Tooltip from '@mui/material/Tooltip';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import mapboxgl, { GeoJSONSource, Map, Marker } from 'mapbox-gl';
@@ -42,33 +44,56 @@ const LayerToggle = ({
   label,
   checked,
   onClick,
-  tooltip,
+  helpText,
 }: {
   id: RootLayerIDs;
   label: string;
   checked: boolean;
   onClick: (e: { target: { id: string } }) => void;
-  tooltip?: string;
+  helpText?: string;
 }) => {
+  const [showHelp, setShowHelp] = useState(false);
+
   return (
-    <label className="form-control" htmlFor={id}>
-      <input type="radio" id={id} checked={checked} onChange={onClick} />
-      <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+    <div style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
+      <label className="form-control" htmlFor={id} style={{ margin: 0 }}>
+        <input type="radio" id={id} checked={checked} onChange={onClick} />
         {label}
-        {tooltip && (
-          <Tooltip title={tooltip}>
-            <InfoIcon
+      </label>
+      {helpText && (
+        <>
+          <Tooltip
+            title={helpText}
+            arrow
+            slotProps={{
+              popper: { style: { zIndex: 9999 } },
+            }}
+          >
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={() => setShowHelp(true)}
               style={{
-                fontSize: 14,
+                display: 'inline-flex',
+                alignItems: 'center',
                 marginLeft: 4,
-                cursor: 'help',
+                cursor: 'pointer',
                 opacity: 0.7,
               }}
-            />
+            >
+              <InfoIcon sx={{ fontSize: 14 }} />
+            </span>
           </Tooltip>
-        )}
-      </span>
-    </label>
+          <Dialog
+            open={showHelp}
+            onClose={() => setShowHelp(false)}
+            sx={{ zIndex: 10000 }}
+          >
+            <DialogContent>{helpText}</DialogContent>
+          </Dialog>
+        </>
+      )}
+    </div>
   );
 };
 
@@ -748,26 +773,29 @@ export function BirdMap() {
       <div className="topBar">
         <LayerToggle
           id={RootLayerIDs.HistoricalLifers}
-          label="Show historical lifers"
+          label="Historical lifers"
+          helpText="Displays on the map where you saw each of your lifers for the first time."
           checked={activeLayerId === RootLayerIDs.HistoricalLifers}
           onClick={handleClick}
         />
         <LayerToggle
           id={RootLayerIDs.NewLifers}
-          label="Show potential new lifers"
-          tooltip="You need to be fairly zoomed in for these to display properly."
+          label="Potential new lifers"
+          helpText="Searches the eBird API to see where you can go to find species not yet on your life list."
           checked={activeLayerId === RootLayerIDs.NewLifers}
           onClick={handleClick}
         />
         <LayerToggle
           id={RootLayerIDs.PopularHotspots}
-          label="Show popular hotspots"
+          label="Popular hotspots"
+          helpText="Shows hotspots by the average number of checklists submitted per week."
           checked={activeLayerId === RootLayerIDs.PopularHotspots}
           onClick={handleClick}
         />
         <LayerToggle
           id={RootLayerIDs.LikelyCommonSpecies}
-          label="Show likely common species diversity"
+          label="Species diversity"
+          helpText="Shows hotspots by the average number of species seen there each month."
           checked={activeLayerId === RootLayerIDs.LikelyCommonSpecies}
           onClick={handleClick}
         />
