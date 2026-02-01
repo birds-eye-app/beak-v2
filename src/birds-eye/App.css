@@ -127,6 +127,7 @@
     right: 0;
     margin: 12px;
     border-radius: 4px;
+    max-width: 280px;
   }
 
   .checkbox-scroll-list {

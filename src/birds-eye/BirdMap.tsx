@@ -1,3 +1,5 @@
+import InfoIcon from '@mui/icons-material/Info';
+import Tooltip from '@mui/material/Tooltip';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import mapboxgl, { GeoJSONSource, Map, Marker } from 'mapbox-gl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -40,16 +42,32 @@ const LayerToggle = ({
   label,
   checked,
   onClick,
+  tooltip,
 }: {
   id: RootLayerIDs;
   label: string;
   checked: boolean;
   onClick: (e: { target: { id: string } }) => void;
+  tooltip?: string;
 }) => {
   return (
     <label className="form-control" htmlFor={id}>
       <input type="radio" id={id} checked={checked} onChange={onClick} />
-      {label}
+      <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+        {label}
+        {tooltip && (
+          <Tooltip title={tooltip}>
+            <InfoIcon
+              style={{
+                fontSize: 14,
+                marginLeft: 4,
+                cursor: 'help',
+                opacity: 0.7,
+              }}
+            />
+          </Tooltip>
+        )}
+      </span>
     </label>
   );
 };
@@ -61,6 +79,18 @@ const MonthSelector = ({
   selectedMonth: number;
   onMonthChange: (month: number) => void;
 }) => {
+  const [isNarrow, setIsNarrow] = useState(
+    typeof window !== 'undefined' && window.innerWidth < 768
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsNarrow(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const months = [
     'Jan',
     'Feb',
@@ -80,7 +110,7 @@ const MonthSelector = ({
     <div
       style={{
         display: 'flex',
-        gap: '8px',
+        gap: isNarrow ? '2px' : '8px',
         alignItems: 'center',
         backgroundColor: 'rgba(255,255,255,0.9)',
         padding: '8px',
@@ -98,13 +128,14 @@ const MonthSelector = ({
               alignItems: 'center',
               cursor: 'pointer',
               fontSize: '11px',
-              padding: '4px 6px',
+              padding: isNarrow ? '4px 4px' : '4px 6px',
               borderRadius: '3px',
               backgroundColor:
                 selectedMonth === monthNumber ? '#4CAF50' : 'transparent',
               color: selectedMonth === monthNumber ? 'white' : 'black',
               transition: 'all 0.2s ease',
             }}
+            title={month}
           >
             <input
               type="radio"
@@ -114,7 +145,7 @@ const MonthSelector = ({
               onChange={() => onMonthChange(monthNumber)}
               style={{ display: 'none' }}
             />
-            {month}
+            {isNarrow ? month[0] : month}
           </label>
         );
       })}
@@ -169,10 +200,19 @@ const HotspotsList = ({
             >
               #{index + 1}
             </span>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                minWidth: 0,
+              }}
+            >
               <div
-                style={{ fontSize: '13px', fontWeight: 'bold' }}
-                title={hotspot.locality_name}
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                }}
               >
                 {hotspot.locality_name}
               </div>
@@ -714,7 +754,8 @@ export function BirdMap() {
         />
         <LayerToggle
           id={RootLayerIDs.NewLifers}
-          label="Show potential new lifers. Note: you need be fairly zoomed in for these to display properly."
+          label="Show potential new lifers"
+          tooltip="You need to be fairly zoomed in for these to display properly."
           checked={activeLayerId === RootLayerIDs.NewLifers}
           onClick={handleClick}
         />
