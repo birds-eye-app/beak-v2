@@ -135,6 +135,7 @@ const MonthSelector = ({
     <div
       style={{
         display: 'flex',
+        width: 'fit-content',
         gap: isNarrow ? '2px' : '8px',
         alignItems: 'center',
         backgroundColor: 'rgba(255,255,255,0.9)',
