@@ -325,6 +325,7 @@ export type SpeciesFilter = 'all' | 'none' | string[];
 export function BirdMap() {
   const mapRef = useRef<Map | undefined>(undefined);
   const mapContainerRef = useRef<HTMLElement>(null);
+  const geocoderContainerRef = useRef<HTMLDivElement>(null);
 
   const [center, setCenter] = useState(INITIAL_CENTER);
   const [zoom, setZoom] = useState(INITIAL_ZOOM);
@@ -377,14 +378,17 @@ export function BirdMap() {
       zoom: INITIAL_ZOOM,
     });
 
-    // Add location search control
+    // Add location search control to custom container
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
       placeholder: 'Search for a location',
       marker: false,
     });
-    mapRef.current.addControl(geocoder, 'top-left');
+    if (geocoderContainerRef.current) {
+      geocoderContainerRef.current.innerHTML = ''; // Clear any existing content
+      geocoder.addTo(geocoderContainerRef.current);
+    }
 
     mapRef.current!.on('load', () => {
       fetchLifers(initialCenter.lat, initialCenter.lng, fileId).then((data) => {
@@ -963,6 +967,7 @@ export function BirdMap() {
         canClose={fileId !== ''}
       />
       <div className="topBar">
+        <div ref={geocoderContainerRef} className="geocoder-container" />
         <div style={{ marginBottom: '8px' }}>
           <button
             onClick={() => {
