@@ -147,6 +147,11 @@
   .checkbox-scroll-list {
     max-height: 20vh;
   }
+
+  /* Position search bar with consistent margin */
+  .mapboxgl-ctrl-bottom-left {
+    bottom: -30px;
+  }
 }
 
 .checkbox-group {
