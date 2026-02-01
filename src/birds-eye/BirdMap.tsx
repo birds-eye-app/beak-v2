@@ -832,15 +832,16 @@ export function BirdMap() {
           | Zoom: {zoom.toFixed(2)} | Mode: {MODE}
         </div>
       )}
-      {Object.keys(visibleSpeciesWithLocation).length > 0 && (
-        <SpeciesSelectionList
-          visibleSpeciesWithLocation={visibleSpeciesWithLocation}
-          onUpdateToCheckedCodes={(checkedCodes) => {
-            console.debug(`updating species filter to ${checkedCodes}`);
-            setSpeciesFilter(checkedCodes);
-          }}
-        />
-      )}
+      {activeLayerId === RootLayerIDs.NewLifers &&
+        Object.keys(visibleSpeciesWithLocation).length > 0 && (
+          <SpeciesSelectionList
+            visibleSpeciesWithLocation={visibleSpeciesWithLocation}
+            onUpdateToCheckedCodes={(checkedCodes) => {
+              console.debug(`updating species filter to ${checkedCodes}`);
+              setSpeciesFilter(checkedCodes);
+            }}
+          />
+        )}
       {(activeLayerId === RootLayerIDs.PopularHotspots ||
         activeLayerId === RootLayerIDs.LikelyCommonSpecies) && (
         <HotspotsList
