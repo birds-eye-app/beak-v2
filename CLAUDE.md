@@ -102,6 +102,13 @@ Tests are located in `tests/` directory (not `src/`). Chirped has comprehensive 
 - Taxonomy processing tests
 - Sample data files for testing
 
+## Git Workflow
+
+- **Never amend commits** - always create new commits for additional changes
+- **Never force push** - use regular `git push` only
+- When making follow-up changes, create a new commit with a descriptive message
+- This preserves history and makes it easier to review changes
+
 ## Deployment Notes
 
 - Site configured for Render deployment at `https://beak-v2.onrender.com`
