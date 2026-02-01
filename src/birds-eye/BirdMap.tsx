@@ -1,6 +1,8 @@
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import mapboxgl, { GeoJSONSource, Map, Marker } from 'mapbox-gl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './App.css';
 
@@ -262,6 +264,15 @@ export function BirdMap() {
       center: initialCenter,
       zoom: INITIAL_ZOOM,
     });
+
+    // Add location search control
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+      placeholder: 'Search for a location',
+      marker: false,
+    });
+    mapRef.current.addControl(geocoder, 'bottom-left');
 
     mapRef.current!.on('load', () => {
       fetchLifers(initialCenter.lat, initialCenter.lng, fileId).then((data) => {
