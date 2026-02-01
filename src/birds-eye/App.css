@@ -198,7 +198,10 @@
 /* if we're on mobile, put the species bar on the bottom */
 @media only screen and (max-width: 768px) {
   .right-species-bar {
+    position: absolute;
+    z-index: 1;
     bottom: 0;
+    left: 0;
     right: 0;
     margin: 12px;
     border-radius: 4px;

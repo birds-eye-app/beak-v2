@@ -389,6 +389,15 @@ export function BirdMap() {
       geocoderContainerRef.current.innerHTML = ''; // Clear any existing content
       geocoder.addTo(geocoderContainerRef.current);
     }
+    // Manually handle result since geocoder is in custom container
+    geocoder.on('result', (e: { result: { center: [number, number] } }) => {
+      mapRef.current?.flyTo({
+        center: e.result.center,
+        zoom: 12,
+        speed: 2.5,
+        essential: true,
+      });
+    });
 
     mapRef.current!.on('load', () => {
       fetchLifers(initialCenter.lat, initialCenter.lng, fileId).then((data) => {
