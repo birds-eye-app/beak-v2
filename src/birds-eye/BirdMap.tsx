@@ -384,7 +384,7 @@ export function BirdMap() {
       placeholder: 'Search for a location',
       marker: false,
     });
-    mapRef.current.addControl(geocoder, 'bottom-left');
+    mapRef.current.addControl(geocoder, 'top-left');
 
     mapRef.current!.on('load', () => {
       fetchLifers(initialCenter.lat, initialCenter.lng, fileId).then((data) => {
@@ -963,6 +963,27 @@ export function BirdMap() {
         canClose={fileId !== ''}
       />
       <div className="topBar">
+        <div style={{ marginBottom: '8px' }}>
+          <button
+            onClick={() => {
+              localStorage.removeItem(STORAGE_KEY);
+              setShowUploadModal(true);
+            }}
+          >
+            Change CSV
+          </button>
+          {homeLocation && (
+            <button
+              onClick={flyToHomeLocation}
+              title={`Home location: ${homeLocation.location_name} (${homeLocation.checklist_count} checklists) - Your home location is calculated as the hotspot where you've submitted the most checklists`}
+            >
+              🏠 Home
+            </button>
+          )}
+          <button onClick={getCurrentLocation} title="Go to current location">
+            📍 Current Location
+          </button>
+        </div>
         <LayerToggle
           id={RootLayerIDs.HistoricalLifers}
           label="Historical lifers"
@@ -998,25 +1019,6 @@ export function BirdMap() {
             onMonthChange={setSelectedMonth}
           />
         )}
-        <button
-          onClick={() => {
-            localStorage.removeItem(STORAGE_KEY);
-            setShowUploadModal(true);
-          }}
-        >
-          Change CSV
-        </button>
-        {homeLocation && (
-          <button
-            onClick={flyToHomeLocation}
-            title={`Home location: ${homeLocation.location_name} (${homeLocation.checklist_count} checklists) - Your home location is calculated as the hotspot where you've submitted the most checklists`}
-          >
-            🏠 Home
-          </button>
-        )}
-        <button onClick={getCurrentLocation} title="Go to current location">
-          📍 Current Location
-        </button>
       </div>
       <div
         id="map-container"
