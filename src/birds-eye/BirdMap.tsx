@@ -34,10 +34,29 @@ import {
   INITIAL_CENTER,
   INITIAL_ZOOM,
   RootLayerIDs,
+  SubLayerIDs,
 } from './constants';
 import { addSourceAndLayer } from './map';
 
 const MODE: 'development' | 'production' = 'production'; // 'development' or 'production' - hardcoded for Docusaurus
+
+const STORAGE_KEY = 'birds-eye-csv-data';
+
+// Helper to load saved CSV data from localStorage
+const loadSavedCsvData = (): {
+  fileId: string;
+  homeLocation: HomeLocationInfo | null;
+} | null => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.warn('Failed to load saved CSV data:', e);
+  }
+  return null;
+};
 
 const LayerToggle = ({
   id,
@@ -182,9 +201,15 @@ const MonthSelector = ({
 const HotspotsList = ({
   visibleHotspots,
   activeLayerId,
+  onHotspotClick,
+  onHotspotHover,
+  hoveredHotspotId,
 }: {
   visibleHotspots: PopularHotspot[];
   activeLayerId: RootLayerIDs;
+  onHotspotClick?: (hotspot: PopularHotspot) => void;
+  onHotspotHover?: (hotspot: PopularHotspot | null) => void;
+  hoveredHotspotId?: string | null;
 }) => {
   const topHotspots = visibleHotspots
     .sort((a, b) =>
@@ -209,47 +234,64 @@ const HotspotsList = ({
         {topHotspots.length})
       </h3>
       <div className="checkbox-scroll-list">
-        {topHotspots.map((hotspot, index) => (
-          <div
-            key={hotspot.locality_id}
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 10,
-              padding: '4px 0',
-              borderBottom: '1px solid rgba(255,255,255,0.1)',
-            }}
-          >
-            <span
-              style={{ fontSize: '12px', fontWeight: 'bold', minWidth: '25px' }}
-            >
-              #{index + 1}
-            </span>
+        {topHotspots.map((hotspot, index) => {
+          const isHovered = hoveredHotspotId === hotspot.locality_id;
+          return (
             <div
+              key={hotspot.locality_id}
+              onClick={() => onHotspotClick?.(hotspot)}
+              onMouseEnter={() => onHotspotHover?.(hotspot)}
+              onMouseLeave={() => onHotspotHover?.(null)}
               style={{
-                flex: 1,
                 display: 'flex',
-                flexDirection: 'column',
-                minWidth: 0,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 10,
+                padding: '4px 8px',
+                marginLeft: -8,
+                marginRight: -8,
+                borderBottom: '1px solid rgba(255,255,255,0.1)',
+                cursor: onHotspotClick ? 'pointer' : 'default',
+                backgroundColor: isHovered
+                  ? 'rgba(255,255,255,0.1)'
+                  : 'transparent',
+                transition: 'background-color 0.15s ease',
               }}
             >
-              <div
+              <span
                 style={{
-                  fontSize: '13px',
+                  fontSize: '12px',
                   fontWeight: 'bold',
+                  minWidth: '25px',
                 }}
               >
-                {hotspot.locality_name}
-              </div>
-              <div style={{ fontSize: '11px', opacity: 0.8 }}>
-                {isLikelySpeciesLayer
-                  ? `${hotspot.likely_common_and_uncommon_species_count || 0} likely species (±${(hotspot.likely_common_species_std_error || 0).toFixed(1)})`
-                  : `${Math.round(hotspot.avg_weekly_checklists)} weekly checklists`}
+                #{index + 1}
+              </span>
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minWidth: 0,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {hotspot.locality_name}
+                </div>
+                <div style={{ fontSize: '11px', opacity: 0.8 }}>
+                  {isLikelySpeciesLayer
+                    ? `${hotspot.likely_common_and_uncommon_species_count || 0} likely species (±${(hotspot.likely_common_species_std_error || 0).toFixed(1)})`
+                    : `${Math.round(hotspot.avg_weekly_checklists)} weekly checklists`}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -293,19 +335,23 @@ export function BirdMap() {
     RootLayerIDs.HistoricalLifers
   );
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [fileId, setFileId] = useState('');
+
+  // Load saved CSV data from localStorage on initial render
+  const savedData = useMemo(() => loadSavedCsvData(), []);
+  const [fileId, setFileId] = useState(savedData?.fileId ?? '');
   const [showLoading, setShowLoading] = useState(false);
-  const [showUploadModal, setShowUploadModal] = useState(true);
+  const [showUploadModal, setShowUploadModal] = useState(!savedData);
   const [speciesFilter, setSpeciesFilter] = useState<SpeciesFilter>('all');
   const [visibleSpecies, setVisibleSpecies] = useState<Lifer[]>([]);
   // debouncing this since it seems to flicker a lot due to rendering?
   const [debouncedVisibleSpecies] = useDebounce(visibleSpecies, 50);
   const [homeLocation, setHomeLocation] = useState<HomeLocationInfo | null>(
-    null
+    savedData?.homeLocation ?? null
   );
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [visibleHotspots, setVisibleHotspots] = useState<PopularHotspot[]>([]);
   const [debouncedVisibleHotspots] = useDebounce(visibleHotspots, 50);
+  const [hoveredHotspotId, setHoveredHotspotId] = useState<string | null>(null);
 
   useEffect(() => {
     if (fileId === '') return;
@@ -607,6 +653,127 @@ export function BirdMap() {
     });
   }, [activeLayerId, mapLoaded]);
 
+  // Highlight hovered hotspot marker on the map
+  useEffect(() => {
+    if (!mapLoaded || !mapRef.current) return;
+
+    // Only applies to hotspot layers
+    const hotspotLayers = [
+      RootLayerIDs.PopularHotspots,
+      RootLayerIDs.LikelyCommonSpecies,
+    ];
+
+    hotspotLayers.forEach((layerId) => {
+      const circleLayerId = `${layerId}.${SubLayerIDs.UnclusteredPointsCircle}`;
+      const labelLayerId = `${layerId}.${SubLayerIDs.UnclusteredPointsLabel}`;
+
+      if (mapRef.current!.getLayer(circleLayerId)) {
+        // Update stroke width - thicker for hovered marker
+        mapRef.current!.setPaintProperty(
+          circleLayerId,
+          'circle-stroke-width',
+          hoveredHotspotId
+            ? [
+                'case',
+                ['==', ['get', 'location_id'], hoveredHotspotId],
+                5, // Hovered: thicker stroke
+                2, // Default stroke
+              ]
+            : 2
+        );
+
+        // Update stroke color - highlight color for hovered marker
+        mapRef.current!.setPaintProperty(
+          circleLayerId,
+          'circle-stroke-color',
+          hoveredHotspotId
+            ? [
+                'case',
+                ['==', ['get', 'location_id'], hoveredHotspotId],
+                '#FFD700', // Gold highlight for hovered
+                'white', // Default white
+              ]
+            : 'white'
+        );
+
+        // Scale up the circle radius for hovered marker
+        const baseRadius =
+          layerId === RootLayerIDs.PopularHotspots
+            ? [
+                'interpolate',
+                ['linear'],
+                ['get', 'checklist_count'],
+                0,
+                8,
+                200,
+                12,
+                1000,
+                18,
+              ]
+            : [
+                'interpolate',
+                ['linear'],
+                ['get', 'likely_common_and_uncommon_species_count'],
+                0,
+                6,
+                100,
+                12,
+                200,
+                20,
+              ];
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const radiusExpression: any = hoveredHotspotId
+          ? [
+              'case',
+              ['==', ['get', 'location_id'], hoveredHotspotId],
+              ['*', baseRadius, 1.5], // 50% bigger when hovered
+              baseRadius,
+            ]
+          : baseRadius;
+
+        mapRef.current!.setPaintProperty(
+          circleLayerId,
+          'circle-radius',
+          radiusExpression
+        );
+
+        // Bring hovered marker to front by setting high sort key
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sortKeyExpression: any = hoveredHotspotId
+          ? [
+              'case',
+              ['==', ['get', 'location_id'], hoveredHotspotId],
+              10000, // Very high value to render on top
+              ['-', ['get', 'checklist_count']], // Default: sort by popularity (negative for descending)
+            ]
+          : ['-', ['get', 'checklist_count']];
+
+        mapRef.current!.setLayoutProperty(
+          circleLayerId,
+          'circle-sort-key',
+          sortKeyExpression
+        );
+      }
+
+      // Update label size for hovered marker
+      if (mapRef.current!.getLayer(labelLayerId)) {
+        mapRef.current!.setLayoutProperty(
+          labelLayerId,
+          'text-size',
+          hoveredHotspotId
+            ? [
+                'case',
+                ['==', ['get', 'location_id'], hoveredHotspotId],
+                14, // Larger text when hovered
+                11, // Default size
+              ]
+            : 11
+        );
+      }
+    });
+  }, [hoveredHotspotId, mapLoaded]);
+
   useEffect(() => {
     if (!mapLoaded) return;
     if (activeLayerId !== RootLayerIDs.NewLifers) return;
@@ -757,9 +924,33 @@ export function BirdMap() {
       if (homeLocationData) {
         setHomeLocation(homeLocationData);
       }
+      // Save to localStorage for persistence across sessions
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            fileId,
+            homeLocation: homeLocationData ?? null,
+          })
+        );
+      } catch (e) {
+        console.warn('Failed to save CSV data to localStorage:', e);
+      }
     },
     []
   );
+
+  const handleHotspotClick = useCallback((hotspot: PopularHotspot) => {
+    mapRef.current?.flyTo({
+      center: [hotspot.longitude, hotspot.latitude],
+      zoom: 14,
+      essential: true,
+    });
+  }, []);
+
+  const handleHotspotHover = useCallback((hotspot: PopularHotspot | null) => {
+    setHoveredHotspotId(hotspot?.locality_id ?? null);
+  }, []);
 
   return (
     <div className="root-container">
@@ -807,7 +998,14 @@ export function BirdMap() {
             onMonthChange={setSelectedMonth}
           />
         )}
-        <button onClick={() => setShowUploadModal(true)}>Change CSV</button>
+        <button
+          onClick={() => {
+            localStorage.removeItem(STORAGE_KEY);
+            setShowUploadModal(true);
+          }}
+        >
+          Change CSV
+        </button>
         {homeLocation && (
           <button
             onClick={flyToHomeLocation}
@@ -847,6 +1045,9 @@ export function BirdMap() {
         <HotspotsList
           visibleHotspots={debouncedVisibleHotspots}
           activeLayerId={activeLayerId}
+          onHotspotClick={handleHotspotClick}
+          onHotspotHover={handleHotspotHover}
+          hoveredHotspotId={hoveredHotspotId}
         />
       )}
     </div>
