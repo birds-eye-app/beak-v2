@@ -1,3 +1,7 @@
+import InfoIcon from '@mui/icons-material/Info';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import Tooltip from '@mui/material/Tooltip';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import mapboxgl, { GeoJSONSource, Map, Marker } from 'mapbox-gl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -40,17 +44,56 @@ const LayerToggle = ({
   label,
   checked,
   onClick,
+  helpText,
 }: {
   id: RootLayerIDs;
   label: string;
   checked: boolean;
   onClick: (e: { target: { id: string } }) => void;
+  helpText?: string;
 }) => {
+  const [showHelp, setShowHelp] = useState(false);
+
   return (
-    <label className="form-control" htmlFor={id}>
-      <input type="radio" id={id} checked={checked} onChange={onClick} />
-      {label}
-    </label>
+    <div style={{ display: 'flex', alignItems: 'center', margin: '5px 0' }}>
+      <label className="form-control" htmlFor={id} style={{ margin: 0 }}>
+        <input type="radio" id={id} checked={checked} onChange={onClick} />
+        {label}
+      </label>
+      {helpText && (
+        <>
+          <Tooltip
+            title={helpText}
+            arrow
+            slotProps={{
+              popper: { style: { zIndex: 9999 } },
+            }}
+          >
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={() => setShowHelp(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                marginLeft: 4,
+                cursor: 'pointer',
+                opacity: 0.7,
+              }}
+            >
+              <InfoIcon sx={{ fontSize: 14 }} />
+            </span>
+          </Tooltip>
+          <Dialog
+            open={showHelp}
+            onClose={() => setShowHelp(false)}
+            sx={{ zIndex: 10000 }}
+          >
+            <DialogContent>{helpText}</DialogContent>
+          </Dialog>
+        </>
+      )}
+    </div>
   );
 };
 
@@ -61,6 +104,18 @@ const MonthSelector = ({
   selectedMonth: number;
   onMonthChange: (month: number) => void;
 }) => {
+  const [isNarrow, setIsNarrow] = useState(
+    typeof window !== 'undefined' && window.innerWidth < 768
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsNarrow(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const months = [
     'Jan',
     'Feb',
@@ -80,7 +135,8 @@ const MonthSelector = ({
     <div
       style={{
         display: 'flex',
-        gap: '8px',
+        width: 'fit-content',
+        gap: isNarrow ? '2px' : '8px',
         alignItems: 'center',
         backgroundColor: 'rgba(255,255,255,0.9)',
         padding: '8px',
@@ -98,13 +154,14 @@ const MonthSelector = ({
               alignItems: 'center',
               cursor: 'pointer',
               fontSize: '11px',
-              padding: '4px 6px',
+              padding: isNarrow ? '4px 4px' : '4px 6px',
               borderRadius: '3px',
               backgroundColor:
                 selectedMonth === monthNumber ? '#4CAF50' : 'transparent',
               color: selectedMonth === monthNumber ? 'white' : 'black',
               transition: 'all 0.2s ease',
             }}
+            title={month}
           >
             <input
               type="radio"
@@ -114,7 +171,7 @@ const MonthSelector = ({
               onChange={() => onMonthChange(monthNumber)}
               style={{ display: 'none' }}
             />
-            {month}
+            {isNarrow ? month[0] : month}
           </label>
         );
       })}
@@ -169,10 +226,19 @@ const HotspotsList = ({
             >
               #{index + 1}
             </span>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                minWidth: 0,
+              }}
+            >
               <div
-                style={{ fontSize: '13px', fontWeight: 'bold' }}
-                title={hotspot.locality_name}
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                }}
               >
                 {hotspot.locality_name}
               </div>
@@ -708,25 +774,29 @@ export function BirdMap() {
       <div className="topBar">
         <LayerToggle
           id={RootLayerIDs.HistoricalLifers}
-          label="Show historical lifers"
+          label="Historical lifers"
+          helpText="Displays on the map where you saw each of your lifers for the first time."
           checked={activeLayerId === RootLayerIDs.HistoricalLifers}
           onClick={handleClick}
         />
         <LayerToggle
           id={RootLayerIDs.NewLifers}
-          label="Show potential new lifers. Note: you need be fairly zoomed in for these to display properly."
+          label="Potential new lifers"
+          helpText="Searches the eBird API to see where you can go to find species not yet on your life list."
           checked={activeLayerId === RootLayerIDs.NewLifers}
           onClick={handleClick}
         />
         <LayerToggle
           id={RootLayerIDs.PopularHotspots}
-          label="Show popular hotspots"
+          label="Popular hotspots"
+          helpText="Shows hotspots by the average number of checklists submitted per week."
           checked={activeLayerId === RootLayerIDs.PopularHotspots}
           onClick={handleClick}
         />
         <LayerToggle
           id={RootLayerIDs.LikelyCommonSpecies}
-          label="Show likely common species diversity"
+          label="Species diversity"
+          helpText="Shows hotspots by the average number of species seen there each month."
           checked={activeLayerId === RootLayerIDs.LikelyCommonSpecies}
           onClick={handleClick}
         />
@@ -762,15 +832,16 @@ export function BirdMap() {
           | Zoom: {zoom.toFixed(2)} | Mode: {MODE}
         </div>
       )}
-      {Object.keys(visibleSpeciesWithLocation).length > 0 && (
-        <SpeciesSelectionList
-          visibleSpeciesWithLocation={visibleSpeciesWithLocation}
-          onUpdateToCheckedCodes={(checkedCodes) => {
-            console.debug(`updating species filter to ${checkedCodes}`);
-            setSpeciesFilter(checkedCodes);
-          }}
-        />
-      )}
+      {activeLayerId === RootLayerIDs.NewLifers &&
+        Object.keys(visibleSpeciesWithLocation).length > 0 && (
+          <SpeciesSelectionList
+            visibleSpeciesWithLocation={visibleSpeciesWithLocation}
+            onUpdateToCheckedCodes={(checkedCodes) => {
+              console.debug(`updating species filter to ${checkedCodes}`);
+              setSpeciesFilter(checkedCodes);
+            }}
+          />
+        )}
       {(activeLayerId === RootLayerIDs.PopularHotspots ||
         activeLayerId === RootLayerIDs.LikelyCommonSpecies) && (
         <HotspotsList

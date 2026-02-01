@@ -127,6 +127,7 @@
     right: 0;
     margin: 12px;
     border-radius: 4px;
+    max-width: 280px;
   }
 
   .checkbox-scroll-list {
@@ -139,10 +140,17 @@
   .right-species-bar {
     bottom: 0;
     right: 0;
+    margin: 12px;
+    border-radius: 4px;
   }
 
   .checkbox-scroll-list {
     max-height: 20vh;
+  }
+
+  /* Position search bar with consistent margin */
+  .mapboxgl-ctrl-bottom-left {
+    bottom: -30px;
   }
 }
 
