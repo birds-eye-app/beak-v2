@@ -140,6 +140,8 @@
   .right-species-bar {
     bottom: 0;
     right: 0;
+    margin: 12px;
+    border-radius: 4px;
   }
 
   .checkbox-scroll-list {
