@@ -12751,6 +12751,11 @@ xdg-basedir@^5.0.1, xdg-basedir@^5.1.0:
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-5.1.0.tgz#1efba19425e73be1bc6f2a6ceb52a3d2c884c0c9"
   integrity sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==
 
+xeno-canto-api-ts@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/xeno-canto-api-ts/-/xeno-canto-api-ts-2.0.3.tgz#7388d6f0221b431688acf044d58e192cd3000d2b"
+  integrity sha512-9waFzzYYDmB3lzDR+9czetaGY136hNHmwPqT6+KZVffYeg552gU4iMBR/Cl0GovrTGljefR+zX00WgigSoVXkQ==
+
 xml-js@^1.6.11:
   version "1.6.11"
   resolved "https://registry.yarnpkg.com/xml-js/-/xml-js-1.6.11.tgz#927d2f6947f7f1c19a316dd8eea3614e8b18f8e9"
