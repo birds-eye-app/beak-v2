@@ -61,31 +61,42 @@ export function AudioPlayer({
     };
   }, []);
 
+  // Safe play helper — Safari rejects play() promises for various reasons
+  const safePlay = useCallback(
+    (audio: HTMLAudioElement) => {
+      audio.play().then(
+        () => setPlaying(true),
+        () => setPlaying(false), // autoplay blocked or source not ready
+      );
+    },
+    [setPlaying],
+  );
+
   // Reset and auto-play when src changes
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     setCurrentTime(0);
     if (autoPlay) {
-      audio.play().then(() => setPlaying(true));
+      safePlay(audio);
     } else {
       setPlaying(false);
     }
-  }, [src, autoPlay]);
+  }, [src, autoPlay, safePlay, setPlaying]);
 
   const togglePlay = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
     if (playing) {
       audio.pause();
+      setPlaying(false);
     } else {
       if (audio.currentTime >= MAX_DURATION) {
         audio.currentTime = 0;
       }
-      audio.play();
+      safePlay(audio);
     }
-    setPlaying(!playing);
-  }, [playing]);
+  }, [playing, safePlay, setPlaying]);
 
   const handleSeek = useCallback((_: Event, value: number | number[]) => {
     const audio = audioRef.current;
@@ -99,13 +110,12 @@ export function AudioPlayer({
     const audio = audioRef.current;
     if (!audio) return;
     audio.currentTime = 0;
-    audio.play();
-    setPlaying(true);
-  }, []);
+    safePlay(audio);
+  }, [safePlay]);
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}>
-      <audio ref={audioRef} src={src} preload="metadata" />
+      <audio ref={audioRef} src={src} preload="auto" crossOrigin="anonymous" />
       <IconButton onClick={togglePlay} color="primary" size="large">
         {playing ? <PauseIcon /> : <PlayArrowIcon />}
       </IconButton>
