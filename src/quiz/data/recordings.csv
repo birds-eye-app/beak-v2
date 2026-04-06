@@ -4,44 +4,66 @@ Northern Cardinal,Cardinalis cardinalis,/quiz/audio/northern-cardinal.mp3,/quiz/
 Blue Jay,Cyanocitta cristata,/quiz/audio/blue-jay.mp3,/quiz/spectrograms/blue-jay.png,1014208,Stanislas Wroza,,medium,2
 House Sparrow,Passer domesticus,/quiz/audio/house-sparrow.mp3,/quiz/spectrograms/house-sparrow.png,1092251,"Olivier SWIFT, Hélène CARTAUD",,easy,2
 Mourning Dove,Zenaida macroura,/quiz/audio/mourning-dove.mp3,/quiz/spectrograms/mourning-dove.png,1013012,Stanislas Wroza,,easy,2
-Song Sparrow,Melospiza melodia,/quiz/audio/song-sparrow.mp3,/quiz/spectrograms/song-sparrow.png,1092304,Scott Crabtree,,medium,
-White-throated Sparrow,Zonotrichia albicollis,/quiz/audio/white-throated-sparrow.mp3,/quiz/spectrograms/white-throated-sparrow.png,1015145,David A. Brinkman,true,medium,
-Red-winged Blackbird,Agelaius phoeniceus,/quiz/audio/red-winged-blackbird.mp3,/quiz/spectrograms/red-winged-blackbird.png,1089594,Ed Pandolfino,,easy,
-Common Grackle,Quiscalus quiscula,/quiz/audio/common-grackle.mp3,/quiz/spectrograms/common-grackle.png,1014942,Stanislas Wroza,,easy,
-Brown-headed Cowbird,Molothrus ater,/quiz/audio/brown-headed-cowbird.mp3,/quiz/spectrograms/brown-headed-cowbird.png,1039613,Thomas Magarian,,medium,
-American Goldfinch,Spinus tristis,/quiz/audio/american-goldfinch.mp3,/quiz/spectrograms/american-goldfinch.png,1090062,Manuel Grosselet,,medium,
-House Finch,Haemorhous mexicanus,/quiz/audio/house-finch.mp3,/quiz/spectrograms/house-finch.png,1089801,Manuel Grosselet,,medium,
-Dark-eyed Junco,Junco hyemalis,/quiz/audio/dark-eyed-junco.mp3,/quiz/spectrograms/dark-eyed-junco.png,1083920,Greg Irving,,hard,
-Eastern Towhee,Pipilo erythrophthalmus,/quiz/audio/eastern-towhee.mp3,/quiz/spectrograms/eastern-towhee.png,1081945,David Darrell-Lambert,,medium,
-Chipping Sparrow,Spizella passerina,/quiz/audio/chipping-sparrow.mp3,/quiz/spectrograms/chipping-sparrow.png,1081943,David Darrell-Lambert,,medium,
-White-breasted Nuthatch,Sitta carolinensis,/quiz/audio/white-breasted-nuthatch.mp3,/quiz/spectrograms/white-breasted-nuthatch.png,1093533,Mario Reyes Jr,,medium,
-Tufted Titmouse,Baeolophus bicolor,/quiz/audio/tufted-titmouse.mp3,/quiz/spectrograms/tufted-titmouse.png,1093532,Mario Reyes Jr,,easy,
-Black-capped Chickadee,Poecile atricapillus,/quiz/audio/black-capped-chickadee.mp3,/quiz/spectrograms/black-capped-chickadee.png,1078261,Valerie Heemstra,true,easy,
-Downy Woodpecker,Dryobates pubescens,/quiz/audio/downy-woodpecker.mp3,/quiz/spectrograms/downy-woodpecker.png,567618,Michael Hurben,,easy,
-Red-bellied Woodpecker,Melanerpes carolinus,/quiz/audio/red-bellied-woodpecker.mp3,/quiz/spectrograms/red-bellied-woodpecker.png,1093541,Mario Reyes Jr,,easy,
-Northern Flicker,Colaptes auratus,/quiz/audio/northern-flicker.mp3,/quiz/spectrograms/northern-flicker.png,1013307,Stanislas Wroza,,easy,
-Yellow-bellied Sapsucker,Sphyrapicus varius,/quiz/audio/yellow-bellied-sapsucker.mp3,/quiz/spectrograms/yellow-bellied-sapsucker.png,815824,Denis Provencher,true,hard,
-Ruby-crowned Kinglet,Corthylio calendula,/quiz/audio/ruby-crowned-kinglet.mp3,/quiz/spectrograms/ruby-crowned-kinglet.png,1034775,Richard E. Webster,,hard,
-Golden-crowned Kinglet,Regulus satrapa,/quiz/audio/golden-crowned-kinglet.mp3,/quiz/spectrograms/golden-crowned-kinglet.png,1029334,Valerie Heemstra,,hard,
-Hermit Thrush,Catharus guttatus,/quiz/audio/hermit-thrush.mp3,/quiz/spectrograms/hermit-thrush.png,1068838,Benjamin Drillat,true,medium,
-Palm Warbler,Setophaga palmarum,/quiz/audio/palm-warbler.mp3,/quiz/spectrograms/palm-warbler.png,1015038,Stanislas Wroza,,medium,
-Pine Warbler,Setophaga pinus,/quiz/audio/pine-warbler.mp3,/quiz/spectrograms/pine-warbler.png,1079213,Marc Anderson,true,hard,
-Yellow Warbler,Setophaga petechia,/quiz/audio/yellow-warbler.mp3,/quiz/spectrograms/yellow-warbler.png,397966,Peter Boesman,true,medium,
-Black-and-white Warbler,Mniotilta varia,/quiz/audio/black-and-white-warbler.mp3,/quiz/spectrograms/black-and-white-warbler.png,1036380,Bobby Wilcox,,medium,
-Northern Parula,Setophaga americana,/quiz/audio/northern-parula.mp3,/quiz/spectrograms/northern-parula.png,1082098,David Darrell-Lambert,,medium,
-Eastern Phoebe,Sayornis phoebe,/quiz/audio/eastern-phoebe.mp3,/quiz/spectrograms/eastern-phoebe.png,1027244,Jim Berry,,easy,
-Red-tailed Hawk,Buteo jamaicensis,/quiz/audio/red-tailed-hawk.mp3,/quiz/spectrograms/red-tailed-hawk.png,1090861,Manuel Grosselet,,easy,
-Cooper's Hawk,Accipiter cooperii,/quiz/audio/cooper-s-hawk.mp3,/quiz/spectrograms/cooper-s-hawk.png,11627,Nathan Pieplow,,medium,
-Peregrine Falcon,Falco peregrinus,/quiz/audio/peregrine-falcon.mp3,/quiz/spectrograms/peregrine-falcon.png,985567,Gil Lissens,true,hard,
-American Kestrel,Falco sparverius,/quiz/audio/american-kestrel.mp3,/quiz/spectrograms/american-kestrel.png,674597,JAYRSON ARAUJO DE OLIVEIRA,,easy,
-Ring-billed Gull,Larus delawarensis,/quiz/audio/ring-billed-gull.mp3,/quiz/spectrograms/ring-billed-gull.png,1020645,Stanislas Wroza,,medium,
-Rock Pigeon,Columba livia,/quiz/audio/rock-pigeon.mp3,/quiz/spectrograms/rock-pigeon.png,1046170,Greg McLachlan,true,easy,
-Monk Parakeet,Myiopsitta monachus,/quiz/audio/monk-parakeet.mp3,/quiz/spectrograms/monk-parakeet.png,1001665,Marcos E. Sosa,,medium,
-Brown Creeper,Certhia americana,/quiz/audio/brown-creeper.mp3,/quiz/spectrograms/brown-creeper.png,1092057,Valerie Heemstra,true,hard,
-Carolina Wren,Thryothorus ludovicianus,/quiz/audio/carolina-wren.mp3,/quiz/spectrograms/carolina-wren.png,1093537,Mario Reyes Jr,,easy,
-House Wren,Troglodytes aedon,/quiz/audio/house-wren.mp3,/quiz/spectrograms/house-wren.png,1087257,Garrett Yocklin,,easy,
-Northern Mockingbird,Mimus polyglottos,/quiz/audio/northern-mockingbird.mp3,/quiz/spectrograms/northern-mockingbird.png,1089514,Scott Crabtree,,easy,
-Cedar Waxwing,Bombycilla cedrorum,/quiz/audio/cedar-waxwing.mp3,/quiz/spectrograms/cedar-waxwing.png,1005316,Rory Nefdt,,easy,
-Red-eyed Vireo,Vireo olivaceus,/quiz/audio/red-eyed-vireo.mp3,/quiz/spectrograms/red-eyed-vireo.png,1014502,Stanislas Wroza,,easy,
-Baltimore Oriole,Icterus galbula,/quiz/audio/baltimore-oriole.mp3,/quiz/spectrograms/baltimore-oriole.png,1036385,Bobby Wilcox,,medium,
-Ovenbird,Seiurus aurocapilla,/quiz/audio/ovenbird.mp3,/quiz/spectrograms/ovenbird.png,1037293,Bobby Wilcox,,easy,
+Song Sparrow,Melospiza melodia,/quiz/audio/song-sparrow.mp3,/quiz/spectrograms/song-sparrow.png,1092304,Scott Crabtree,,medium,2
+White-throated Sparrow,Zonotrichia albicollis,/quiz/audio/white-throated-sparrow.mp3,/quiz/spectrograms/white-throated-sparrow.png,234159,William Whitehead,,medium,2
+Red-winged Blackbird,Agelaius phoeniceus,/quiz/audio/red-winged-blackbird.mp3,/quiz/spectrograms/red-winged-blackbird.png,1089594,Ed Pandolfino,,easy,2
+Common Grackle,Quiscalus quiscula,/quiz/audio/common-grackle.mp3,/quiz/spectrograms/common-grackle.png,1014942,Stanislas Wroza,,easy,2
+House Finch,Haemorhous mexicanus,/quiz/audio/house-finch.mp3,/quiz/spectrograms/house-finch.png,1089801,Manuel Grosselet,,medium,3
+Dark-eyed Junco,Junco hyemalis,/quiz/audio/dark-eyed-junco.mp3,/quiz/spectrograms/dark-eyed-junco.png,1083920,Greg Irving,,medium,2
+Eastern Towhee,Pipilo erythrophthalmus,/quiz/audio/eastern-towhee.mp3,/quiz/spectrograms/eastern-towhee.png,1081945,David Darrell-Lambert,,easy,2
+Chipping Sparrow,Spizella passerina,/quiz/audio/chipping-sparrow.mp3,/quiz/spectrograms/chipping-sparrow.png,1081943,David Darrell-Lambert,,medium,2
+Tufted Titmouse,Baeolophus bicolor,/quiz/audio/tufted-titmouse.mp3,/quiz/spectrograms/tufted-titmouse.png,1093532,Mario Reyes Jr,true,easy,2
+Black-capped Chickadee,Poecile atricapillus,/quiz/audio/black-capped-chickadee.mp3,/quiz/spectrograms/black-capped-chickadee.png,994313,William Whitehead,,easy,2
+Downy Woodpecker,Dryobates pubescens,/quiz/audio/downy-woodpecker.mp3,/quiz/spectrograms/downy-woodpecker.png,567618,Michael Hurben,,easy,2
+Red-bellied Woodpecker,Melanerpes carolinus,/quiz/audio/red-bellied-woodpecker.mp3,/quiz/spectrograms/red-bellied-woodpecker.png,1093541,Mario Reyes Jr,true,easy,1
+Northern Flicker,Colaptes auratus,/quiz/audio/northern-flicker.mp3,/quiz/spectrograms/northern-flicker.png,1013307,Stanislas Wroza,,easy,3
+Yellow-bellied Sapsucker,Sphyrapicus varius,/quiz/audio/yellow-bellied-sapsucker.mp3,/quiz/spectrograms/yellow-bellied-sapsucker.png,815824,Denis Provencher,,medium,2
+Ruby-crowned Kinglet,Corthylio calendula,/quiz/audio/ruby-crowned-kinglet.mp3,/quiz/spectrograms/ruby-crowned-kinglet.png,1034775,Richard E. Webster,,medium,2
+Golden-crowned Kinglet,Regulus satrapa,/quiz/audio/golden-crowned-kinglet.mp3,/quiz/spectrograms/golden-crowned-kinglet.png,1029334,Valerie Heemstra,,medium,2
+Hermit Thrush,Catharus guttatus,/quiz/audio/hermit-thrush.mp3,/quiz/spectrograms/hermit-thrush.png,933565,William Whitehead,,medium,2
+Palm Warbler,Setophaga palmarum,/quiz/audio/palm-warbler.mp3,/quiz/spectrograms/palm-warbler.png,1015038,Stanislas Wroza,true,medium,
+Pine Warbler,Setophaga pinus,/quiz/audio/pine-warbler.mp3,/quiz/spectrograms/pine-warbler.png,1093540,Mario Reyes Jr,,hard,2
+Black-and-white Warbler,Mniotilta varia,/quiz/audio/black-and-white-warbler.mp3,/quiz/spectrograms/black-and-white-warbler.png,1036380,Bobby Wilcox,,medium,2
+Northern Parula,Setophaga americana,/quiz/audio/northern-parula.mp3,/quiz/spectrograms/northern-parula.png,1082098,David Darrell-Lambert,,medium,2
+Eastern Phoebe,Sayornis phoebe,/quiz/audio/eastern-phoebe.mp3,/quiz/spectrograms/eastern-phoebe.png,1027244,Jim Berry,,easy,2
+Red-tailed Hawk,Buteo jamaicensis,/quiz/audio/red-tailed-hawk.mp3,/quiz/spectrograms/red-tailed-hawk.png,1090861,Manuel Grosselet,,easy,2
+American Kestrel,Falco sparverius,/quiz/audio/american-kestrel.mp3,/quiz/spectrograms/american-kestrel.png,674597,JAYRSON ARAUJO DE OLIVEIRA,,easy,2
+Baltimore Oriole,Icterus galbula,/quiz/audio/baltimore-oriole.mp3,/quiz/spectrograms/baltimore-oriole.png,1036385,Bobby Wilcox,true,medium,
+Ovenbird,Seiurus aurocapilla,/quiz/audio/ovenbird.mp3,/quiz/spectrograms/ovenbird.png,1037293,Bobby Wilcox,,easy,2
+Laughing Gull,Leucophaeus atricilla,/quiz/audio/laughing-gull.mp3,/quiz/spectrograms/laughing-gull.png,1154,Don Jones,,easy,3
+American Crow,Corvus brachyrhynchos,/quiz/audio/american-crow.mp3,/quiz/spectrograms/american-crow.png,807484,Barry Edmonston,,easy,2
+Fish Crow,Corvus ossifragus,/quiz/audio/fish-crow.mp3,/quiz/spectrograms/fish-crow.png,530410,Taylor Sturm,,easy,2
+Blue-headed Vireo,Vireo solitarius,/quiz/audio/blue-headed-vireo.mp3,/quiz/spectrograms/blue-headed-vireo.png,593859,William Whitehead,,medium,2
+Double-crested Cormorant,Nannopterum auritum,/quiz/audio/double-crested-cormorant.mp3,/quiz/spectrograms/double-crested-cormorant.png,611038,Brian Henderson,true,medium,
+Scarlet Tanager,Piranga olivacea,/quiz/audio/scarlet-tanager.mp3,/quiz/spectrograms/scarlet-tanager.png,558905,William Whitehead,true,medium,
+Canada Goose,Branta canadensis,/quiz/audio/canada-goose.mp3,/quiz/spectrograms/canada-goose.png,287162,Joe Klaiber,true,easy,
+Rose-breasted Grosbeak,Pheucticus ludovicianus,/quiz/audio/rose-breasted-grosbeak.mp3,/quiz/spectrograms/rose-breasted-grosbeak.png,558664,William Whitehead,,medium,2
+Swamp Sparrow,Melospiza georgiana,/quiz/audio/swamp-sparrow.mp3,/quiz/spectrograms/swamp-sparrow.png,729071,William Whitehead,true,medium,
+Black-throated Blue Warbler,Setophaga caerulescens,/quiz/audio/black-throated-blue-warbler.mp3,/quiz/spectrograms/black-throated-blue-warbler.png,555000,William Whitehead,true,medium,
+Great Crested Flycatcher,Myiarchus crinitus,/quiz/audio/great-crested-flycatcher.mp3,/quiz/spectrograms/great-crested-flycatcher.png,182575,Jorge de Leon Cardozo and Susan Hochgraf,,easy,2
+Prairie Warbler,Setophaga discolor,/quiz/audio/prairie-warbler.mp3,/quiz/spectrograms/prairie-warbler.png,655862,William Whitehead,,medium,2
+American Herring Gull,Larus smithsonianus,/quiz/audio/american-herring-gull.mp3,/quiz/spectrograms/american-herring-gull.png,1021690,Stanislas Wroza,,medium,2
+Brown Thrasher,Toxostoma rufum,/quiz/audio/brown-thrasher.mp3,/quiz/spectrograms/brown-thrasher.png,546731,William Whitehead,,medium,2
+Brown Creeper,Certhia americana,/quiz/audio/brown-creeper.mp3,/quiz/spectrograms/brown-creeper.png,50434,William Whitehead,,hard,2
+European Starling,Sturnus vulgaris,/quiz/audio/european-starling.mp3,/quiz/spectrograms/european-starling.png,636461,Thomas Ryder Payne,,easy,3
+Red-bellied Woodpecker,Melanerpes carolinus,/quiz/audio/red-bellied-woodpecker.mp3,/quiz/spectrograms/red-bellied-woodpecker.png,568575,Meena Haribal,,easy,2
+Yellow-rumped Warbler,Setophaga coronata,/quiz/audio/yellow-rumped-warbler.mp3,/quiz/spectrograms/yellow-rumped-warbler.png,701682,William Whitehead,true,medium,
+Gray Catbird,Dumetella carolinensis,/quiz/audio/gray-catbird.mp3,/quiz/spectrograms/gray-catbird.png,190458,Krzysztof Deoniziak,,medium,2
+Tufted Titmouse,Baeolophus bicolor,/quiz/audio/tufted-titmouse.mp3,/quiz/spectrograms/tufted-titmouse.png,1035994,Rory Nefdt,true,medium,
+Double-crested Cormorant,Nannopterum auritum,/quiz/audio/double-crested-cormorant.mp3,/quiz/spectrograms/double-crested-cormorant.png,780994,Paul Driver,,medium,2
+Baltimore Oriole,Icterus galbula,/quiz/audio/baltimore-oriole.mp3,/quiz/spectrograms/baltimore-oriole.png,552079,William Whitehead,true,medium,
+Scarlet Tanager,Piranga olivacea,/quiz/audio/scarlet-tanager.mp3,/quiz/spectrograms/scarlet-tanager.png,101628,Daniel Lane,true,medium,
+Canada Goose,Branta canadensis,/quiz/audio/canada-goose.mp3,/quiz/spectrograms/canada-goose.png,637975,Regina Eidner,,easy,2
+Northern Yellow Warbler,Setophaga aestiva,/quiz/audio/northern-yellow-warbler.mp3,/quiz/spectrograms/northern-yellow-warbler.png,394040,Dominic Garcia-Hall,,medium,3
+Swamp Sparrow,Melospiza georgiana,/quiz/audio/swamp-sparrow.mp3,/quiz/spectrograms/swamp-sparrow.png,729070,William Whitehead,,medium,2
+Black-throated Blue Warbler,Setophaga caerulescens,/quiz/audio/black-throated-blue-warbler.mp3,/quiz/spectrograms/black-throated-blue-warbler.png,101928,Daniel Lane,,medium,2
+Yellow-rumped Warbler,Setophaga coronata,/quiz/audio/yellow-rumped-warbler.mp3,/quiz/spectrograms/yellow-rumped-warbler.png,469599,Rolf A. de By,,medium,2
+Tufted Titmouse,Baeolophus bicolor,/quiz/audio/tufted-titmouse.mp3,/quiz/spectrograms/tufted-titmouse.png,706242,William Whitehead,true,medium,
+Baltimore Oriole,Icterus galbula,/quiz/audio/baltimore-oriole.mp3,/quiz/spectrograms/baltimore-oriole.png,367190,William Whitehead,true,medium,
+Scarlet Tanager,Piranga olivacea,/quiz/audio/scarlet-tanager.mp3,/quiz/spectrograms/scarlet-tanager.png,101898,Daniel Lane,,medium,2
+Palm Warbler,Setophaga palmarum,/quiz/audio/palm-warbler.mp3,/quiz/spectrograms/palm-warbler.png,410779,William Whitehead,true,medium,
+Baltimore Oriole,Icterus galbula,/quiz/audio/baltimore-oriole.mp3,/quiz/spectrograms/baltimore-oriole.png,1014853,Stanislas Wroza,,medium,2
+Tufted Titmouse,Baeolophus bicolor,/quiz/audio/tufted-titmouse.mp3,/quiz/spectrograms/tufted-titmouse.png,465256,William Whitehead,true,medium,
+Palm Warbler,Setophaga palmarum,/quiz/audio/palm-warbler.mp3,/quiz/spectrograms/palm-warbler.png,640356,Christopher McPherson,true,medium,
+Tufted Titmouse,Baeolophus bicolor,/quiz/audio/tufted-titmouse.mp3,/quiz/spectrograms/tufted-titmouse.png,895984,Scott Gravette,,easy,
+Palm Warbler,Setophaga palmarum,/quiz/audio/palm-warbler.mp3,/quiz/spectrograms/palm-warbler.png,1015036,Stanislas Wroza,,medium,

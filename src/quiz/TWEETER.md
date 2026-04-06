@@ -55,7 +55,14 @@ static/quiz/spectrograms/  # ~46 spectrogram PNGs
 ## TODO
 
 ### features
-- [ ] support ability for users to create their own quizzes. Select location and time and prequery for birds. Allow user to select birds to include and filter songs in list.
+- [ ] support ability for users to create their own quizzes. 
+    1. Select location and time and prequery for birds. 
+    2. Allow user to select birds to include
+    3. Go through each bird and suggest best songs based on quality and proximity. 
+    4. Creator goes through and selects which recordings they do / don't want to include
+    5. Then they can view the quiz and even share it with others
+
+    This will need: 
 - [ ] **Difficulty modes**: Let users filter by easy/medium/hard.
 
 ### polish
@@ -64,8 +71,10 @@ static/quiz/spectrograms/  # ~46 spectrogram PNGs
 - [ ] **Dynamic bird list**: Currently hardcoded to ~50 McGolrick Park April birds. Eventually pull from eBird API based on user-selected hotspot + month.
 - [ ] **Spectrogram from XenoCanto CDN**: Like audio, spectrograms could be served from XenoCanto URLs at runtime instead of committed to git.
 - [ ] **Share results**: Screenshot/share score card (like Chirped).
-- [ ] **Mobile optimization**: Test and polish mobile layout.
 - [ ] **Move to API**: Push bird list + recording selection to the backend (cloaca) instead of hardcoded frontend data.
+- [ ] fetch script is slow. Is it still downloading files? 
+- [ ] support multiple recordings per species
 
 ### bugs
 - [ ] **Safari can't play WAV recordings**: XenoCanto's `/download` endpoint serves WAV files for roughly half the recordings. Chrome handles these fine, but Safari errors with `MEDIA_ERR_SRC_NOT_SUPPORTED` (code 4). Fix options: (a) download recordings locally and convert to MP3 with ffmpeg, then host on S3/R2, (b) only use recordings that happen to be MP3, or (c) proxy through our own backend that transcodes on the fly. For now, the demo works in Chrome; Safari will silently fail on ~half the recordings.
+- [ ] fetching audio by common name is finicky. should figure out more precise way to do this

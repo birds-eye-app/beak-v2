@@ -1,19 +1,22 @@
 /**
- * One-time script to download bird song recordings from XenoCanto
- * for the McGolrick Park / April quiz POC.
+ * Fetch bird song recordings from XenoCanto for the quiz.
+ * Uses scientific names for precise matching and proximity sorting.
+ * Skips XC IDs already in the CSV (active or rejected) to avoid re-fetching bad recordings.
+ * Supports multiple rows per species — rejected recordings stay in the CSV as a blocklist.
  *
- * Usage: npx tsx scripts/fetch-xeno-canto.ts
+ * Usage:
+ *   npx tsx scripts/fetch-xeno-canto.ts           # fetch for all species
+ *   npx tsx scripts/fetch-xeno-canto.ts --missing  # only species without an active recording
  */
 
 import * as XenoCanto from "xeno-canto-api-ts";
 import { readFileSync, existsSync } from "fs";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, appendFile } from "fs/promises";
 import * as path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Load API key from .env
 const envPath = path.join(__dirname, "../.env");
 const API_KEY = readFileSync(envPath, "utf-8")
   .split("\n")
@@ -21,204 +24,199 @@ const API_KEY = readFileSync(envPath, "utf-8")
   ?.split("=")[1]
   ?.trim();
 
-if (!API_KEY) {
-  throw new Error("XENO_CANTO_API_KEY not found in .env");
-}
+if (!API_KEY) throw new Error("XENO_CANTO_API_KEY not found in .env");
 
-const AUDIO_DIR = path.join(__dirname, "../public/quiz/audio");
-const SPECTRO_DIR = path.join(__dirname, "../public/quiz/spectrograms");
-const MANIFEST_PATH = path.join(__dirname, "../src/quiz/data/recordings.json");
+const SPECTRO_DIR = path.join(__dirname, "../static/quiz/spectrograms");
+const CSV_PATH = path.join(__dirname, "../src/quiz/data/recordings.csv");
 
-// ~50 common birds for McGolrick Park, Brooklyn in April
-const SPECIES = [
-  "American Robin",
-  "Northern Cardinal",
-  "Blue Jay",
-  "House Sparrow",
-  "European Starling",
-  "Mourning Dove",
-  "Song Sparrow",
-  "White-throated Sparrow",
-  "Red-winged Blackbird",
-  "Common Grackle",
-  "Brown-headed Cowbird",
-  "American Goldfinch",
-  "House Finch",
-  "Dark-eyed Junco",
-  "Eastern Towhee",
-  "Chipping Sparrow",
-  "White-breasted Nuthatch",
-  "Tufted Titmouse",
-  "Black-capped Chickadee",
-  "Downy Woodpecker",
-  "Red-bellied Woodpecker",
-  "Northern Flicker",
-  "Yellow-bellied Sapsucker",
-  "Ruby-crowned Kinglet",
-  "Golden-crowned Kinglet",
-  "Blue-gray Gnatcatcher",
-  "Hermit Thrush",
-  "Yellow-rumped Warbler",
-  "Palm Warbler",
-  "Pine Warbler",
-  "Yellow Warbler",
-  "Black-and-white Warbler",
-  "Northern Parula",
-  "Eastern Phoebe",
-  "Red-tailed Hawk",
-  "Cooper's Hawk",
-  "Peregrine Falcon",
-  "American Kestrel",
-  "Ring-billed Gull",
-  "Rock Pigeon",
-  "Monk Parakeet",
-  "Brown Creeper",
-  "Carolina Wren",
-  "House Wren",
-  "Gray Catbird",
-  "Northern Mockingbird",
-  "Cedar Waxwing",
-  "Red-eyed Vireo",
-  "Baltimore Oriole",
-  "Ovenbird",
-];
-
-interface ManifestEntry {
-  commonName: string;
-  scientificName: string;
-  audioFile: string;
-  spectrogramFile: string;
-  xenoCantoId: string;
-  recordist: string;
-}
-
-// McGolrick Park, Brooklyn
+// McGolrick Park coordinates for proximity sorting
 const TARGET_LAT = 40.7232;
 const TARGET_LON = -73.9422;
 
-function distanceFromTarget(lat: string, lon: string): number {
-  const la = parseFloat(lat);
-  const lo = parseFloat(lon);
-  if (isNaN(la) || isNaN(lo)) return Infinity;
-  // Simple Euclidean approximation — good enough for ranking
-  return Math.sqrt((la - TARGET_LAT) ** 2 + (lo - TARGET_LON) ** 2);
-}
-
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-async function downloadFile(url: string, destPath: string): Promise<void> {
-  const fullUrl = url.startsWith("//") ? `https:${url}` : url;
-  const response = await fetch(fullUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to download ${fullUrl}: ${response.status}`);
-  }
-  const buffer = Buffer.from(await response.arrayBuffer());
-  await writeFile(destPath, buffer);
-}
+// Top 50 McGolrick Park April birds from eBird data
+const SPECIES = [
+  { common: "European Starling", gen: "Sturnus", sp: "vulgaris" },
+  { common: "House Sparrow", gen: "Passer", sp: "domesticus" },
+  { common: "American Robin", gen: "Turdus", sp: "migratorius" },
+  { common: "Mourning Dove", gen: "Zenaida", sp: "macroura" },
+  { common: "White-throated Sparrow", gen: "Zonotrichia", sp: "albicollis" },
+  { common: "Red-bellied Woodpecker", gen: "Melanerpes", sp: "carolinus" },
+  { common: "Yellow-bellied Sapsucker", gen: "Sphyrapicus", sp: "varius" },
+  { common: "Downy Woodpecker", gen: "Dryobates", sp: "pubescens" },
+  { common: "Laughing Gull", gen: "Leucophaeus", sp: "atricilla" },
+  { common: "Hermit Thrush", gen: "Catharus", sp: "guttatus" },
+  { common: "Common Grackle", gen: "Quiscalus", sp: "quiscula" },
+  { common: "Blue Jay", gen: "Cyanocitta", sp: "cristata" },
+  { common: "Northern Flicker", gen: "Colaptes", sp: "auratus" },
+  { common: "Northern Cardinal", gen: "Cardinalis", sp: "cardinalis" },
+  { common: "Ruby-crowned Kinglet", gen: "Corthylio", sp: "calendula" },
+  { common: "Chipping Sparrow", gen: "Spizella", sp: "passerina" },
+  { common: "American Crow", gen: "Corvus", sp: "brachyrhynchos" },
+  { common: "Fish Crow", gen: "Corvus", sp: "ossifragus" },
+  { common: "Black-and-white Warbler", gen: "Mniotilta", sp: "varia" },
+  { common: "Yellow-rumped Warbler", gen: "Setophaga", sp: "coronata" },
+  { common: "Gray Catbird", gen: "Dumetella", sp: "carolinensis" },
+  { common: "Dark-eyed Junco", gen: "Junco", sp: "hyemalis" },
+  { common: "Tufted Titmouse", gen: "Baeolophus", sp: "bicolor" },
+  { common: "Blue-headed Vireo", gen: "Vireo", sp: "solitarius" },
+  { common: "House Finch", gen: "Haemorhous", sp: "mexicanus" },
+  { common: "Ovenbird", gen: "Seiurus", sp: "aurocapilla" },
+  { common: "Eastern Towhee", gen: "Pipilo", sp: "erythrophthalmus" },
+  { common: "Double-crested Cormorant", gen: "Nannopterum", sp: "auritum" },
+  { common: "Baltimore Oriole", gen: "Icterus", sp: "galbula" },
+  { common: "Pine Warbler", gen: "Setophaga", sp: "pinus" },
+  { common: "Eastern Phoebe", gen: "Sayornis", sp: "phoebe" },
+  { common: "Scarlet Tanager", gen: "Piranga", sp: "olivacea" },
+  { common: "Song Sparrow", gen: "Melospiza", sp: "melodia" },
+  { common: "Northern Parula", gen: "Setophaga", sp: "americana" },
+  { common: "Red-tailed Hawk", gen: "Buteo", sp: "jamaicensis" },
+  { common: "Black-capped Chickadee", gen: "Poecile", sp: "atricapillus" },
+  { common: "Palm Warbler", gen: "Setophaga", sp: "palmarum" },
+  { common: "Golden-crowned Kinglet", gen: "Regulus", sp: "satrapa" },
+  { common: "Canada Goose", gen: "Branta", sp: "canadensis" },
+  { common: "Red-winged Blackbird", gen: "Agelaius", sp: "phoeniceus" },
+  { common: "Rose-breasted Grosbeak", gen: "Pheucticus", sp: "ludovicianus" },
+  { common: "Northern Yellow Warbler", gen: "Setophaga", sp: "aestiva" },
+  { common: "Swamp Sparrow", gen: "Melospiza", sp: "georgiana" },
+  { common: "Black-throated Blue Warbler", gen: "Setophaga", sp: "caerulescens" },
+  { common: "Brown Creeper", gen: "Certhia", sp: "americana" },
+  { common: "Great Crested Flycatcher", gen: "Myiarchus", sp: "crinitus" },
+  { common: "American Kestrel", gen: "Falco", sp: "sparverius" },
+  { common: "Prairie Warbler", gen: "Setophaga", sp: "discolor" },
+  { common: "American Herring Gull", gen: "Larus", sp: "smithsonianus" },
+  { common: "Brown Thrasher", gen: "Toxostoma", sp: "rufum" },
+];
 
 type XCRecording = Awaited<
   ReturnType<typeof XenoCanto.search>
 >["xcResponse"]["recordings"][number];
 
-function pickClosest(recs: XCRecording[]): XCRecording {
-  return recs.reduce((best, rec) => {
-    const bestDist = distanceFromTarget(best.lat, best.lon);
-    const recDist = distanceFromTarget(rec.lat, rec.lon);
-    return recDist < bestDist ? rec : best;
-  });
+function slugify(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-async function fetchRecordingForSpecies(
-  species: string,
+function distanceFromTarget(lat: string, lon: string): number {
+  const la = parseFloat(lat);
+  const lo = parseFloat(lon);
+  if (isNaN(la) || isNaN(lo)) return Infinity;
+  return Math.sqrt((la - TARGET_LAT) ** 2 + (lo - TARGET_LON) ** 2);
+}
+
+function parseCSVLine(line: string): string[] {
+  const fields: string[] = [];
+  let current = "";
+  let inQuotes = false;
+  for (const char of line) {
+    if (char === '"') inQuotes = !inQuotes;
+    else if (char === "," && !inQuotes) { fields.push(current); current = ""; }
+    else current += char;
+  }
+  fields.push(current);
+  return fields;
+}
+
+function readExistingCSV(): { xcIds: Set<string>; activeSpecies: Set<string> } {
+  if (!existsSync(CSV_PATH)) return { xcIds: new Set(), activeSpecies: new Set() };
+  const csv = readFileSync(CSV_PATH, "utf-8");
+  const lines = csv.trim().split("\n");
+  const headers = parseCSVLine(lines[0]);
+  const xcIds = new Set<string>();
+  const activeSpecies = new Set<string>();
+
+  for (const line of lines.slice(1)) {
+    const fields = parseCSVLine(line);
+    const row: Record<string, string> = {};
+    headers.forEach((h, i) => (row[h] = fields[i] ?? ""));
+    xcIds.add(row.xenoCantoId);
+    if (row.rejected !== "true") activeSpecies.add(row.commonName);
+  }
+  return { xcIds, activeSpecies };
+}
+
+async function downloadFile(url: string, destPath: string): Promise<void> {
+  const fullUrl = url.startsWith("//") ? `https:${url}` : url;
+  const response = await fetch(fullUrl);
+  if (!response.ok) throw new Error(`Failed to download ${fullUrl}: ${response.status}`);
+  const buffer = Buffer.from(await response.arrayBuffer());
+  await writeFile(destPath, buffer);
+}
+
+async function fetchRecording(
+  gen: string, sp: string, skipIds: Set<string>,
 ): Promise<XCRecording | null> {
-  // Try high-quality song first, then progressively relax filters
-  // Within each tier, pick the recording closest to target location
   const attempts: Parameters<typeof XenoCanto.search>[0][] = [
-    { key: API_KEY, en: species, q: "A", type: "song" },
-    { key: API_KEY, en: species, type: "song" },
-    { key: API_KEY, en: species, type: "call" },
-    { key: API_KEY, en: species },
+    { key: API_KEY, gen, sp, q: "A", type: "song" },
+    { key: API_KEY, gen, sp, type: "song" },
+    { key: API_KEY, gen, sp, type: "call" },
+    { key: API_KEY, gen, sp },
   ];
 
   for (const opts of attempts) {
     const result = await XenoCanto.search(opts);
-    if (result.xcResponse.recordings.length > 0) {
-      const closest = pickClosest(result.xcResponse.recordings);
-      return closest;
+    const candidates = result.xcResponse.recordings.filter((r) => !skipIds.has(r.id));
+    if (candidates.length > 0) {
+      return candidates.reduce((best, rec) =>
+        distanceFromTarget(rec.lat, rec.lon) < distanceFromTarget(best.lat, best.lon)
+          ? rec : best,
+      );
     }
   }
-
   return null;
 }
 
 async function main() {
-  await mkdir(AUDIO_DIR, { recursive: true });
   await mkdir(SPECTRO_DIR, { recursive: true });
 
-  const manifest: ManifestEntry[] = [];
-  let successCount = 0;
-  let failCount = 0;
+  const missingOnly = process.argv.includes("--missing");
+  const { xcIds, activeSpecies } = readExistingCSV();
+
+  let fetched = 0;
+  let skipped = 0;
+  let failed = 0;
 
   for (const species of SPECIES) {
-    const slug = slugify(species);
-    const audioPath = path.join(AUDIO_DIR, `${slug}.mp3`);
-    const spectroPath = path.join(SPECTRO_DIR, `${slug}.png`);
+    if (missingOnly && activeSpecies.has(species.common)) {
+      skipped++;
+      continue;
+    }
+
+    const slug = slugify(species.common);
+    console.log(`  Fetching: ${species.common} (${species.gen} ${species.sp})...`);
 
     try {
-      console.log(`  Fetching: ${species}...`);
-      const recording = await fetchRecordingForSpecies(species);
-      if (!recording) {
-        console.error(`  ✗ No recordings found for ${species}`);
-        failCount++;
+      const rec = await fetchRecording(species.gen, species.sp, xcIds);
+      if (!rec) {
+        console.error(`  ✗ No new recordings found (all candidates already tried)`);
+        failed++;
         continue;
       }
 
-      // Download audio (skip if already exists)
-      if (!existsSync(audioPath)) {
-        await downloadFile(recording.file, audioPath);
-      }
+      // Download spectrogram
+      const spectroPath = path.join(SPECTRO_DIR, `${slug}.png`);
+      const spectroUrl = rec.sono.med || rec.sono.large;
+      if (spectroUrl) await downloadFile(spectroUrl, spectroPath);
 
-      // Download spectrogram (skip if already exists)
-      if (!existsSync(spectroPath)) {
-        const spectroUrl = recording.sono.med || recording.sono.large;
-        if (spectroUrl) {
-          await downloadFile(spectroUrl, spectroPath);
-        } else {
-          console.warn(`    No spectrogram for ${species}`);
-        }
-      }
+      const recordist = rec.rec.includes(",") ? `"${rec.rec}"` : rec.rec;
+      const csvLine = `${species.common},${rec.gen} ${rec.sp},/quiz/audio/${slug}.mp3,/quiz/spectrograms/${slug}.png,${rec.id},${recordist},,medium,`;
+      await appendFile(CSV_PATH, csvLine + "\n");
 
-      manifest.push({
-        commonName: recording.en,
-        scientificName: `${recording.gen} ${recording.sp}`,
-        audioFile: `/quiz/audio/${slug}.mp3`,
-        spectrogramFile: `/quiz/spectrograms/${slug}.png`,
-        xenoCantoId: recording.id,
-        recordist: recording.rec,
-      });
+      xcIds.add(rec.id);
 
-      successCount++;
-      const dist = distanceFromTarget(recording.lat, recording.lon);
+      const dist = distanceFromTarget(rec.lat, rec.lon);
+      fetched++;
       console.log(
-        `  ✓ ${species} (XC${recording.id}, ${recording.type}, q:${recording.q}, ${recording.cnt}, dist:${dist.toFixed(1)})`,
+        `  ✓ XC${rec.id} (${rec.en}, ${rec.type}, q:${rec.q}, ${rec.cnt}, dist:${dist.toFixed(1)})`,
       );
 
-      // Be polite to the API
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((r) => setTimeout(r, 500));
     } catch (err) {
-      console.error(`  ✗ ${species}: ${err}`);
-      failCount++;
+      console.error(`  ✗ ${species.common}: ${err}`);
+      failed++;
     }
   }
 
-  await writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
-  console.log(`\nDone! ${successCount} downloaded, ${failCount} failed.`);
-  console.log(`Manifest: ${MANIFEST_PATH}`);
+  console.log(`\nDone! ${fetched} fetched, ${skipped} skipped, ${failed} failed`);
+  console.log("Now run: npx tsx scripts/build-recordings.ts");
 }
 
 main().catch(console.error);
