@@ -34,6 +34,11 @@ export default function TweeterPage(): ReactNode {
             overflow-y: auto;
             z-index: 9999;
           }
+
+          /* MUI poppers (autocomplete dropdown) need to be above the container */
+          .MuiAutocomplete-popper {
+            z-index: 10000 !important;
+          }
         `}</style>
       </Head>
       <div className="tweeter-standalone-container">
