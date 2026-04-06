@@ -54,22 +54,18 @@ static/quiz/spectrograms/  # ~46 spectrogram PNGs
 
 ## TODO
 
-### High Priority
-- [ ] **Admin page for Docusaurus**: The admin page was built for Vite's dev middleware. It needs a Docusaurus-compatible approach (could be a simple local Express server, or just edit the CSV directly).
+### features
+- [ ] support ability for users to create their own quizzes. Select location and time and prequery for birds. Allow user to select birds to include and filter songs in list.
+- [ ] **Difficulty modes**: Let users filter by easy/medium/hard.
+
+### polish
 - [ ] **Re-fetch recordings with proximity sorting**: The current recordings were fetched before the proximity feature was added. Re-run `fetch-xeno-canto.ts` to get closer recordings (e.g., the Peregrine Falcon is from Europe).
 - [ ] **Replace bad recordings**: Pine Warbler, Yellow Warbler, Rock Pigeon all returned wrong species from XenoCanto. Need to find correct recordings for these (and the 4 species that had 0 results: European Starling, Blue-gray Gnatcatcher, Yellow-rumped Warbler, Gray Catbird).
 - [ ] **Dynamic bird list**: Currently hardcoded to ~50 McGolrick Park April birds. Eventually pull from eBird API based on user-selected hotspot + month.
-
-### Medium Priority
-- [ ] **Hotspot + month selection UI**: Let users pick any eBird hotspot and month, then dynamically fetch the bird list and recordings.
 - [ ] **Spectrogram from XenoCanto CDN**: Like audio, spectrograms could be served from XenoCanto URLs at runtime instead of committed to git.
-- [ ] **Better difficulty assignment**: Currently hand-assigned. Could be data-driven based on species frequency at the location.
-- [ ] **Quality curation pass**: Listen to all recordings and rate quality 1-3 in the CSV. Reject bad ones.
-
-### Low Priority / Future
-- [ ] **Persistent scores**: Track scores across sessions (localStorage or backend).
-- [ ] **Difficulty modes**: Let users filter by easy/medium/hard.
-- [ ] **Multi-round streaks**: Track consecutive correct answers.
 - [ ] **Share results**: Screenshot/share score card (like Chirped).
 - [ ] **Mobile optimization**: Test and polish mobile layout.
 - [ ] **Move to API**: Push bird list + recording selection to the backend (cloaca) instead of hardcoded frontend data.
+
+### bugs
+- [ ] **Safari can't play WAV recordings**: XenoCanto's `/download` endpoint serves WAV files for roughly half the recordings. Chrome handles these fine, but Safari errors with `MEDIA_ERR_SRC_NOT_SUPPORTED` (code 4). Fix options: (a) download recordings locally and convert to MP3 with ffmpeg, then host on S3/R2, (b) only use recordings that happen to be MP3, or (c) proxy through our own backend that transcodes on the fly. For now, the demo works in Chrome; Safari will silently fail on ~half the recordings.

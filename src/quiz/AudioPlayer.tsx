@@ -48,25 +48,62 @@ export function AudioPlayer({
       }
       setCurrentTime(Math.min(audio.currentTime, MAX_DURATION));
     };
-    const onDurationChange = () => setDuration(audio.duration);
-    const onEnded = () => setPlaying(false);
+    const onDurationChange = () => {
+      console.log(`[AudioPlayer] durationchange: ${audio.duration}s src=${audio.src.slice(-40)}`);
+      setDuration(audio.duration);
+    };
+    const onEnded = () => {
+      console.log(`[AudioPlayer] ended src=${audio.src.slice(-40)}`);
+      setPlaying(false);
+    };
+    const onError = () => {
+      const e = audio.error;
+      console.error(
+        `[AudioPlayer] error code=${e?.code} message="${e?.message}" src=${audio.src.slice(-40)}`,
+      );
+      setPlaying(false);
+    };
+    const onStalled = () => {
+      console.warn(`[AudioPlayer] stalled src=${audio.src.slice(-40)}`);
+    };
+    const onWaiting = () => {
+      console.log(`[AudioPlayer] waiting (buffering) src=${audio.src.slice(-40)}`);
+    };
+    const onCanPlay = () => {
+      console.log(`[AudioPlayer] canplay src=${audio.src.slice(-40)}`);
+    };
 
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("durationchange", onDurationChange);
     audio.addEventListener("ended", onEnded);
+    audio.addEventListener("error", onError);
+    audio.addEventListener("stalled", onStalled);
+    audio.addEventListener("waiting", onWaiting);
+    audio.addEventListener("canplay", onCanPlay);
     return () => {
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("durationchange", onDurationChange);
       audio.removeEventListener("ended", onEnded);
+      audio.removeEventListener("error", onError);
+      audio.removeEventListener("stalled", onStalled);
+      audio.removeEventListener("waiting", onWaiting);
+      audio.removeEventListener("canplay", onCanPlay);
     };
   }, []);
 
   // Safe play helper — Safari rejects play() promises for various reasons
   const safePlay = useCallback(
     (audio: HTMLAudioElement) => {
+      console.log(`[AudioPlayer] play() called, readyState=${audio.readyState} networkState=${audio.networkState} src=${audio.src.slice(-40)}`);
       audio.play().then(
-        () => setPlaying(true),
-        () => setPlaying(false), // autoplay blocked or source not ready
+        () => {
+          console.log(`[AudioPlayer] play() succeeded`);
+          setPlaying(true);
+        },
+        (err) => {
+          console.error(`[AudioPlayer] play() rejected:`, err);
+          setPlaying(false);
+        },
       );
     },
     [setPlaying],
@@ -115,7 +152,7 @@ export function AudioPlayer({
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}>
-      <audio ref={audioRef} src={src} preload="auto" crossOrigin="anonymous" />
+      <audio ref={audioRef} src={src} preload="auto" />
       <IconButton onClick={togglePlay} color="primary" size="large">
         {playing ? <PauseIcon /> : <PlayArrowIcon />}
       </IconButton>
