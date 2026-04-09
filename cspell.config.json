@@ -168,6 +168,7 @@
     "Wheeler",
     "Whimbrel",
     "Wrapped",
+    "Xeno",
     "Yellowthroat",
     "yenspu"
   ],
@@ -207,7 +208,14 @@
       ]
     }
   ],
-  "dictionaries": ["typescript", "node", "html", "css", "bash", "en_us"],
+  "dictionaries": [
+    "typescript",
+    "node",
+    "html",
+    "css",
+    "bash",
+    "en_us"
+  ],
   "import": [
     "@cspell/dict-typescript/cspell-ext.json",
     "@cspell/dict-node/cspell-ext.json",
