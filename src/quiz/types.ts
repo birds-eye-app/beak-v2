@@ -3,7 +3,6 @@ export type Difficulty = "easy" | "medium" | "hard";
 export interface RecordingManifest {
   commonName: string;
   scientificName: string;
-  audioFile: string;
   audioUrl: string;
   spectrogramFile: string;
   xenoCantoId: string;

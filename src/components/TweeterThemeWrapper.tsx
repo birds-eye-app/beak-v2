@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { Quiz } from '../quiz/Quiz';
@@ -32,7 +32,7 @@ export default function TweeterThemeWrapper() {
     return () => observer.disconnect();
   }, []);
 
-  const theme = createTheme({
+  const theme = useMemo(() => createTheme({
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       primary: {
@@ -46,7 +46,7 @@ export default function TweeterThemeWrapper() {
         primary: isDarkMode ? '#ffffff' : '#000000',
       },
     },
-  });
+  }), [isDarkMode]);
 
   return (
     <ThemeProvider theme={theme}>

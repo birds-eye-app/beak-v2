@@ -25,6 +25,7 @@ export function AudioPlayer({
   const [playing, _setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [error, setError] = useState(false);
 
   const setPlaying = useCallback(
     (v: boolean) => {
@@ -52,58 +53,33 @@ export function AudioPlayer({
       console.log(`[AudioPlayer] durationchange: ${audio.duration}s src=${audio.src.slice(-40)}`);
       setDuration(audio.duration);
     };
-    const onEnded = () => {
-      console.log(`[AudioPlayer] ended src=${audio.src.slice(-40)}`);
-      setPlaying(false);
-    };
+    const onEnded = () => setPlaying(false);
     const onError = () => {
-      const e = audio.error;
-      console.error(
-        `[AudioPlayer] error code=${e?.code} message="${e?.message}" src=${audio.src.slice(-40)}`,
-      );
       setPlaying(false);
+      setError(true);
     };
-    const onStalled = () => {
-      console.warn(`[AudioPlayer] stalled src=${audio.src.slice(-40)}`);
-    };
-    const onWaiting = () => {
-      console.log(`[AudioPlayer] waiting (buffering) src=${audio.src.slice(-40)}`);
-    };
-    const onCanPlay = () => {
-      console.log(`[AudioPlayer] canplay src=${audio.src.slice(-40)}`);
-    };
+    const onCanPlay = () => setError(false);
 
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("durationchange", onDurationChange);
     audio.addEventListener("ended", onEnded);
     audio.addEventListener("error", onError);
-    audio.addEventListener("stalled", onStalled);
-    audio.addEventListener("waiting", onWaiting);
     audio.addEventListener("canplay", onCanPlay);
     return () => {
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("durationchange", onDurationChange);
       audio.removeEventListener("ended", onEnded);
       audio.removeEventListener("error", onError);
-      audio.removeEventListener("stalled", onStalled);
-      audio.removeEventListener("waiting", onWaiting);
       audio.removeEventListener("canplay", onCanPlay);
     };
-  }, []);
+  }, [setPlaying]);
 
   // Safe play helper — Safari rejects play() promises for various reasons
   const safePlay = useCallback(
     (audio: HTMLAudioElement) => {
-      console.log(`[AudioPlayer] play() called, readyState=${audio.readyState} networkState=${audio.networkState} src=${audio.src.slice(-40)}`);
       audio.play().then(
-        () => {
-          console.log(`[AudioPlayer] play() succeeded`);
-          setPlaying(true);
-        },
-        (err) => {
-          console.error(`[AudioPlayer] play() rejected:`, err);
-          setPlaying(false);
-        },
+        () => setPlaying(true),
+        () => setPlaying(false),
       );
     },
     [setPlaying],
@@ -114,6 +90,7 @@ export function AudioPlayer({
     const audio = audioRef.current;
     if (!audio) return;
     setCurrentTime(0);
+    setError(false);
     if (autoPlay) {
       safePlay(audio);
     } else {
@@ -149,6 +126,25 @@ export function AudioPlayer({
     audio.currentTime = 0;
     safePlay(audio);
   }, [safePlay]);
+
+  if (error) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          width: "100%",
+          py: 1,
+        }}
+      >
+        <audio ref={audioRef} src={src} preload="auto" />
+        <Typography variant="body2" color="error" sx={{ flex: 1 }}>
+          Could not load this recording. Try skipping to the next question.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}>

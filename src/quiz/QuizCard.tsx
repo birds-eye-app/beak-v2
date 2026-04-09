@@ -85,13 +85,31 @@ export function QuizCard({
     guess.trim().toLowerCase() === recording.commonName.toLowerCase();
   const earnedPoints = submitted && isCorrect ? potentialPoints : 0;
 
+  const hasAdvancedRef = useRef(false);
+  const autoAdvanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
+  const advance = useCallback(
+    (g: string, correct: boolean, elapsed: number) => {
+      if (hasAdvancedRef.current) return;
+      hasAdvancedRef.current = true;
+      if (advanceTimerRef.current) {
+        clearInterval(advanceTimerRef.current);
+        advanceTimerRef.current = null;
+      }
+      if (autoAdvanceTimeoutRef.current) {
+        clearTimeout(autoAdvanceTimeoutRef.current);
+        autoAdvanceTimeoutRef.current = null;
+      }
+      onAnswer(g, correct, elapsed);
+    },
+    [onAnswer],
+  );
+
   const handleNext = useCallback(() => {
-    if (advanceTimerRef.current) {
-      clearInterval(advanceTimerRef.current);
-      advanceTimerRef.current = null;
-    }
-    onAnswer(guess, isCorrect, elapsedSeconds);
-  }, [guess, isCorrect, elapsedSeconds, onAnswer]);
+    advance(guess, isCorrect, elapsedSeconds);
+  }, [guess, isCorrect, elapsedSeconds, advance]);
 
   const handleSubmit = useCallback(() => {
     if (!guess.trim() || submitted) return;
@@ -111,16 +129,16 @@ export function QuizCard({
 
     advanceTimerRef.current = setInterval(tick, 30);
 
-    const timeout = setTimeout(() => {
-      if (advanceTimerRef.current) clearInterval(advanceTimerRef.current);
-      onAnswer(guess, isCorrect, elapsedSeconds);
+    autoAdvanceTimeoutRef.current = setTimeout(() => {
+      advance(guess, isCorrect, elapsedSeconds);
     }, AUTO_ADVANCE_MS);
 
     return () => {
       if (advanceTimerRef.current) clearInterval(advanceTimerRef.current);
-      clearTimeout(timeout);
+      if (autoAdvanceTimeoutRef.current)
+        clearTimeout(autoAdvanceTimeoutRef.current);
     };
-  }, [submitted, guess, isCorrect, elapsedSeconds, onAnswer]);
+  }, [submitted, guess, isCorrect, elapsedSeconds, advance]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {

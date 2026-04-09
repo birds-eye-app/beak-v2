@@ -60,7 +60,6 @@ const recordings = allRows
     ({
       commonName,
       scientificName,
-      audioFile,
       spectrogramFile,
       xenoCantoId,
       recordist,
@@ -68,7 +67,6 @@ const recordings = allRows
     }) => ({
       commonName,
       scientificName,
-      audioFile,
       audioUrl: `https://xeno-canto.org/${xenoCantoId}/download`,
       spectrogramFile,
       xenoCantoId,
