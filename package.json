@@ -46,7 +46,8 @@
     "react-modal": "^3.16.3",
     "react-spinners": "^0.17.0",
     "swiper": "^11.2.10",
-    "use-debounce": "^10.0.5"
+    "use-debounce": "^10.0.5",
+    "xeno-canto-api-ts": "^2.0.3"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.8.1",

@@ -1,0 +1,452 @@
+[
+  {
+    "commonName": "American Robin",
+    "scientificName": "Turdus migratorius",
+    "audioUrl": "https://xeno-canto.org/1093668/download",
+    "spectrogramFile": "/quiz/spectrograms/american-robin.png",
+    "xenoCantoId": "1093668",
+    "recordist": "Paul Driver",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Northern Cardinal",
+    "scientificName": "Cardinalis cardinalis",
+    "audioUrl": "https://xeno-canto.org/1093667/download",
+    "spectrogramFile": "/quiz/spectrograms/northern-cardinal.png",
+    "xenoCantoId": "1093667",
+    "recordist": "Paul Driver",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Blue Jay",
+    "scientificName": "Cyanocitta cristata",
+    "audioUrl": "https://xeno-canto.org/1014208/download",
+    "spectrogramFile": "/quiz/spectrograms/blue-jay.png",
+    "xenoCantoId": "1014208",
+    "recordist": "Stanislas Wroza",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "House Sparrow",
+    "scientificName": "Passer domesticus",
+    "audioUrl": "https://xeno-canto.org/1092251/download",
+    "spectrogramFile": "/quiz/spectrograms/house-sparrow.png",
+    "xenoCantoId": "1092251",
+    "recordist": "Olivier SWIFT, Hélène CARTAUD",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Mourning Dove",
+    "scientificName": "Zenaida macroura",
+    "audioUrl": "https://xeno-canto.org/1013012/download",
+    "spectrogramFile": "/quiz/spectrograms/mourning-dove.png",
+    "xenoCantoId": "1013012",
+    "recordist": "Stanislas Wroza",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Song Sparrow",
+    "scientificName": "Melospiza melodia",
+    "audioUrl": "https://xeno-canto.org/1092304/download",
+    "spectrogramFile": "/quiz/spectrograms/song-sparrow.png",
+    "xenoCantoId": "1092304",
+    "recordist": "Scott Crabtree",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "White-throated Sparrow",
+    "scientificName": "Zonotrichia albicollis",
+    "audioUrl": "https://xeno-canto.org/234159/download",
+    "spectrogramFile": "/quiz/spectrograms/white-throated-sparrow.png",
+    "xenoCantoId": "234159",
+    "recordist": "William Whitehead",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Red-winged Blackbird",
+    "scientificName": "Agelaius phoeniceus",
+    "audioUrl": "https://xeno-canto.org/1089594/download",
+    "spectrogramFile": "/quiz/spectrograms/red-winged-blackbird.png",
+    "xenoCantoId": "1089594",
+    "recordist": "Ed Pandolfino",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Common Grackle",
+    "scientificName": "Quiscalus quiscula",
+    "audioUrl": "https://xeno-canto.org/1014942/download",
+    "spectrogramFile": "/quiz/spectrograms/common-grackle.png",
+    "xenoCantoId": "1014942",
+    "recordist": "Stanislas Wroza",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "House Finch",
+    "scientificName": "Haemorhous mexicanus",
+    "audioUrl": "https://xeno-canto.org/1089801/download",
+    "spectrogramFile": "/quiz/spectrograms/house-finch.png",
+    "xenoCantoId": "1089801",
+    "recordist": "Manuel Grosselet",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Dark-eyed Junco",
+    "scientificName": "Junco hyemalis",
+    "audioUrl": "https://xeno-canto.org/1083920/download",
+    "spectrogramFile": "/quiz/spectrograms/dark-eyed-junco.png",
+    "xenoCantoId": "1083920",
+    "recordist": "Greg Irving",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Eastern Towhee",
+    "scientificName": "Pipilo erythrophthalmus",
+    "audioUrl": "https://xeno-canto.org/1081945/download",
+    "spectrogramFile": "/quiz/spectrograms/eastern-towhee.png",
+    "xenoCantoId": "1081945",
+    "recordist": "David Darrell-Lambert",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Chipping Sparrow",
+    "scientificName": "Spizella passerina",
+    "audioUrl": "https://xeno-canto.org/1081943/download",
+    "spectrogramFile": "/quiz/spectrograms/chipping-sparrow.png",
+    "xenoCantoId": "1081943",
+    "recordist": "David Darrell-Lambert",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Black-capped Chickadee",
+    "scientificName": "Poecile atricapillus",
+    "audioUrl": "https://xeno-canto.org/994313/download",
+    "spectrogramFile": "/quiz/spectrograms/black-capped-chickadee.png",
+    "xenoCantoId": "994313",
+    "recordist": "William Whitehead",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Downy Woodpecker",
+    "scientificName": "Dryobates pubescens",
+    "audioUrl": "https://xeno-canto.org/567618/download",
+    "spectrogramFile": "/quiz/spectrograms/downy-woodpecker.png",
+    "xenoCantoId": "567618",
+    "recordist": "Michael Hurben",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Northern Flicker",
+    "scientificName": "Colaptes auratus",
+    "audioUrl": "https://xeno-canto.org/1013307/download",
+    "spectrogramFile": "/quiz/spectrograms/northern-flicker.png",
+    "xenoCantoId": "1013307",
+    "recordist": "Stanislas Wroza",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Yellow-bellied Sapsucker",
+    "scientificName": "Sphyrapicus varius",
+    "audioUrl": "https://xeno-canto.org/815824/download",
+    "spectrogramFile": "/quiz/spectrograms/yellow-bellied-sapsucker.png",
+    "xenoCantoId": "815824",
+    "recordist": "Denis Provencher",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Ruby-crowned Kinglet",
+    "scientificName": "Corthylio calendula",
+    "audioUrl": "https://xeno-canto.org/1034775/download",
+    "spectrogramFile": "/quiz/spectrograms/ruby-crowned-kinglet.png",
+    "xenoCantoId": "1034775",
+    "recordist": "Richard E. Webster",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Golden-crowned Kinglet",
+    "scientificName": "Regulus satrapa",
+    "audioUrl": "https://xeno-canto.org/1029334/download",
+    "spectrogramFile": "/quiz/spectrograms/golden-crowned-kinglet.png",
+    "xenoCantoId": "1029334",
+    "recordist": "Valerie Heemstra",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Hermit Thrush",
+    "scientificName": "Catharus guttatus",
+    "audioUrl": "https://xeno-canto.org/933565/download",
+    "spectrogramFile": "/quiz/spectrograms/hermit-thrush.png",
+    "xenoCantoId": "933565",
+    "recordist": "William Whitehead",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Pine Warbler",
+    "scientificName": "Setophaga pinus",
+    "audioUrl": "https://xeno-canto.org/1093540/download",
+    "spectrogramFile": "/quiz/spectrograms/pine-warbler.png",
+    "xenoCantoId": "1093540",
+    "recordist": "Mario Reyes Jr",
+    "difficulty": "hard"
+  },
+  {
+    "commonName": "Black-and-white Warbler",
+    "scientificName": "Mniotilta varia",
+    "audioUrl": "https://xeno-canto.org/1036380/download",
+    "spectrogramFile": "/quiz/spectrograms/black-and-white-warbler.png",
+    "xenoCantoId": "1036380",
+    "recordist": "Bobby Wilcox",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Northern Parula",
+    "scientificName": "Setophaga americana",
+    "audioUrl": "https://xeno-canto.org/1082098/download",
+    "spectrogramFile": "/quiz/spectrograms/northern-parula.png",
+    "xenoCantoId": "1082098",
+    "recordist": "David Darrell-Lambert",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Eastern Phoebe",
+    "scientificName": "Sayornis phoebe",
+    "audioUrl": "https://xeno-canto.org/1027244/download",
+    "spectrogramFile": "/quiz/spectrograms/eastern-phoebe.png",
+    "xenoCantoId": "1027244",
+    "recordist": "Jim Berry",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Red-tailed Hawk",
+    "scientificName": "Buteo jamaicensis",
+    "audioUrl": "https://xeno-canto.org/1090861/download",
+    "spectrogramFile": "/quiz/spectrograms/red-tailed-hawk.png",
+    "xenoCantoId": "1090861",
+    "recordist": "Manuel Grosselet",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "American Kestrel",
+    "scientificName": "Falco sparverius",
+    "audioUrl": "https://xeno-canto.org/674597/download",
+    "spectrogramFile": "/quiz/spectrograms/american-kestrel.png",
+    "xenoCantoId": "674597",
+    "recordist": "JAYRSON ARAUJO DE OLIVEIRA",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Ovenbird",
+    "scientificName": "Seiurus aurocapilla",
+    "audioUrl": "https://xeno-canto.org/1037293/download",
+    "spectrogramFile": "/quiz/spectrograms/ovenbird.png",
+    "xenoCantoId": "1037293",
+    "recordist": "Bobby Wilcox",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Laughing Gull",
+    "scientificName": "Leucophaeus atricilla",
+    "audioUrl": "https://xeno-canto.org/1154/download",
+    "spectrogramFile": "/quiz/spectrograms/laughing-gull.png",
+    "xenoCantoId": "1154",
+    "recordist": "Don Jones",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "American Crow",
+    "scientificName": "Corvus brachyrhynchos",
+    "audioUrl": "https://xeno-canto.org/807484/download",
+    "spectrogramFile": "/quiz/spectrograms/american-crow.png",
+    "xenoCantoId": "807484",
+    "recordist": "Barry Edmonston",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Fish Crow",
+    "scientificName": "Corvus ossifragus",
+    "audioUrl": "https://xeno-canto.org/530410/download",
+    "spectrogramFile": "/quiz/spectrograms/fish-crow.png",
+    "xenoCantoId": "530410",
+    "recordist": "Taylor Sturm",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Blue-headed Vireo",
+    "scientificName": "Vireo solitarius",
+    "audioUrl": "https://xeno-canto.org/593859/download",
+    "spectrogramFile": "/quiz/spectrograms/blue-headed-vireo.png",
+    "xenoCantoId": "593859",
+    "recordist": "William Whitehead",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Rose-breasted Grosbeak",
+    "scientificName": "Pheucticus ludovicianus",
+    "audioUrl": "https://xeno-canto.org/558664/download",
+    "spectrogramFile": "/quiz/spectrograms/rose-breasted-grosbeak.png",
+    "xenoCantoId": "558664",
+    "recordist": "William Whitehead",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Great Crested Flycatcher",
+    "scientificName": "Myiarchus crinitus",
+    "audioUrl": "https://xeno-canto.org/182575/download",
+    "spectrogramFile": "/quiz/spectrograms/great-crested-flycatcher.png",
+    "xenoCantoId": "182575",
+    "recordist": "Jorge de Leon Cardozo and Susan Hochgraf",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Prairie Warbler",
+    "scientificName": "Setophaga discolor",
+    "audioUrl": "https://xeno-canto.org/655862/download",
+    "spectrogramFile": "/quiz/spectrograms/prairie-warbler.png",
+    "xenoCantoId": "655862",
+    "recordist": "William Whitehead",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "American Herring Gull",
+    "scientificName": "Larus smithsonianus",
+    "audioUrl": "https://xeno-canto.org/1021690/download",
+    "spectrogramFile": "/quiz/spectrograms/american-herring-gull.png",
+    "xenoCantoId": "1021690",
+    "recordist": "Stanislas Wroza",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Brown Thrasher",
+    "scientificName": "Toxostoma rufum",
+    "audioUrl": "https://xeno-canto.org/546731/download",
+    "spectrogramFile": "/quiz/spectrograms/brown-thrasher.png",
+    "xenoCantoId": "546731",
+    "recordist": "William Whitehead",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Brown Creeper",
+    "scientificName": "Certhia americana",
+    "audioUrl": "https://xeno-canto.org/50434/download",
+    "spectrogramFile": "/quiz/spectrograms/brown-creeper.png",
+    "xenoCantoId": "50434",
+    "recordist": "William Whitehead",
+    "difficulty": "hard"
+  },
+  {
+    "commonName": "European Starling",
+    "scientificName": "Sturnus vulgaris",
+    "audioUrl": "https://xeno-canto.org/636461/download",
+    "spectrogramFile": "/quiz/spectrograms/european-starling.png",
+    "xenoCantoId": "636461",
+    "recordist": "Thomas Ryder Payne",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Red-bellied Woodpecker",
+    "scientificName": "Melanerpes carolinus",
+    "audioUrl": "https://xeno-canto.org/568575/download",
+    "spectrogramFile": "/quiz/spectrograms/red-bellied-woodpecker.png",
+    "xenoCantoId": "568575",
+    "recordist": "Meena Haribal",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Gray Catbird",
+    "scientificName": "Dumetella carolinensis",
+    "audioUrl": "https://xeno-canto.org/190458/download",
+    "spectrogramFile": "/quiz/spectrograms/gray-catbird.png",
+    "xenoCantoId": "190458",
+    "recordist": "Krzysztof Deoniziak",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Double-crested Cormorant",
+    "scientificName": "Nannopterum auritum",
+    "audioUrl": "https://xeno-canto.org/780994/download",
+    "spectrogramFile": "/quiz/spectrograms/double-crested-cormorant.png",
+    "xenoCantoId": "780994",
+    "recordist": "Paul Driver",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Canada Goose",
+    "scientificName": "Branta canadensis",
+    "audioUrl": "https://xeno-canto.org/637975/download",
+    "spectrogramFile": "/quiz/spectrograms/canada-goose.png",
+    "xenoCantoId": "637975",
+    "recordist": "Regina Eidner",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Northern Yellow Warbler",
+    "scientificName": "Setophaga aestiva",
+    "audioUrl": "https://xeno-canto.org/394040/download",
+    "spectrogramFile": "/quiz/spectrograms/northern-yellow-warbler.png",
+    "xenoCantoId": "394040",
+    "recordist": "Dominic Garcia-Hall",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Swamp Sparrow",
+    "scientificName": "Melospiza georgiana",
+    "audioUrl": "https://xeno-canto.org/729070/download",
+    "spectrogramFile": "/quiz/spectrograms/swamp-sparrow.png",
+    "xenoCantoId": "729070",
+    "recordist": "William Whitehead",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Black-throated Blue Warbler",
+    "scientificName": "Setophaga caerulescens",
+    "audioUrl": "https://xeno-canto.org/101928/download",
+    "spectrogramFile": "/quiz/spectrograms/black-throated-blue-warbler.png",
+    "xenoCantoId": "101928",
+    "recordist": "Daniel Lane",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Yellow-rumped Warbler",
+    "scientificName": "Setophaga coronata",
+    "audioUrl": "https://xeno-canto.org/469599/download",
+    "spectrogramFile": "/quiz/spectrograms/yellow-rumped-warbler.png",
+    "xenoCantoId": "469599",
+    "recordist": "Rolf A. de By",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Scarlet Tanager",
+    "scientificName": "Piranga olivacea",
+    "audioUrl": "https://xeno-canto.org/101898/download",
+    "spectrogramFile": "/quiz/spectrograms/scarlet-tanager.png",
+    "xenoCantoId": "101898",
+    "recordist": "Daniel Lane",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Baltimore Oriole",
+    "scientificName": "Icterus galbula",
+    "audioUrl": "https://xeno-canto.org/1014853/download",
+    "spectrogramFile": "/quiz/spectrograms/baltimore-oriole.png",
+    "xenoCantoId": "1014853",
+    "recordist": "Stanislas Wroza",
+    "difficulty": "medium"
+  },
+  {
+    "commonName": "Tufted Titmouse",
+    "scientificName": "Baeolophus bicolor",
+    "audioUrl": "https://xeno-canto.org/895984/download",
+    "spectrogramFile": "/quiz/spectrograms/tufted-titmouse.png",
+    "xenoCantoId": "895984",
+    "recordist": "Scott Gravette",
+    "difficulty": "easy"
+  },
+  {
+    "commonName": "Palm Warbler",
+    "scientificName": "Setophaga palmarum",
+    "audioUrl": "https://xeno-canto.org/1015036/download",
+    "spectrogramFile": "/quiz/spectrograms/palm-warbler.png",
+    "xenoCantoId": "1015036",
+    "recordist": "Stanislas Wroza",
+    "difficulty": "medium"
+  }
+]
