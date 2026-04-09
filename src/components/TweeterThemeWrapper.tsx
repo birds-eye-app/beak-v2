@@ -32,21 +32,25 @@ export default function TweeterThemeWrapper() {
     return () => observer.disconnect();
   }, []);
 
-  const theme = useMemo(() => createTheme({
-    palette: {
-      mode: isDarkMode ? 'dark' : 'light',
-      primary: {
-        main: isDarkMode ? '#25c2a0' : '#2e8555',
-      },
-      background: {
-        default: isDarkMode ? '#1b1b1d' : '#eee',
-        paper: isDarkMode ? '#2d2d30' : '#fff',
-      },
-      text: {
-        primary: isDarkMode ? '#ffffff' : '#000000',
-      },
-    },
-  }), [isDarkMode]);
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: isDarkMode ? 'dark' : 'light',
+          primary: {
+            main: isDarkMode ? '#25c2a0' : '#2e8555',
+          },
+          background: {
+            default: isDarkMode ? '#1b1b1d' : '#eee',
+            paper: isDarkMode ? '#2d2d30' : '#fff',
+          },
+          text: {
+            primary: isDarkMode ? '#ffffff' : '#000000',
+          },
+        },
+      }),
+    [isDarkMode]
+  );
 
   return (
     <ThemeProvider theme={theme}>

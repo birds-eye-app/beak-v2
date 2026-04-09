@@ -169,6 +169,16 @@
     "Whimbrel",
     "Wrapped",
     "Xeno",
+    "xeno",
+    "canto",
+    "SPECTRO",
+    "spectro",
+    "rumped",
+    "tweeter",
+    "Tweeter",
+    "sono",
+    "unreviewed",
+    "fdiees",
     "Yellowthroat",
     "yenspu"
   ],
@@ -208,14 +218,7 @@
       ]
     }
   ],
-  "dictionaries": [
-    "typescript",
-    "node",
-    "html",
-    "css",
-    "bash",
-    "en_us"
-  ],
+  "dictionaries": ["typescript", "node", "html", "css", "bash", "en_us"],
   "import": [
     "@cspell/dict-typescript/cspell-ext.json",
     "@cspell/dict-node/cspell-ext.json",

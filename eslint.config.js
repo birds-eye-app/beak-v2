@@ -49,6 +49,9 @@ export default [
         setInterval: 'readonly',
         clearInterval: 'readonly',
         setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        HTMLAudioElement: 'readonly',
+        Event: 'readonly',
       },
     },
     plugins: {

@@ -1,6 +1,6 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import {
   Box,
   Button,
@@ -11,8 +11,8 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from "@mui/material";
-import type { QuizAnswer } from "./types";
+} from '@mui/material';
+import type { QuizAnswer } from './types';
 
 export function QuizResults({
   answers,
@@ -28,28 +28,28 @@ export function QuizResults({
   const totalPoints = answers.reduce((sum, a) => sum + a.points, 0);
 
   return (
-    <Card sx={{ maxWidth: 600, mx: "auto" }}>
+    <Card sx={{ maxWidth: 600, mx: 'auto' }}>
       <CardContent>
-        <Typography variant="h4" sx={{ mb: 0.5, textAlign: "center" }}>
+        <Typography variant="h4" sx={{ mb: 0.5, textAlign: 'center' }}>
           {totalPoints} pts
         </Typography>
         <Typography
           variant="h6"
           color="text.secondary"
-          sx={{ mb: 1, textAlign: "center" }}
+          sx={{ mb: 1, textAlign: 'center' }}
         >
           {score} / {answers.length} correct
         </Typography>
         <Typography
           variant="body1"
           color="text.secondary"
-          sx={{ mb: 3, textAlign: "center" }}
+          sx={{ mb: 3, textAlign: 'center' }}
         >
           {score === answers.length
-            ? "Perfect score!"
+            ? 'Perfect score!'
             : score >= answers.length * 0.7
-              ? "Nice work!"
-              : "Keep practicing!"}
+              ? 'Nice work!'
+              : 'Keep practicing!'}
         </Typography>
 
         <List dense>
@@ -70,7 +70,7 @@ export function QuizResults({
                   answer.correct
                     ? `${answer.elapsedSeconds.toFixed(1)}s`
                     : answer.skipped
-                      ? "Skipped"
+                      ? 'Skipped'
                       : `You guessed: ${answer.guessed}`
                 }
               />
@@ -86,8 +86,8 @@ export function QuizResults({
         <Box
           sx={{
             mt: 3,
-            display: "flex",
-            justifyContent: "center",
+            display: 'flex',
+            justifyContent: 'center',
             gap: 2,
           }}
         >

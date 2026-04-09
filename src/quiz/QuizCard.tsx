@@ -1,7 +1,7 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import {
   Box,
   Button,
@@ -12,23 +12,23 @@ import {
   LinearProgress,
   Tooltip,
   Typography,
-} from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { AudioPlayer } from "./AudioPlayer";
-import { SpeciesAutocomplete } from "./SpeciesAutocomplete";
+} from '@mui/material';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AudioPlayer } from './AudioPlayer';
+import { SpeciesAutocomplete } from './SpeciesAutocomplete';
 import {
   calculatePoints,
   DIFFICULTY_MULTIPLIER,
   type RecordingManifest,
-} from "./types";
+} from './types';
 
 const AUTO_ADVANCE_MS = 3000;
 const isDev = process.env.NODE_ENV === 'development';
 
 const DIFFICULTY_COLOR = {
-  easy: "success",
-  medium: "warning",
-  hard: "error",
+  easy: 'success',
+  medium: 'warning',
+  hard: 'error',
 } as const;
 
 export function QuizCard({
@@ -48,7 +48,7 @@ export function QuizCard({
   onReject?: (xenoCantoId: string) => void;
   autoPlay?: boolean;
 }) {
-  const [guess, setGuess] = useState("");
+  const [guess, setGuess] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [autoAdvanceProgress, setAutoAdvanceProgress] = useState(0);
   const advanceTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -87,7 +87,7 @@ export function QuizCard({
 
   const hasAdvancedRef = useRef(false);
   const autoAdvanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
+    null
   );
 
   const advance = useCallback(
@@ -104,7 +104,7 @@ export function QuizCard({
       }
       onAnswer(g, correct, elapsed);
     },
-    [onAnswer],
+    [onAnswer]
   );
 
   const handleNext = useCallback(() => {
@@ -142,7 +142,7 @@ export function QuizCard({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") {
+      if (e.key === 'Enter') {
         if (!submitted) {
           handleSubmit();
         } else {
@@ -150,36 +150,36 @@ export function QuizCard({
         }
       }
     },
-    [submitted, handleSubmit, handleNext],
+    [submitted, handleSubmit, handleNext]
   );
 
   const xcUrl = `https://xeno-canto.org/${recording.xenoCantoId}`;
   const multiplier = DIFFICULTY_MULTIPLIER[recording.difficulty];
 
   return (
-    <Card sx={{ maxWidth: 600, mx: "auto" }} onKeyDown={handleKeyDown}>
+    <Card sx={{ maxWidth: 600, mx: 'auto' }} onKeyDown={handleKeyDown}>
       <CardContent>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             mb: 1,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" color="text.secondary">
               Question {questionNumber} of {totalQuestions}
             </Typography>
             <Chip
-              label={`${recording.difficulty}${multiplier > 1 ? ` ${multiplier}x` : ""}`}
+              label={`${recording.difficulty}${multiplier > 1 ? ` ${multiplier}x` : ''}`}
               size="small"
               color={DIFFICULTY_COLOR[recording.difficulty]}
               variant="outlined"
-              sx={{ height: 20, fontSize: "0.7rem" }}
+              sx={{ height: 20, fontSize: '0.7rem' }}
             />
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <Typography
               variant="body2"
               color="text.secondary"
@@ -187,11 +187,11 @@ export function QuizCard({
               href={xcUrl}
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ textDecoration: "none", color: "text.secondary" }}
+              sx={{ textDecoration: 'none', color: 'text.secondary' }}
             >
               {recording.recordist}
             </Typography>
-            <OpenInNewIcon sx={{ fontSize: 14, color: "text.secondary" }} />
+            <OpenInNewIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
           </Box>
         </Box>
         <LinearProgress
@@ -205,10 +205,10 @@ export function QuizCard({
           src={recording.spectrogramFile}
           alt="Spectrogram"
           sx={{
-            width: "100%",
+            width: '100%',
             borderRadius: 1,
             mb: 2,
-            backgroundColor: "grey.900",
+            backgroundColor: 'grey.900',
           }}
         />
 
@@ -220,17 +220,17 @@ export function QuizCard({
 
         {/* Points indicator */}
         {!submitted && (
-          <Box sx={{ mt: 1, textAlign: "center" }}>
+          <Box sx={{ mt: 1, textAlign: 'center' }}>
             <Typography
               variant="caption"
               sx={{
                 color:
                   elapsedSeconds < 3
-                    ? "success.main"
+                    ? 'success.main'
                     : elapsedSeconds < 6
-                      ? "warning.main"
-                      : "text.secondary",
-                fontWeight: elapsedSeconds < 6 ? "bold" : "normal",
+                      ? 'warning.main'
+                      : 'text.secondary',
+                fontWeight: elapsedSeconds < 6 ? 'bold' : 'normal',
               }}
             >
               {potentialPoints} pts
@@ -249,10 +249,10 @@ export function QuizCard({
         {!submitted ? (
           <Box
             sx={{
-              display: "flex",
+              display: 'flex',
               gap: 1,
               mt: 2,
-              alignItems: "center",
+              alignItems: 'center',
             }}
           >
             <Button
@@ -267,7 +267,7 @@ export function QuizCard({
               <Button
                 variant="outlined"
                 onClick={onSkip}
-                sx={{ whiteSpace: "nowrap" }}
+                sx={{ whiteSpace: 'nowrap' }}
               >
                 IDK
               </Button>
@@ -287,13 +287,13 @@ export function QuizCard({
           <Box sx={{ mt: 2 }}>
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
                 gap: 1,
                 mb: 2,
                 p: 1.5,
                 borderRadius: 1,
-                backgroundColor: isCorrect ? "success.dark" : "error.dark",
+                backgroundColor: isCorrect ? 'success.dark' : 'error.dark',
               }}
             >
               {isCorrect ? (
@@ -304,32 +304,32 @@ export function QuizCard({
               <Box sx={{ flex: 1 }}>
                 <Typography>
                   {isCorrect
-                    ? "Correct!"
+                    ? 'Correct!'
                     : `Incorrect — it was ${recording.commonName}`}
                 </Typography>
               </Box>
               {isCorrect && (
-                <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                   +{earnedPoints}
                 </Typography>
               )}
             </Box>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
               <Button
                 variant="contained"
                 fullWidth
                 onClick={handleNext}
-                sx={{ position: "relative", overflow: "hidden" }}
+                sx={{ position: 'relative', overflow: 'hidden' }}
               >
                 <Box
                   sx={{
-                    position: "absolute",
+                    position: 'absolute',
                     top: 0,
                     left: 0,
                     bottom: 0,
                     width: `${autoAdvanceProgress}%`,
-                    backgroundColor: "rgba(255,255,255,0.15)",
-                    transition: "width 30ms linear",
+                    backgroundColor: 'rgba(255,255,255,0.15)',
+                    transition: 'width 30ms linear',
                   }}
                 />
                 Next

@@ -1,6 +1,6 @@
-import { Autocomplete, createFilterOptions, TextField } from "@mui/material";
-import { useMemo } from "react";
-import recordings from "./data/recordings.json";
+import { Autocomplete, createFilterOptions, TextField } from '@mui/material';
+import { useMemo } from 'react';
+import recordings from './data/recordings.json';
 
 interface SpeciesOption {
   label: string;
@@ -30,7 +30,7 @@ export function SpeciesAutocomplete({
         commonName: r.commonName,
         scientificName: r.scientificName,
       })),
-    [],
+    []
   );
 
   return (
@@ -42,7 +42,7 @@ export function SpeciesAutocomplete({
       inputValue={value}
       onInputChange={(_, newValue) => onChange(newValue)}
       onChange={(_, newValue) => {
-        if (typeof newValue === "string") {
+        if (typeof newValue === 'string') {
           onChange(newValue);
         } else if (newValue) {
           onChange(newValue.commonName);

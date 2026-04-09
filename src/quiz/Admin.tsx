@@ -1,8 +1,8 @@
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import PauseIcon from "@mui/icons-material/Pause";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import {
   Box,
   Button,
@@ -21,10 +21,10 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+} from '@mui/material';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-const API_BASE = "http://localhost:3001";
+const API_BASE = 'http://localhost:3001';
 
 interface RecordingRow {
   commonName: string;
@@ -38,11 +38,11 @@ interface RecordingRow {
   quality: string;
 }
 
-const DIFFICULTIES = ["easy", "medium", "hard"] as const;
+const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 const DIFF_COLORS = {
-  easy: "success",
-  medium: "warning",
-  hard: "error",
+  easy: 'success',
+  medium: 'warning',
+  hard: 'error',
 } as const;
 
 function AudioCell({ src }: { src: string }) {
@@ -65,11 +65,11 @@ function AudioCell({ src }: { src: string }) {
     if (!audio) return;
     const onEnded = () => setPlaying(false);
     const onError = () => setPlaying(false);
-    audio.addEventListener("ended", onEnded);
-    audio.addEventListener("error", onError);
+    audio.addEventListener('ended', onEnded);
+    audio.addEventListener('error', onError);
     return () => {
-      audio.removeEventListener("ended", onEnded);
-      audio.removeEventListener("error", onError);
+      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
     };
   }, []);
 
@@ -113,24 +113,24 @@ export function Admin() {
     async (xenoCantoId: string, field: string, value: string) => {
       if (!apiAvailable) return;
       await fetch(`${API_BASE}/api/recording/update`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ xenoCantoId, [field]: value }),
       });
       setRows((prev) =>
         prev.map((r) =>
-          r.xenoCantoId === xenoCantoId ? { ...r, [field]: value } : r,
-        ),
+          r.xenoCantoId === xenoCantoId ? { ...r, [field]: value } : r
+        )
       );
     },
-    [apiAvailable],
+    [apiAvailable]
   );
 
   if (loading) return <Typography sx={{ p: 4 }}>Loading...</Typography>;
 
   if (!apiAvailable) {
     return (
-      <Container maxWidth="sm" sx={{ py: 8, textAlign: "center" }}>
+      <Container maxWidth="sm" sx={{ py: 8, textAlign: 'center' }}>
         <Typography variant="h5" sx={{ mb: 2 }}>
           Admin API not running
         </Typography>
@@ -142,10 +142,10 @@ export function Admin() {
           sx={{
             mt: 1,
             p: 2,
-            backgroundColor: "grey.900",
+            backgroundColor: 'grey.900',
             borderRadius: 1,
-            fontFamily: "monospace",
-            color: "grey.300",
+            fontFamily: 'monospace',
+            color: 'grey.300',
           }}
         >
           npx tsx scripts/admin-server.ts
@@ -154,15 +154,17 @@ export function Admin() {
     );
   }
 
-  const active = rows.filter((r) => r.rejected !== "true");
-  const rejected = rows.filter((r) => r.rejected === "true");
+  const active = rows.filter((r) => r.rejected !== 'true');
+  const rejected = rows.filter((r) => r.rejected === 'true');
   const reviewed = rows.filter(
-    (r) => r.quality && r.quality !== "0" && r.rejected !== "true",
+    (r) => r.quality && r.quality !== '0' && r.rejected !== 'true'
   );
-  const needsReview = active.filter((r) => !r.quality || r.quality === "0");
+  const needsReview = active.filter((r) => !r.quality || r.quality === '0');
 
   const filteredRows = showOnlyUnreviewed
-    ? rows.filter((r) => (!r.quality || r.quality === "0") && r.rejected !== "true")
+    ? rows.filter(
+        (r) => (!r.quality || r.quality === '0') && r.rejected !== 'true'
+      )
     : rows;
 
   return (
@@ -172,14 +174,14 @@ export function Admin() {
       </Typography>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           mb: 3,
         }}
       >
-        <Typography variant="body2" sx={{ color: "grey.600" }}>
-          {reviewed.length} reviewed / {needsReview.length} needs review /{" "}
+        <Typography variant="body2" sx={{ color: 'grey.600' }}>
+          {reviewed.length} reviewed / {needsReview.length} needs review /{' '}
           {rejected.length} rejected / {rows.length} total
         </Typography>
         <FormControlLabel
@@ -210,9 +212,9 @@ export function Admin() {
           </TableHead>
           <TableBody>
             {filteredRows.map((row, i) => {
-              const isRejected = row.rejected === "true";
+              const isRejected = row.rejected === 'true';
               const isReviewed =
-                !isRejected && row.quality && row.quality !== "0";
+                !isRejected && row.quality && row.quality !== '0';
               const xcUrl = `https://xeno-canto.org/${row.xenoCantoId}`;
               const audioUrl = `https://xeno-canto.org/${row.xenoCantoId}/download`;
 
@@ -222,10 +224,10 @@ export function Admin() {
                   sx={{
                     opacity: isRejected ? 0.35 : 1,
                     backgroundColor: isRejected
-                      ? "rgba(244, 67, 54, 0.03)"
+                      ? 'rgba(244, 67, 54, 0.03)'
                       : isReviewed
-                        ? "rgba(76, 175, 80, 0.03)"
-                        : "rgba(255, 152, 0, 0.05)",
+                        ? 'rgba(76, 175, 80, 0.03)'
+                        : 'rgba(255, 152, 0, 0.05)',
                   }}
                 >
                   <TableCell>
@@ -240,7 +242,7 @@ export function Admin() {
                         size="small"
                         color="error"
                         variant="outlined"
-                        sx={{ height: 20, fontSize: "0.7rem" }}
+                        sx={{ height: 20, fontSize: '0.7rem' }}
                       />
                     ) : isReviewed ? (
                       <CheckCircleIcon color="success" fontSize="small" />
@@ -264,9 +266,9 @@ export function Admin() {
                       sx={{
                         width: 160,
                         height: 40,
-                        objectFit: "cover",
+                        objectFit: 'cover',
                         borderRadius: 0.5,
-                        backgroundColor: "grey.200",
+                        backgroundColor: 'grey.200',
                       }}
                     />
                   </TableCell>
@@ -280,12 +282,12 @@ export function Admin() {
                       target="_blank"
                       rel="noopener noreferrer"
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: 0.5,
-                        color: "inherit",
-                        textDecoration: "none",
-                        fontSize: "0.8rem",
+                        color: 'inherit',
+                        textDecoration: 'none',
+                        fontSize: '0.8rem',
                       }}
                     >
                       {row.recordist}
@@ -299,12 +301,12 @@ export function Admin() {
                           key={d}
                           color={DIFF_COLORS[d]}
                           variant={
-                            row.difficulty === d ? "contained" : "outlined"
+                            row.difficulty === d ? 'contained' : 'outlined'
                           }
                           onClick={() =>
-                            handleUpdate(row.xenoCantoId, "difficulty", d)
+                            handleUpdate(row.xenoCantoId, 'difficulty', d)
                           }
-                          sx={{ textTransform: "none", minWidth: 50 }}
+                          sx={{ textTransform: 'none', minWidth: 50 }}
                         >
                           {d}
                         </Button>
@@ -316,11 +318,7 @@ export function Admin() {
                       value={row.quality ? parseInt(row.quality) : 0}
                       max={3}
                       onChange={(_, v) =>
-                        handleUpdate(
-                          row.xenoCantoId,
-                          "quality",
-                          String(v ?? 0),
-                        )
+                        handleUpdate(row.xenoCantoId, 'quality', String(v ?? 0))
                       }
                     />
                   </TableCell>
@@ -331,9 +329,9 @@ export function Admin() {
                         color="success"
                         variant="text"
                         onClick={() =>
-                          handleUpdate(row.xenoCantoId, "rejected", "")
+                          handleUpdate(row.xenoCantoId, 'rejected', '')
                         }
-                        sx={{ textTransform: "none" }}
+                        sx={{ textTransform: 'none' }}
                       >
                         Restore
                       </Button>
@@ -343,9 +341,9 @@ export function Admin() {
                         color="error"
                         variant="text"
                         onClick={() =>
-                          handleUpdate(row.xenoCantoId, "rejected", "true")
+                          handleUpdate(row.xenoCantoId, 'rejected', 'true')
                         }
-                        sx={{ textTransform: "none" }}
+                        sx={{ textTransform: 'none' }}
                       >
                         Reject
                       </Button>

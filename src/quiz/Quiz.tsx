@@ -1,13 +1,13 @@
-import { Box, Container, Typography } from "@mui/material";
-import { useCallback, useMemo, useState } from "react";
-import recordings from "./data/recordings.json";
-import { QuizCard } from "./QuizCard";
-import { QuizResults } from "./QuizResults";
+import { Box, Container, Typography } from '@mui/material';
+import { useCallback, useMemo, useState } from 'react';
+import recordings from './data/recordings.json';
+import { QuizCard } from './QuizCard';
+import { QuizResults } from './QuizResults';
 import {
   calculatePoints,
   type QuizAnswer,
   type RecordingManifest,
-} from "./types";
+} from './types';
 
 const QUESTIONS_PER_ROUND = 10;
 
@@ -28,11 +28,11 @@ export function Quiz() {
     () =>
       shuffle(recordings as RecordingManifest[]).slice(0, QUESTIONS_PER_ROUND),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [round],
+    [round]
   );
 
   const [replayQuestions, setReplayQuestions] = useState<RecordingManifest[]>(
-    [],
+    []
   );
 
   const activeQuestions = isReplayRound ? replayQuestions : questions;
@@ -61,7 +61,7 @@ export function Quiz() {
       ]);
       setCurrentIndex((prev) => prev + 1);
     },
-    [currentIndex, activeQuestions],
+    [currentIndex, activeQuestions]
   );
 
   const handleSkip = useCallback(() => {
@@ -70,7 +70,7 @@ export function Quiz() {
       ...prev,
       {
         correct: false,
-        guessed: "",
+        guessed: '',
         actual: recording.commonName,
         skipped: true,
         recording,
@@ -83,9 +83,9 @@ export function Quiz() {
 
   const handleReject = useCallback(
     async (xenoCantoId: string) => {
-      await fetch("/api/reject", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      await fetch('/api/reject', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ xenoCantoId }),
       });
       const recording = activeQuestions[currentIndex];
@@ -93,7 +93,7 @@ export function Quiz() {
         ...prev,
         {
           correct: false,
-          guessed: "(rejected)",
+          guessed: '(rejected)',
           actual: recording.commonName,
           recording,
           points: 0,
@@ -102,7 +102,7 @@ export function Quiz() {
       ]);
       setCurrentIndex((prev) => prev + 1);
     },
-    [currentIndex, activeQuestions],
+    [currentIndex, activeQuestions]
   );
 
   const handlePlayAgain = useCallback(() => {
@@ -126,9 +126,9 @@ export function Quiz() {
     <Container maxWidth="sm" sx={{ py: 4 }}>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           mb: 3,
         }}
       >
@@ -141,14 +141,14 @@ export function Quiz() {
       </Box>
       <Typography
         variant="body2"
-        sx={{ mb: 1, textAlign: "center", color: "grey.600" }}
+        sx={{ mb: 1, textAlign: 'center', color: 'grey.600' }}
       >
         McGolrick Park, Brooklyn — April
-        {isReplayRound && " (Review)"}
+        {isReplayRound && ' (Review)'}
       </Typography>
       <Typography
         variant="caption"
-        sx={{ mb: 3, display: "block", textAlign: "center", color: "grey.500" }}
+        sx={{ mb: 3, display: 'block', textAlign: 'center', color: 'grey.500' }}
       >
         Some recordings may have multiple species in the background — focus on
         the one clear primary species.
@@ -173,17 +173,17 @@ export function Quiz() {
         />
       )}
 
-      <Box sx={{ mt: 4, textAlign: "center" }}>
-        <Typography variant="caption" sx={{ color: "grey.600" }}>
-          Recordings from{" "}
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
+        <Typography variant="caption" sx={{ color: 'grey.600' }}>
+          Recordings from{' '}
           <a
             href="https://xeno-canto.org"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "inherit" }}
+            style={{ color: 'inherit' }}
           >
             xeno-canto.org
-          </a>{" "}
+          </a>{' '}
           — CC BY-NC-SA 4.0
         </Typography>
       </Box>

@@ -1,4 +1,4 @@
-export type Difficulty = "easy" | "medium" | "hard";
+export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export interface RecordingManifest {
   commonName: string;
@@ -24,7 +24,7 @@ const MAX_SPEED_BONUS = 100;
 
 export function calculatePoints(
   elapsedSeconds: number,
-  difficulty: Difficulty,
+  difficulty: Difficulty
 ): number {
   const multiplier = DIFFICULTY_MULTIPLIER[difficulty];
   let speedBonus = 0;

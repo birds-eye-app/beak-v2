@@ -82,22 +82,25 @@ static/quiz/spectrograms/  # Spectrogram PNGs (~50 files)
 ## TODO
 
 ### Features
+
 - [ ] Support ability for users to create their own quizzes
-    1. Select location and time and prequery for birds
-    2. Allow user to select birds to include
-    3. Go through each bird and suggest best songs based on quality and proximity
-    4. Creator goes through and selects which recordings they do / don't want to include
-    5. Then they can view the quiz and even share it with others
+  1. Select location and time and prequery for birds
+  2. Allow user to select birds to include
+  3. Go through each bird and suggest best songs based on quality and proximity
+  4. Creator goes through and selects which recordings they do / don't want to include
+  5. Then they can view the quiz and even share it with others
 - [ ] Difficulty modes: Let users filter by easy/medium/hard
 - [ ] Support multiple recordings per species (rotate through them across rounds)
 
 ### Polish
+
 - [ ] Re-fetch recordings with proximity sorting for older recordings
 - [ ] Spectrogram from XenoCanto CDN (serve at runtime instead of committing to git)
 - [ ] Share results: Screenshot/share score card (like Chirped)
 - [ ] Move to API: Push bird list + recording selection to the backend (cloaca)
 
 ### Bugs
+
 - [ ] **Safari can't play WAV recordings**: XenoCanto's `/download` endpoint serves WAV files for roughly half the recordings. Chrome handles these fine, but Safari errors with `MEDIA_ERR_SRC_NOT_SUPPORTED` (code 4). Fix options: (a) download recordings locally and convert to MP3 with ffmpeg, then host on S3/R2, (b) only use recordings that happen to be MP3, or (c) proxy through our own backend that transcodes on the fly.
 - [ ] Fetching audio by common name is finicky — scientific name search is now the default but the species list still uses common names as the primary key in the CSV
 - [ ] Fetch script is slow (sequential API calls with 500ms delay between each)

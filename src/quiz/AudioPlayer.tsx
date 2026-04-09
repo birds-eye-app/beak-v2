@@ -1,15 +1,15 @@
-import PauseIcon from "@mui/icons-material/Pause";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import ReplayIcon from "@mui/icons-material/Replay";
-import { Box, IconButton, Slider, Typography } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ReplayIcon from '@mui/icons-material/Replay';
+import { Box, IconButton, Slider, Typography } from '@mui/material';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const MAX_DURATION = 30; // seconds
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
+  return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
 export function AudioPlayer({
@@ -32,7 +32,7 @@ export function AudioPlayer({
       _setPlaying(v);
       onPlayingChange?.(v);
     },
-    [onPlayingChange],
+    [onPlayingChange]
   );
 
   const clampedDuration = Math.min(duration, MAX_DURATION);
@@ -49,10 +49,7 @@ export function AudioPlayer({
       }
       setCurrentTime(Math.min(audio.currentTime, MAX_DURATION));
     };
-    const onDurationChange = () => {
-      console.log(`[AudioPlayer] durationchange: ${audio.duration}s src=${audio.src.slice(-40)}`);
-      setDuration(audio.duration);
-    };
+    const onDurationChange = () => setDuration(audio.duration);
     const onEnded = () => setPlaying(false);
     const onError = () => {
       setPlaying(false);
@@ -60,17 +57,17 @@ export function AudioPlayer({
     };
     const onCanPlay = () => setError(false);
 
-    audio.addEventListener("timeupdate", onTimeUpdate);
-    audio.addEventListener("durationchange", onDurationChange);
-    audio.addEventListener("ended", onEnded);
-    audio.addEventListener("error", onError);
-    audio.addEventListener("canplay", onCanPlay);
+    audio.addEventListener('timeupdate', onTimeUpdate);
+    audio.addEventListener('durationchange', onDurationChange);
+    audio.addEventListener('ended', onEnded);
+    audio.addEventListener('error', onError);
+    audio.addEventListener('canplay', onCanPlay);
     return () => {
-      audio.removeEventListener("timeupdate", onTimeUpdate);
-      audio.removeEventListener("durationchange", onDurationChange);
-      audio.removeEventListener("ended", onEnded);
-      audio.removeEventListener("error", onError);
-      audio.removeEventListener("canplay", onCanPlay);
+      audio.removeEventListener('timeupdate', onTimeUpdate);
+      audio.removeEventListener('durationchange', onDurationChange);
+      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
+      audio.removeEventListener('canplay', onCanPlay);
     };
   }, [setPlaying]);
 
@@ -79,10 +76,10 @@ export function AudioPlayer({
     (audio: HTMLAudioElement) => {
       audio.play().then(
         () => setPlaying(true),
-        () => setPlaying(false),
+        () => setPlaying(false)
       );
     },
-    [setPlaying],
+    [setPlaying]
   );
 
   // Reset and auto-play when src changes
@@ -131,10 +128,10 @@ export function AudioPlayer({
     return (
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
           gap: 1,
-          width: "100%",
+          width: '100%',
           py: 1,
         }}
       >
@@ -147,7 +144,7 @@ export function AudioPlayer({
   }
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
       <audio ref={audioRef} src={src} preload="auto" />
       <IconButton onClick={togglePlay} color="primary" size="large">
         {playing ? <PauseIcon /> : <PlayArrowIcon />}
@@ -159,7 +156,7 @@ export function AudioPlayer({
         onChange={handleSeek}
         sx={{ flex: 1 }}
       />
-      <Typography variant="caption" sx={{ minWidth: 40, textAlign: "right" }}>
+      <Typography variant="caption" sx={{ minWidth: 40, textAlign: 'right' }}>
         {formatTime(currentTime)}/{formatTime(clampedDuration)}
       </Typography>
       <IconButton onClick={restart} size="small">
