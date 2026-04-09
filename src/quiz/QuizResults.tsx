@@ -18,10 +18,12 @@ export function QuizResults({
   answers,
   onPlayAgain,
   onReplayMissed,
+  onBack,
 }: {
   answers: QuizAnswer[];
   onPlayAgain: () => void;
   onReplayMissed?: () => void;
+  onBack?: () => void;
 }) {
   const score = answers.filter((a) => a.correct).length;
   const missedCount = answers.filter((a) => !a.correct).length;
@@ -97,6 +99,11 @@ export function QuizResults({
           {onReplayMissed && missedCount > 0 && (
             <Button variant="outlined" onClick={onReplayMissed}>
               Review Missed ({missedCount})
+            </Button>
+          )}
+          {onBack && (
+            <Button variant="text" onClick={onBack}>
+              All Quizzes
             </Button>
           )}
         </Box>

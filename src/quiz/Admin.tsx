@@ -36,6 +36,8 @@ interface RecordingRow {
   rejected: string;
   difficulty: string;
   quality: string;
+  country: string;
+  loc: string;
 }
 
 const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
@@ -92,27 +94,42 @@ export function Admin() {
   const [loading, setLoading] = useState(true);
   const [apiAvailable, setApiAvailable] = useState(false);
   const [showOnlyUnreviewed, setShowOnlyUnreviewed] = useState(false);
+  const [quizzes, setQuizzes] = useState<string[]>([]);
+  const [selectedQuiz, setSelectedQuiz] = useState<string>('');
 
-  const fetchData = useCallback(async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/recordings`);
-      const data = await res.json();
-      setRows(data);
-      setApiAvailable(true);
-    } catch {
-      setApiAvailable(false);
-    }
-    setLoading(false);
+  // Fetch quiz list once on mount
+  useEffect(() => {
+    fetch(`${API_BASE}/api/quizzes`)
+      .then((r) => r.json())
+      .then((data) => {
+        setQuizzes(data);
+        if (!selectedQuiz && data[0]) setSelectedQuiz(data[0]);
+      })
+      .catch(() => setApiAvailable(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Fetch recordings when selected quiz changes
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (!selectedQuiz) return;
+    setLoading(true);
+    fetch(`${API_BASE}/api/recordings?quiz=${selectedQuiz}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setRows(data);
+        setApiAvailable(true);
+        setLoading(false);
+      })
+      .catch(() => {
+        setApiAvailable(false);
+        setLoading(false);
+      });
+  }, [selectedQuiz]);
 
   const handleUpdate = useCallback(
     async (xenoCantoId: string, field: string, value: string) => {
       if (!apiAvailable) return;
-      await fetch(`${API_BASE}/api/recording/update`, {
+      await fetch(`${API_BASE}/api/recording/update?quiz=${selectedQuiz}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ xenoCantoId, [field]: value }),
@@ -123,7 +140,7 @@ export function Admin() {
         )
       );
     },
-    [apiAvailable]
+    [apiAvailable, selectedQuiz]
   );
 
   if (loading) return <Typography sx={{ p: 4 }}>Loading...</Typography>;
@@ -172,6 +189,22 @@ export function Admin() {
       <Typography variant="h5" sx={{ mb: 1 }}>
         Tweeter Admin
       </Typography>
+
+      {quizzes.length > 1 && (
+        <ButtonGroup size="small" sx={{ mb: 2 }}>
+          {quizzes.map((q) => (
+            <Button
+              key={q}
+              variant={q === selectedQuiz ? 'contained' : 'outlined'}
+              onClick={() => setSelectedQuiz(q)}
+              sx={{ textTransform: 'none' }}
+            >
+              {q}
+            </Button>
+          ))}
+        </ButtonGroup>
+      )}
+
       <Box
         sx={{
           display: 'flex',
@@ -205,6 +238,7 @@ export function Admin() {
               <TableCell>Spectrogram</TableCell>
               <TableCell>Audio</TableCell>
               <TableCell>Recordist</TableCell>
+              <TableCell>Location</TableCell>
               <TableCell>Difficulty</TableCell>
               <TableCell>Quality</TableCell>
               <TableCell>Actions</TableCell>
@@ -293,6 +327,13 @@ export function Admin() {
                       {row.recordist}
                       <OpenInNewIcon sx={{ fontSize: 12 }} />
                     </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="caption" color="text.secondary">
+                      {row.loc
+                        ? `${row.loc}, ${row.country}`
+                        : row.country || '—'}
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     <ButtonGroup size="small" variant="outlined">

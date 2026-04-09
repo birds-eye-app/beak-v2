@@ -15,8 +15,14 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CSV_PATH = path.join(__dirname, '../src/quiz/data/recordings.csv');
+const QUIZZES_DIR = path.join(__dirname, '../src/quiz/quizzes');
+const LEGACY_CSV = path.join(__dirname, '../src/quiz/data/recordings.csv');
 const PORT = 3001;
+
+function csvPathForQuiz(quizId?: string): string {
+  if (!quizId) return LEGACY_CSV;
+  return path.join(QUIZZES_DIR, quizId, 'recordings.csv');
+}
 
 function parseCSVLine(line: string): string[] {
   const fields: string[] = [];
@@ -36,8 +42,8 @@ function parseCSVLine(line: string): string[] {
   return fields;
 }
 
-function readCSV() {
-  const csv = readFileSync(CSV_PATH, 'utf-8');
+function readCSV(csvPath: string = LEGACY_CSV) {
+  const csv = readFileSync(csvPath, 'utf-8');
   const lines = csv.trim().split('\n');
   const headers = parseCSVLine(lines[0]);
   return {
@@ -52,32 +58,32 @@ function readCSV() {
   };
 }
 
-// Column indices
-const COLS: Record<string, number> = {
-  xenoCantoId: 4,
-  recordist: 5,
-  rejected: 6,
-  difficulty: 7,
-  quality: 8,
-};
+function quoteField(val: string): string {
+  return val.includes(',') ? `"${val}"` : val;
+}
 
-function updateRow(xenoCantoId: string, updates: Record<string, string>) {
-  const csv = readFileSync(CSV_PATH, 'utf-8');
+function updateRow(
+  xenoCantoId: string,
+  updates: Record<string, string>,
+  csvPath: string = LEGACY_CSV
+) {
+  const csv = readFileSync(csvPath, 'utf-8');
   const lines = csv.split('\n');
+  const headers = parseCSVLine(lines[0]);
+  const xcIdIdx = headers.indexOf('xenoCantoId');
+
   const updated = lines.map((line, i) => {
-    if (i === 0) return line;
+    if (i === 0 || !line.trim()) return line;
     const fields = parseCSVLine(line);
-    if (fields[COLS.xenoCantoId] !== xenoCantoId) return line;
+    if (fields[xcIdIdx] !== xenoCantoId) return line;
 
     for (const [key, val] of Object.entries(updates)) {
-      if (key in COLS) fields[COLS[key]] = val;
+      const idx = headers.indexOf(key);
+      if (idx >= 0) fields[idx] = val;
     }
-    // Re-quote recordist if it contains commas
-    const rec = fields[COLS.recordist];
-    if (rec.includes(',')) fields[COLS.recordist] = `"${rec}"`;
-    return fields.join(',');
+    return fields.map(quoteField).join(',');
   });
-  writeFileSync(CSV_PATH, updated.join('\n'));
+  writeFileSync(csvPath, updated.join('\n'));
   execSync('npx tsx scripts/build-recordings.ts', {
     cwd: path.join(__dirname, '..'),
   });
@@ -95,19 +101,35 @@ const server = createServer((req, res) => {
     return;
   }
 
-  if (req.url === '/api/recordings' && req.method === 'GET') {
-    const { rows } = readCSV();
+  const parsedUrl = new URL(req.url ?? '/', `http://localhost:${PORT}`);
+  const quizId = parsedUrl.searchParams.get('quiz') ?? undefined;
+  const csvPath = csvPathForQuiz(quizId);
+
+  if (parsedUrl.pathname === '/api/quizzes' && req.method === 'GET') {
+    const { readdirSync } = require('fs');
+    const dirs = readdirSync(QUIZZES_DIR, { withFileTypes: true })
+      .filter((d: { isDirectory: () => boolean; name: string }) =>
+        d.isDirectory()
+      )
+      .map((d: { name: string }) => d.name);
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(dirs));
+    return;
+  }
+
+  if (parsedUrl.pathname === '/api/recordings' && req.method === 'GET') {
+    const { rows } = readCSV(csvPath);
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(rows));
     return;
   }
 
-  if (req.url === '/api/recording/update' && req.method === 'POST') {
+  if (parsedUrl.pathname === '/api/recording/update' && req.method === 'POST') {
     let body = '';
-    req.on('data', (chunk) => (body += chunk));
+    req.on('data', (chunk: string) => (body += chunk));
     req.on('end', () => {
       const { xenoCantoId, ...updates } = JSON.parse(body);
-      updateRow(xenoCantoId, updates);
+      updateRow(xenoCantoId, updates, csvPath);
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ ok: true }));
     });

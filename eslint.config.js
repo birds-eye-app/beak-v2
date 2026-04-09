@@ -52,6 +52,7 @@ export default [
         clearTimeout: 'readonly',
         HTMLAudioElement: 'readonly',
         Event: 'readonly',
+        URL: 'readonly',
       },
     },
     plugins: {

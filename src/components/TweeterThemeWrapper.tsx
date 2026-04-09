@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { Quiz } from '../quiz/Quiz';
+import { Tweeter } from '../quiz/Tweeter';
 
 export default function TweeterThemeWrapper() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -62,7 +62,7 @@ export default function TweeterThemeWrapper() {
           backgroundColor: theme.palette.background.default,
         }}
       >
-        <Quiz />
+        <Tweeter />
       </div>
     </ThemeProvider>
   );

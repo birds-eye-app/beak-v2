@@ -1,15 +1,14 @@
-import { Box, Container, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, Container, IconButton, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
-import recordings from './data/recordings.json';
 import { QuizCard } from './QuizCard';
 import { QuizResults } from './QuizResults';
 import {
   calculatePoints,
   type QuizAnswer,
+  type QuizConfig,
   type RecordingManifest,
 } from './types';
-
-const QUESTIONS_PER_ROUND = 10;
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -20,16 +19,25 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export function Quiz() {
+export function Quiz({
+  config,
+  onBack,
+}: {
+  config: QuizConfig;
+  onBack: () => void;
+}) {
   const [round, setRound] = useState(0);
   const [isReplayRound, setIsReplayRound] = useState(false);
 
-  const questions: RecordingManifest[] = useMemo(
-    () =>
-      shuffle(recordings as RecordingManifest[]).slice(0, QUESTIONS_PER_ROUND),
+  const isDev = process.env.NODE_ENV === 'development';
+  const DEV_QUESTION_LIMIT = 5;
+
+  const questions: RecordingManifest[] = useMemo(() => {
+    const shuffled = shuffle(config.recordings);
+    const limit = config.questionsPerRound ?? (isDev ? DEV_QUESTION_LIMIT : 0);
+    return limit > 0 ? shuffled.slice(0, limit) : shuffled;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [round]
-  );
+  }, [round, config, isDev]);
 
   const [replayQuestions, setReplayQuestions] = useState<RecordingManifest[]>(
     []
@@ -83,11 +91,11 @@ export function Quiz() {
 
   const handleReject = useCallback(
     async (xenoCantoId: string) => {
-      await fetch('/api/reject', {
+      fetch('/api/reject', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ xenoCantoId }),
-      });
+      }).catch(() => {});
       const recording = activeQuestions[currentIndex];
       setAnswers((prev) => [
         ...prev,
@@ -129,10 +137,15 @@ export function Quiz() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          mb: 3,
+          mb: 1,
         }}
       >
-        <Typography variant="h5">Tweeter</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton onClick={onBack} size="small">
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h5">{config.title}</Typography>
+        </Box>
         {answers.length > 0 && !done && (
           <Typography variant="h6" color="primary">
             {totalScore} pts
@@ -143,7 +156,7 @@ export function Quiz() {
         variant="body2"
         sx={{ mb: 1, textAlign: 'center', color: 'grey.600' }}
       >
-        McGolrick Park, Brooklyn — April
+        {config.subtitle}
         {isReplayRound && ' (Review)'}
       </Typography>
       <Typography
@@ -159,11 +172,13 @@ export function Quiz() {
           answers={answers}
           onPlayAgain={handlePlayAgain}
           onReplayMissed={handleReplayMissed}
+          onBack={onBack}
         />
       ) : (
         <QuizCard
           key={`${round}-${isReplayRound}-${currentIndex}`}
           recording={activeQuestions[currentIndex]}
+          allRecordings={config.recordings}
           questionNumber={currentIndex + 1}
           totalQuestions={activeQuestions.length}
           onAnswer={handleAnswer}

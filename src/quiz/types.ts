@@ -8,6 +8,8 @@ export interface RecordingManifest {
   xenoCantoId: string;
   recordist: string;
   difficulty: Difficulty;
+  country: string;
+  location: string;
 }
 
 export const DIFFICULTY_MULTIPLIER: Record<Difficulty, number> = {
@@ -37,6 +39,16 @@ export function calculatePoints(
     speedBonus = Math.round(MAX_SPEED_BONUS * frac);
   }
   return Math.round((BASE_POINTS + speedBonus) * multiplier);
+}
+
+export interface QuizConfig {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  recordings: RecordingManifest[];
+  /** If set, quiz picks this many random questions. If unset, uses all recordings. */
+  questionsPerRound?: number;
 }
 
 export interface QuizAnswer {

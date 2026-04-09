@@ -7,6 +7,8 @@
 # Generated files
 .docusaurus
 .cache-loader
+src/quiz/**/recordings.json
+src/quiz/data/recordings.json
 
 # Misc
 .DS_Store
