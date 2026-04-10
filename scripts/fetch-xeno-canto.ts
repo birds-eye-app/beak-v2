@@ -115,7 +115,7 @@ async function fetchRecording(
   gen: string,
   sp: string,
   skipIds: Set<string>
-): Promise<{ recording: XCRecording; droppedQuality: boolean } | null> {
+): Promise<{ recording: XCRecording } | null> {
   const tiers = [
     {
       opts: { key: API_KEY, gen, sp, q: 'A', type: 'song' },
@@ -151,13 +151,12 @@ async function fetchRecording(
 
       // Found an MP3 (or other playable format)
       if (bestTierIdx === -1) bestTierIdx = tierIdx;
-      const droppedQuality = tierIdx > 0 && bestTierIdx === tierIdx;
       if (tierIdx > 0) {
         console.log(
           `    ⚠ Dropped to tier "${tiers[tierIdx].label}" (best tier was WAV-only)`
         );
       }
-      return { recording: rec, droppedQuality };
+      return { recording: rec };
     }
 
     // All candidates in this tier were WAV — try next tier

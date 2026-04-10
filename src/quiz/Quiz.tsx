@@ -91,10 +91,10 @@ export function Quiz({
 
   const handleReject = useCallback(
     async (xenoCantoId: string) => {
-      fetch('/api/reject', {
+      fetch(`http://localhost:3001/api/recording/update?quiz=${config.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ xenoCantoId }),
+        body: JSON.stringify({ xenoCantoId, rejected: 'true' }),
       }).catch(() => {});
       const recording = activeQuestions[currentIndex];
       setAnswers((prev) => [

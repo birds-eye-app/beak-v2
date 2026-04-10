@@ -21,6 +21,9 @@ const PORT = 3001;
 
 function csvPathForQuiz(quizId?: string): string {
   if (!quizId) return LEGACY_CSV;
+  if (quizId.includes('..') || quizId.includes('/')) {
+    throw new Error(`Invalid quiz ID: ${quizId}`);
+  }
   return path.join(QUIZZES_DIR, quizId, 'recordings.csv');
 }
 
@@ -84,7 +87,10 @@ function updateRow(
     return fields.map(quoteField).join(',');
   });
   writeFileSync(csvPath, updated.join('\n'));
-  execSync('npx tsx scripts/build-recordings.ts', {
+  const quizArg = csvPath.includes('/quizzes/')
+    ? path.basename(path.dirname(csvPath))
+    : '';
+  execSync(`npx tsx scripts/build-recordings.ts ${quizArg}`, {
     cwd: path.join(__dirname, '..'),
   });
 }
@@ -128,10 +134,15 @@ const server = createServer((req, res) => {
     let body = '';
     req.on('data', (chunk: string) => (body += chunk));
     req.on('end', () => {
-      const { xenoCantoId, ...updates } = JSON.parse(body);
-      updateRow(xenoCantoId, updates, csvPath);
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ ok: true }));
+      try {
+        const { xenoCantoId, ...updates } = JSON.parse(body);
+        updateRow(xenoCantoId, updates, csvPath);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ ok: true }));
+      } catch (err) {
+        res.writeHead(400);
+        res.end(JSON.stringify({ error: String(err) }));
+      }
     });
     return;
   }

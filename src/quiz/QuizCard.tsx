@@ -80,7 +80,9 @@ export function QuizCard({
   }, [audioPlaying, submitted]);
 
   const elapsedSeconds = elapsedMs / 1000;
-  const potentialPoints = calculatePoints(elapsedSeconds, recording.difficulty);
+  const [frozenElapsed, setFrozenElapsed] = useState<number | null>(null);
+  const finalElapsed = frozenElapsed ?? elapsedSeconds;
+  const potentialPoints = calculatePoints(finalElapsed, recording.difficulty);
 
   const isCorrect =
     submitted &&
@@ -110,11 +112,12 @@ export function QuizCard({
   );
 
   const handleNext = useCallback(() => {
-    advance(guess, isCorrect, elapsedSeconds);
-  }, [guess, isCorrect, elapsedSeconds, advance]);
+    advance(guess, isCorrect, finalElapsed);
+  }, [guess, isCorrect, finalElapsed, advance]);
 
   const handleSubmit = useCallback(() => {
     if (!guess.trim() || submitted) return;
+    setFrozenElapsed(elapsedSeconds);
     setSubmitted(true);
   }, [guess, submitted]);
 
@@ -132,7 +135,7 @@ export function QuizCard({
     advanceTimerRef.current = setInterval(tick, 30);
 
     autoAdvanceTimeoutRef.current = setTimeout(() => {
-      advance(guess, isCorrect, elapsedSeconds);
+      advance(guess, isCorrect, finalElapsed);
     }, AUTO_ADVANCE_MS);
 
     return () => {
@@ -140,7 +143,7 @@ export function QuizCard({
       if (autoAdvanceTimeoutRef.current)
         clearTimeout(autoAdvanceTimeoutRef.current);
     };
-  }, [submitted, guess, isCorrect, elapsedSeconds, advance]);
+  }, [submitted, guess, isCorrect, finalElapsed, advance]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -246,12 +249,12 @@ export function QuizCard({
               variant="caption"
               sx={{
                 color:
-                  elapsedSeconds < 3
+                  finalElapsed < 3
                     ? 'success.main'
-                    : elapsedSeconds < 6
+                    : finalElapsed < 6
                       ? 'warning.main'
                       : 'text.secondary',
-                fontWeight: elapsedSeconds < 6 ? 'bold' : 'normal',
+                fontWeight: finalElapsed < 6 ? 'bold' : 'normal',
               }}
             >
               {potentialPoints} pts
