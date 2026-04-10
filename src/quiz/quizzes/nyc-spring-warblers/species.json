@@ -1,0 +1,48 @@
+[
+  { "common": "Common Yellowthroat", "gen": "Geothlypis", "sp": "trichas" },
+  { "common": "Black-and-white Warbler", "gen": "Mniotilta", "sp": "varia" },
+  { "common": "Northern Yellow Warbler", "gen": "Setophaga", "sp": "aestiva" },
+  { "common": "Yellow-rumped Warbler", "gen": "Setophaga", "sp": "coronata" },
+  { "common": "American Redstart", "gen": "Setophaga", "sp": "ruticilla" },
+  { "common": "Northern Parula", "gen": "Setophaga", "sp": "americana" },
+  { "common": "Ovenbird", "gen": "Seiurus", "sp": "aurocapilla" },
+  {
+    "common": "Black-throated Blue Warbler",
+    "gen": "Setophaga",
+    "sp": "caerulescens"
+  },
+  {
+    "common": "Northern Waterthrush",
+    "gen": "Parkesia",
+    "sp": "noveboracensis"
+  },
+  { "common": "Magnolia Warbler", "gen": "Setophaga", "sp": "magnolia" },
+  { "common": "Blackpoll Warbler", "gen": "Setophaga", "sp": "striata" },
+  {
+    "common": "Black-throated Green Warbler",
+    "gen": "Setophaga",
+    "sp": "virens"
+  },
+  { "common": "Palm Warbler", "gen": "Setophaga", "sp": "palmarum" },
+  {
+    "common": "Chestnut-sided Warbler",
+    "gen": "Setophaga",
+    "sp": "pensylvanica"
+  },
+  { "common": "Pine Warbler", "gen": "Setophaga", "sp": "pinus" },
+  { "common": "Canada Warbler", "gen": "Cardellina", "sp": "canadensis" },
+  { "common": "Prairie Warbler", "gen": "Setophaga", "sp": "discolor" },
+  { "common": "Nashville Warbler", "gen": "Leiothlypis", "sp": "ruficapilla" },
+  { "common": "Bay-breasted Warbler", "gen": "Setophaga", "sp": "castanea" },
+  { "common": "Blackburnian Warbler", "gen": "Setophaga", "sp": "fusca" },
+  { "common": "Wilson's Warbler", "gen": "Cardellina", "sp": "pusilla" },
+  { "common": "Cape May Warbler", "gen": "Setophaga", "sp": "tigrina" },
+  { "common": "Louisiana Waterthrush", "gen": "Parkesia", "sp": "motacilla" },
+  { "common": "Blue-winged Warbler", "gen": "Vermivora", "sp": "cyanoptera" },
+  { "common": "Hooded Warbler", "gen": "Setophaga", "sp": "citrina" },
+  { "common": "Worm-eating Warbler", "gen": "Helmitheros", "sp": "vermivorum" },
+  { "common": "Tennessee Warbler", "gen": "Leiothlypis", "sp": "peregrina" },
+  { "common": "Prothonotary Warbler", "gen": "Protonotaria", "sp": "citrea" },
+  { "common": "Yellow-throated Warbler", "gen": "Setophaga", "sp": "dominica" },
+  { "common": "Kentucky Warbler", "gen": "Geothlypis", "sp": "formosa" }
+]

@@ -33,6 +33,7 @@ const DIFFICULTY_COLOR = {
 
 export function QuizCard({
   recording,
+  allRecordings,
   questionNumber,
   totalQuestions,
   onAnswer,
@@ -41,6 +42,7 @@ export function QuizCard({
   autoPlay = true,
 }: {
   recording: RecordingManifest;
+  allRecordings: RecordingManifest[];
   questionNumber: number;
   totalQuestions: number;
   onAnswer: (guessed: string, correct: boolean, elapsedSeconds: number) => void;
@@ -78,7 +80,9 @@ export function QuizCard({
   }, [audioPlaying, submitted]);
 
   const elapsedSeconds = elapsedMs / 1000;
-  const potentialPoints = calculatePoints(elapsedSeconds, recording.difficulty);
+  const [frozenElapsed, setFrozenElapsed] = useState<number | null>(null);
+  const finalElapsed = frozenElapsed ?? elapsedSeconds;
+  const potentialPoints = calculatePoints(finalElapsed, recording.difficulty);
 
   const isCorrect =
     submitted &&
@@ -108,11 +112,12 @@ export function QuizCard({
   );
 
   const handleNext = useCallback(() => {
-    advance(guess, isCorrect, elapsedSeconds);
-  }, [guess, isCorrect, elapsedSeconds, advance]);
+    advance(guess, isCorrect, finalElapsed);
+  }, [guess, isCorrect, finalElapsed, advance]);
 
   const handleSubmit = useCallback(() => {
     if (!guess.trim() || submitted) return;
+    setFrozenElapsed(elapsedSeconds);
     setSubmitted(true);
   }, [guess, submitted]);
 
@@ -130,7 +135,7 @@ export function QuizCard({
     advanceTimerRef.current = setInterval(tick, 30);
 
     autoAdvanceTimeoutRef.current = setTimeout(() => {
-      advance(guess, isCorrect, elapsedSeconds);
+      advance(guess, isCorrect, finalElapsed);
     }, AUTO_ADVANCE_MS);
 
     return () => {
@@ -138,7 +143,7 @@ export function QuizCard({
       if (autoAdvanceTimeoutRef.current)
         clearTimeout(autoAdvanceTimeoutRef.current);
     };
-  }, [submitted, guess, isCorrect, elapsedSeconds, advance]);
+  }, [submitted, guess, isCorrect, finalElapsed, advance]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -164,24 +169,26 @@ export function QuizCard({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            mb: 1,
+            mb: 0.5,
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" color="text.secondary">
               Question {questionNumber} of {totalQuestions}
             </Typography>
-            <Chip
-              label={`${recording.difficulty}${multiplier > 1 ? ` ${multiplier}x` : ''}`}
-              size="small"
-              color={DIFFICULTY_COLOR[recording.difficulty]}
-              variant="outlined"
-              sx={{ height: 20, fontSize: '0.7rem' }}
-            />
+            {submitted && (
+              <Chip
+                label={`${recording.difficulty}${multiplier > 1 ? ` ${multiplier}x` : ''}`}
+                size="small"
+                color={DIFFICULTY_COLOR[recording.difficulty]}
+                variant="outlined"
+                sx={{ height: 20, fontSize: '0.7rem' }}
+              />
+            )}
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <Typography
-              variant="body2"
+              variant="caption"
               color="text.secondary"
               component="a"
               href={xcUrl}
@@ -191,9 +198,26 @@ export function QuizCard({
             >
               {recording.recordist}
             </Typography>
-            <OpenInNewIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+            <OpenInNewIcon sx={{ fontSize: 12, color: 'text.secondary' }} />
           </Box>
         </Box>
+        {recording.location && (
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{
+              display: 'block',
+              textAlign: 'right',
+              mb: 0.5,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {recording.location}
+            {recording.country ? `, ${recording.country}` : ''}
+          </Typography>
+        )}
         <LinearProgress
           variant="determinate"
           value={(questionNumber / totalQuestions) * 100}
@@ -225,12 +249,12 @@ export function QuizCard({
               variant="caption"
               sx={{
                 color:
-                  elapsedSeconds < 3
+                  finalElapsed < 3
                     ? 'success.main'
-                    : elapsedSeconds < 6
+                    : finalElapsed < 6
                       ? 'warning.main'
                       : 'text.secondary',
-                fontWeight: elapsedSeconds < 6 ? 'bold' : 'normal',
+                fontWeight: finalElapsed < 6 ? 'bold' : 'normal',
               }}
             >
               {potentialPoints} pts
@@ -243,6 +267,7 @@ export function QuizCard({
             value={guess}
             onChange={setGuess}
             disabled={submitted}
+            recordings={allRecordings}
           />
         </Box>
 

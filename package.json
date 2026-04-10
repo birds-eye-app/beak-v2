@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "docusaurus": "docusaurus",
-    "start": "docusaurus start",
-    "build": "docusaurus build",
+    "start": "tsx scripts/build-recordings.ts && docusaurus start",
+    "build": "tsx scripts/build-recordings.ts && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",

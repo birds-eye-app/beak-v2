@@ -6,7 +6,9 @@
     "spectrogramFile": "/quiz/spectrograms/american-robin.png",
     "xenoCantoId": "1093668",
     "recordist": "Paul Driver",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Northern Cardinal",
@@ -15,7 +17,9 @@
     "spectrogramFile": "/quiz/spectrograms/northern-cardinal.png",
     "xenoCantoId": "1093667",
     "recordist": "Paul Driver",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Blue Jay",
@@ -24,7 +28,9 @@
     "spectrogramFile": "/quiz/spectrograms/blue-jay.png",
     "xenoCantoId": "1014208",
     "recordist": "Stanislas Wroza",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "House Sparrow",
@@ -33,7 +39,9 @@
     "spectrogramFile": "/quiz/spectrograms/house-sparrow.png",
     "xenoCantoId": "1092251",
     "recordist": "Olivier SWIFT, Hélène CARTAUD",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Mourning Dove",
@@ -42,7 +50,9 @@
     "spectrogramFile": "/quiz/spectrograms/mourning-dove.png",
     "xenoCantoId": "1013012",
     "recordist": "Stanislas Wroza",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Song Sparrow",
@@ -51,7 +61,9 @@
     "spectrogramFile": "/quiz/spectrograms/song-sparrow.png",
     "xenoCantoId": "1092304",
     "recordist": "Scott Crabtree",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "White-throated Sparrow",
@@ -60,7 +72,9 @@
     "spectrogramFile": "/quiz/spectrograms/white-throated-sparrow.png",
     "xenoCantoId": "234159",
     "recordist": "William Whitehead",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Red-winged Blackbird",
@@ -69,7 +83,9 @@
     "spectrogramFile": "/quiz/spectrograms/red-winged-blackbird.png",
     "xenoCantoId": "1089594",
     "recordist": "Ed Pandolfino",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Common Grackle",
@@ -78,7 +94,9 @@
     "spectrogramFile": "/quiz/spectrograms/common-grackle.png",
     "xenoCantoId": "1014942",
     "recordist": "Stanislas Wroza",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "House Finch",
@@ -87,7 +105,9 @@
     "spectrogramFile": "/quiz/spectrograms/house-finch.png",
     "xenoCantoId": "1089801",
     "recordist": "Manuel Grosselet",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Dark-eyed Junco",
@@ -96,7 +116,9 @@
     "spectrogramFile": "/quiz/spectrograms/dark-eyed-junco.png",
     "xenoCantoId": "1083920",
     "recordist": "Greg Irving",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Eastern Towhee",
@@ -105,7 +127,9 @@
     "spectrogramFile": "/quiz/spectrograms/eastern-towhee.png",
     "xenoCantoId": "1081945",
     "recordist": "David Darrell-Lambert",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Chipping Sparrow",
@@ -114,7 +138,9 @@
     "spectrogramFile": "/quiz/spectrograms/chipping-sparrow.png",
     "xenoCantoId": "1081943",
     "recordist": "David Darrell-Lambert",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Black-capped Chickadee",
@@ -123,7 +149,9 @@
     "spectrogramFile": "/quiz/spectrograms/black-capped-chickadee.png",
     "xenoCantoId": "994313",
     "recordist": "William Whitehead",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Downy Woodpecker",
@@ -132,7 +160,9 @@
     "spectrogramFile": "/quiz/spectrograms/downy-woodpecker.png",
     "xenoCantoId": "567618",
     "recordist": "Michael Hurben",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Northern Flicker",
@@ -141,7 +171,9 @@
     "spectrogramFile": "/quiz/spectrograms/northern-flicker.png",
     "xenoCantoId": "1013307",
     "recordist": "Stanislas Wroza",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Yellow-bellied Sapsucker",
@@ -150,7 +182,9 @@
     "spectrogramFile": "/quiz/spectrograms/yellow-bellied-sapsucker.png",
     "xenoCantoId": "815824",
     "recordist": "Denis Provencher",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Ruby-crowned Kinglet",
@@ -159,7 +193,9 @@
     "spectrogramFile": "/quiz/spectrograms/ruby-crowned-kinglet.png",
     "xenoCantoId": "1034775",
     "recordist": "Richard E. Webster",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Golden-crowned Kinglet",
@@ -168,7 +204,9 @@
     "spectrogramFile": "/quiz/spectrograms/golden-crowned-kinglet.png",
     "xenoCantoId": "1029334",
     "recordist": "Valerie Heemstra",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Hermit Thrush",
@@ -177,7 +215,9 @@
     "spectrogramFile": "/quiz/spectrograms/hermit-thrush.png",
     "xenoCantoId": "933565",
     "recordist": "William Whitehead",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Pine Warbler",
@@ -186,7 +226,9 @@
     "spectrogramFile": "/quiz/spectrograms/pine-warbler.png",
     "xenoCantoId": "1093540",
     "recordist": "Mario Reyes Jr",
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Black-and-white Warbler",
@@ -195,7 +237,9 @@
     "spectrogramFile": "/quiz/spectrograms/black-and-white-warbler.png",
     "xenoCantoId": "1036380",
     "recordist": "Bobby Wilcox",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Northern Parula",
@@ -204,7 +248,9 @@
     "spectrogramFile": "/quiz/spectrograms/northern-parula.png",
     "xenoCantoId": "1082098",
     "recordist": "David Darrell-Lambert",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Eastern Phoebe",
@@ -213,7 +259,9 @@
     "spectrogramFile": "/quiz/spectrograms/eastern-phoebe.png",
     "xenoCantoId": "1027244",
     "recordist": "Jim Berry",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Red-tailed Hawk",
@@ -222,7 +270,9 @@
     "spectrogramFile": "/quiz/spectrograms/red-tailed-hawk.png",
     "xenoCantoId": "1090861",
     "recordist": "Manuel Grosselet",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "American Kestrel",
@@ -231,7 +281,9 @@
     "spectrogramFile": "/quiz/spectrograms/american-kestrel.png",
     "xenoCantoId": "674597",
     "recordist": "JAYRSON ARAUJO DE OLIVEIRA",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Ovenbird",
@@ -240,7 +292,9 @@
     "spectrogramFile": "/quiz/spectrograms/ovenbird.png",
     "xenoCantoId": "1037293",
     "recordist": "Bobby Wilcox",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Laughing Gull",
@@ -249,7 +303,9 @@
     "spectrogramFile": "/quiz/spectrograms/laughing-gull.png",
     "xenoCantoId": "1154",
     "recordist": "Don Jones",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "American Crow",
@@ -258,7 +314,9 @@
     "spectrogramFile": "/quiz/spectrograms/american-crow.png",
     "xenoCantoId": "807484",
     "recordist": "Barry Edmonston",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Fish Crow",
@@ -267,7 +325,9 @@
     "spectrogramFile": "/quiz/spectrograms/fish-crow.png",
     "xenoCantoId": "530410",
     "recordist": "Taylor Sturm",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Blue-headed Vireo",
@@ -276,7 +336,9 @@
     "spectrogramFile": "/quiz/spectrograms/blue-headed-vireo.png",
     "xenoCantoId": "593859",
     "recordist": "William Whitehead",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Rose-breasted Grosbeak",
@@ -285,7 +347,9 @@
     "spectrogramFile": "/quiz/spectrograms/rose-breasted-grosbeak.png",
     "xenoCantoId": "558664",
     "recordist": "William Whitehead",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Great Crested Flycatcher",
@@ -294,7 +358,9 @@
     "spectrogramFile": "/quiz/spectrograms/great-crested-flycatcher.png",
     "xenoCantoId": "182575",
     "recordist": "Jorge de Leon Cardozo and Susan Hochgraf",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Prairie Warbler",
@@ -303,7 +369,9 @@
     "spectrogramFile": "/quiz/spectrograms/prairie-warbler.png",
     "xenoCantoId": "655862",
     "recordist": "William Whitehead",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "American Herring Gull",
@@ -312,7 +380,9 @@
     "spectrogramFile": "/quiz/spectrograms/american-herring-gull.png",
     "xenoCantoId": "1021690",
     "recordist": "Stanislas Wroza",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Brown Thrasher",
@@ -321,7 +391,9 @@
     "spectrogramFile": "/quiz/spectrograms/brown-thrasher.png",
     "xenoCantoId": "546731",
     "recordist": "William Whitehead",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Brown Creeper",
@@ -330,7 +402,9 @@
     "spectrogramFile": "/quiz/spectrograms/brown-creeper.png",
     "xenoCantoId": "50434",
     "recordist": "William Whitehead",
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "European Starling",
@@ -339,7 +413,9 @@
     "spectrogramFile": "/quiz/spectrograms/european-starling.png",
     "xenoCantoId": "636461",
     "recordist": "Thomas Ryder Payne",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Red-bellied Woodpecker",
@@ -348,7 +424,9 @@
     "spectrogramFile": "/quiz/spectrograms/red-bellied-woodpecker.png",
     "xenoCantoId": "568575",
     "recordist": "Meena Haribal",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Gray Catbird",
@@ -357,7 +435,9 @@
     "spectrogramFile": "/quiz/spectrograms/gray-catbird.png",
     "xenoCantoId": "190458",
     "recordist": "Krzysztof Deoniziak",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Double-crested Cormorant",
@@ -366,7 +446,9 @@
     "spectrogramFile": "/quiz/spectrograms/double-crested-cormorant.png",
     "xenoCantoId": "780994",
     "recordist": "Paul Driver",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Canada Goose",
@@ -375,7 +457,9 @@
     "spectrogramFile": "/quiz/spectrograms/canada-goose.png",
     "xenoCantoId": "637975",
     "recordist": "Regina Eidner",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Northern Yellow Warbler",
@@ -384,7 +468,9 @@
     "spectrogramFile": "/quiz/spectrograms/northern-yellow-warbler.png",
     "xenoCantoId": "394040",
     "recordist": "Dominic Garcia-Hall",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Swamp Sparrow",
@@ -393,7 +479,9 @@
     "spectrogramFile": "/quiz/spectrograms/swamp-sparrow.png",
     "xenoCantoId": "729070",
     "recordist": "William Whitehead",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Black-throated Blue Warbler",
@@ -402,7 +490,9 @@
     "spectrogramFile": "/quiz/spectrograms/black-throated-blue-warbler.png",
     "xenoCantoId": "101928",
     "recordist": "Daniel Lane",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Yellow-rumped Warbler",
@@ -411,7 +501,9 @@
     "spectrogramFile": "/quiz/spectrograms/yellow-rumped-warbler.png",
     "xenoCantoId": "469599",
     "recordist": "Rolf A. de By",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Scarlet Tanager",
@@ -420,7 +512,9 @@
     "spectrogramFile": "/quiz/spectrograms/scarlet-tanager.png",
     "xenoCantoId": "101898",
     "recordist": "Daniel Lane",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Baltimore Oriole",
@@ -429,7 +523,9 @@
     "spectrogramFile": "/quiz/spectrograms/baltimore-oriole.png",
     "xenoCantoId": "1014853",
     "recordist": "Stanislas Wroza",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Tufted Titmouse",
@@ -438,7 +534,9 @@
     "spectrogramFile": "/quiz/spectrograms/tufted-titmouse.png",
     "xenoCantoId": "895984",
     "recordist": "Scott Gravette",
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "country": "",
+    "location": ""
   },
   {
     "commonName": "Palm Warbler",
@@ -447,6 +545,8 @@
     "spectrogramFile": "/quiz/spectrograms/palm-warbler.png",
     "xenoCantoId": "1015036",
     "recordist": "Stanislas Wroza",
-    "difficulty": "medium"
+    "difficulty": "medium",
+    "country": "",
+    "location": ""
   }
 ]
