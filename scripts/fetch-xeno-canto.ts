@@ -31,9 +31,10 @@ if (!API_KEY) throw new Error('XENO_CANTO_API_KEY not found in .env');
 
 const SPECTRO_DIR = path.join(__dirname, '../static/quiz/spectrograms');
 
-// NYC coordinates for proximity sorting (Central Park as default center)
-const TARGET_LAT = 40.7829;
-const TARGET_LON = -73.9654;
+// Default coordinates for proximity sorting (Central Park, NYC)
+// Override with --lat and --lon CLI args for non-NYC quizzes
+let TARGET_LAT = 40.7829;
+let TARGET_LON = -73.9654;
 
 interface SpeciesEntry {
   common: string;
@@ -176,9 +177,19 @@ async function main() {
   const quizId = args.find((a) => !a.startsWith('--'));
   const missingOnly = args.includes('--missing');
 
+  // Override target coordinates if provided
+  const latIdx = args.indexOf('--lat');
+  const lonIdx = args.indexOf('--lon');
+  if (latIdx !== -1 && args[latIdx + 1]) {
+    TARGET_LAT = parseFloat(args[latIdx + 1]);
+  }
+  if (lonIdx !== -1 && args[lonIdx + 1]) {
+    TARGET_LON = parseFloat(args[lonIdx + 1]);
+  }
+
   if (!quizId) {
     console.error(
-      'Usage: npx tsx scripts/fetch-xeno-canto.ts <quiz-id> [--missing]'
+      'Usage: npx tsx scripts/fetch-xeno-canto.ts <quiz-id> [--missing] [--lat N --lon N]'
     );
     console.error('Available quizzes:');
     const { readdirSync } = await import('fs');
@@ -238,8 +249,12 @@ async function main() {
       const spectroUrl = rec.sono.med || rec.sono.large;
       if (spectroUrl) await downloadFile(spectroUrl, spectroPath);
 
-      const recordist = rec.rec.includes(',') ? `"${rec.rec}"` : rec.rec;
-      const loc = rec.loc.includes(',') ? `"${rec.loc}"` : rec.loc;
+      const rawRecordist = rec.rec ?? '';
+      const rawLoc = rec.loc ?? '';
+      const recordist = rawRecordist.includes(',')
+        ? `"${rawRecordist}"`
+        : rawRecordist;
+      const loc = rawLoc.includes(',') ? `"${rawLoc}"` : rawLoc;
       const csvLine = `${sp.common},${rec.gen} ${rec.sp},/quiz/audio/${slug}.mp3,/quiz/spectrograms/${slug}.png,${rec.id},${recordist},,medium,,${rec.cnt},${loc}`;
       await appendFile(csvPath, csvLine + '\n');
 
