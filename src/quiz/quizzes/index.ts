@@ -1,6 +1,8 @@
 import type { QuizConfig } from '../types';
 import mcgolrickRecordings from './mcgolrick-april/recordings.json';
 import nycWarblersRecordings from './nyc-spring-warblers/recordings.json';
+import hawaiiBigIslandRecordings from './hawaii-big-island/recordings.json';
+import kauaiRecordings from './kauai/recordings.json';
 import type { RecordingManifest } from '../types';
 
 export const QUIZZES: QuizConfig[] = [
@@ -19,6 +21,22 @@ export const QUIZZES: QuizConfig[] = [
     description:
       'Every warbler passing through the five boroughs in spring. A true test of your warbler skills.',
     recordings: nycWarblersRecordings as RecordingManifest[],
+  },
+  {
+    id: 'hawaii-big-island',
+    title: 'Hawaii — Big Island',
+    subtitle: 'Hawaii Island',
+    description:
+      'Native honeycreepers, endemic forest birds, and introduced tropicals of the Big Island.',
+    recordings: hawaiiBigIslandRecordings as RecordingManifest[],
+  },
+  {
+    id: 'kauai',
+    title: 'Kauai',
+    subtitle: 'The Garden Isle',
+    description:
+      "Kauai endemics like Anianiau and Kauai Elepaio alongside the island's introduced chorus.",
+    recordings: kauaiRecordings as RecordingManifest[],
   },
 ];
 

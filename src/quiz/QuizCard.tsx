@@ -37,7 +37,6 @@ export function QuizCard({
   questionNumber,
   totalQuestions,
   onAnswer,
-  onSkip,
   onReject,
   autoPlay = true,
 }: {
@@ -46,7 +45,6 @@ export function QuizCard({
   questionNumber: number;
   totalQuestions: number;
   onAnswer: (guessed: string, correct: boolean, elapsedSeconds: number) => void;
-  onSkip?: () => void;
   onReject?: (xenoCantoId: string) => void;
   autoPlay?: boolean;
 }) {
@@ -120,6 +118,13 @@ export function QuizCard({
     setFrozenElapsed(elapsedSeconds);
     setSubmitted(true);
   }, [guess, submitted]);
+
+  const handleIDK = useCallback(() => {
+    if (submitted) return;
+    setGuess('');
+    setFrozenElapsed(elapsedSeconds);
+    setSubmitted(true);
+  }, [submitted, elapsedSeconds]);
 
   // Auto-advance countdown after submission
   useEffect(() => {
@@ -288,15 +293,13 @@ export function QuizCard({
             >
               Submit
             </Button>
-            {onSkip && (
-              <Button
-                variant="outlined"
-                onClick={onSkip}
-                sx={{ whiteSpace: 'nowrap' }}
-              >
-                IDK
-              </Button>
-            )}
+            <Button
+              variant="outlined"
+              onClick={handleIDK}
+              sx={{ whiteSpace: 'nowrap' }}
+            >
+              IDK
+            </Button>
             {isDev && onReject && (
               <Tooltip title="Reject this recording (dev only)">
                 <IconButton
@@ -330,7 +333,9 @@ export function QuizCard({
                 <Typography>
                   {isCorrect
                     ? 'Correct!'
-                    : `Incorrect — it was ${recording.commonName}`}
+                    : guess.trim()
+                      ? `Incorrect — it was ${recording.commonName}`
+                      : `It was ${recording.commonName}`}
                 </Typography>
               </Box>
               {isCorrect && (

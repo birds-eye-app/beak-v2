@@ -62,6 +62,7 @@ export function Quiz({
           correct,
           guessed,
           actual: recording.commonName,
+          skipped: !guessed.trim(),
           recording,
           points,
           elapsedSeconds,
@@ -71,23 +72,6 @@ export function Quiz({
     },
     [currentIndex, activeQuestions]
   );
-
-  const handleSkip = useCallback(() => {
-    const recording = activeQuestions[currentIndex];
-    setAnswers((prev) => [
-      ...prev,
-      {
-        correct: false,
-        guessed: '',
-        actual: recording.commonName,
-        skipped: true,
-        recording,
-        points: 0,
-        elapsedSeconds: 0,
-      },
-    ]);
-    setCurrentIndex((prev) => prev + 1);
-  }, [currentIndex, activeQuestions]);
 
   const handleReject = useCallback(
     async (xenoCantoId: string) => {
@@ -182,7 +166,6 @@ export function Quiz({
           questionNumber={currentIndex + 1}
           totalQuestions={activeQuestions.length}
           onAnswer={handleAnswer}
-          onSkip={handleSkip}
           onReject={handleReject}
           autoPlay={currentIndex > 0}
         />
