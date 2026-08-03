@@ -2,10 +2,9 @@ import { Feature, GeoJsonProperties, Geometry } from 'geojson';
 // For now, use hardcoded values since process.env is not available in Docusaurus browser environment
 const viteBaseURL = 'http://localhost:8000/';
 
-// hard code route to render backend... probably just wanna move this over to vercel or
-// fix render site hosting at some point
+// cloaca now lives on the patch-town box (Hetzner) — migrated off Render 2026-08.
 const isDevelopment = false; // Set to true for local development
-const apiBaseUrl = isDevelopment ? viteBaseURL : 'https://cloaca.onrender.com/';
+const apiBaseUrl = isDevelopment ? viteBaseURL : 'https://cloaca.dtmeadows.me/';
 
 export type Lifer = {
   common_name: string;
