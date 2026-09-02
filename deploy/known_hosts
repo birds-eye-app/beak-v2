@@ -1,0 +1,10 @@
+# Pinned SSH host keys for the patch-town box (178.104.31.145) — the deploy target.
+#
+# Copied from patch-town's vps/known_hosts (the out-of-band-verified source of truth there).
+# WHY pin instead of ssh-keyscan in CI: a fresh keyscan is trust-on-first-use every run and
+# silently defeats StrictHostKeyChecking=yes. See patch-town .github/workflows/deploy.yml.
+#
+# REGENERATE after a box rebuild/key rotation: re-copy from patch-town vps/known_hosts.
+178.104.31.145 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAF+8fm1PIrskL5S2YktyGpDhJbz4GZ2WcOk0YWwMVvuKQgHbrw7NF90iPuTy3d1U/OV1m6pMTynH4TvVvHtmpw=
+178.104.31.145 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEdhHSvyKKPTEx29LCgOtjaT28MDxGn7DfNzUQrU27tW
+178.104.31.145 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDfMzFue0wzgIjzotIplTWk+lWkUZc7u1toTTK9xAHklU1GTgTI5E05FUDhS1gyxJyrcEvcZXizqKFz4m3sY0sg43i87dgBCqhh18d/zQgRscyUvYVAJQ/W+ZciPy0+C+EeOrsrSJ4qYvOqSGJZL/1j+87/3fvnmCyn0JubhnSASsiyP7UlJr4V5XA7CtMLyyuVf+H4iNJqv3rD2ZlvNCo3HJDPlbwrXCTOL1m+O5T3Sgajv6zNXwzF7flhVvOYNVxo/wBdDHGUd8oYr9GlTz9IJHO3UNuwTiRXsngKLEoyhqAIB+I89NkYOQMVn0tweGBE7tnUULswyJre+ODN3+5mKgLAr4+TDOE5/lRigako0xyuDR0eI6BF8pdteAFEb2SoZhTuqarkzUF54R7DLOB0YJYuhNvXULRvKujCkEEL8m2CPzMVoHS4YSBiRbhZupkZ48j8UN5y+QyLfVSBB67hVO5Z857aNPbjtzuidH+RtU915uojznki7oPU/WDGoXc=
