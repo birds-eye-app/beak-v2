@@ -69,3 +69,44 @@ jobs:
 
       - name: Build project
         run: yarn build
+
+  # Publish the built site to the patch-town box, which serves it at https://dtmeadows.me
+  # (replaced Render static hosting, 2026-09). The SSH key is a dedicated deploy key whose
+  # authorized_keys entry on the box forces vps/receive-site.sh (patch-town repo) — it can
+  # stream a site tarball and nothing else.
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-site
+      cancel-in-progress: false
+    steps:
+      # Pinned to immutable commit SHAs, not mutable version tags: this job holds
+      # SITE_DEPLOY_SSH_KEY, so a retagged action would run attacker code next to a
+      # production credential. Same rule as patch-town's deploy.yml. (v4.3.0 / v4.4.0)
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build project
+        run: yarn build
+
+      - name: Push bundle to the box
+        env:
+          SITE_DEPLOY_SSH_KEY: ${{ secrets.SITE_DEPLOY_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SITE_DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          # Pin the host key from the committed deploy/known_hosts (see that file's header).
+          cp deploy/known_hosts ~/.ssh/known_hosts
+          # The remote command is ignored — the key's forced command (receive-site.sh) runs
+          # regardless; naming it here documents intent.
+          tar -czf - -C build . | ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes root@178.104.31.145 publish-site
