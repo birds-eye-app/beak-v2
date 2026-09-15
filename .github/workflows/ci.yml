@@ -69,6 +69,8 @@ jobs:
 
       - name: Build project
         run: yarn build
+        env:
+          MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
 
   # Publish the built site to the patch-town box, which serves it at https://dtmeadows.me
   # (replaced Render static hosting, 2026-09). The SSH key is a dedicated deploy key whose
@@ -96,6 +98,8 @@ jobs:
 
       - name: Build project
         run: yarn build
+        env:
+          MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
 
       - name: Push bundle to the box
         env:

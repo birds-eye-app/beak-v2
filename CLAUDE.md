@@ -21,7 +21,7 @@ This is a Docusaurus-based personal site that hosts two standalone interactive b
 - Mapbox-powered geographic visualization of eBird sightings
 - Handles CSV upload and displays data as interactive map layers
 - Located in `src/birds-eye/` with core mapping logic in `BirdMap.tsx`
-- Requires Mapbox API token (hardcoded for Docusaurus compatibility)
+- Requires a Mapbox public token: `MAPBOX_TOKEN` at build time (see `.env.example`, `src/mapboxToken.ts`)
 
 ### Standalone Page Architecture
 
@@ -35,9 +35,12 @@ Both apps use a specific pattern for full-screen, standalone experiences:
 
 ### Environment Variables & Deployment
 
-- Uses hardcoded API tokens in source for Docusaurus browser compatibility
-- Environment variables don't work in browser build - avoid `process.env` patterns
-- Mapbox token currently hardcoded in `src/birds-eye/BirdMap.tsx`
+- `process.env` is NOT available in browser code. Build-time values go through
+  `docusaurus.config.ts` → `customFields` (it runs in Node); read them with `useDocusaurusContext`
+- The Mapbox public token is `MAPBOX_TOKEN` at build time and reaches components via
+  `useMapboxToken()` in `src/mapboxToken.ts`. Two tokens: the CI secret is the production one
+  (URL-restricted to dtmeadows.me); `.env` holds a separate dev token restricted to localhost
+  (see `.env.example`). Never commit a token literal — push protection blocks it
 - Deployed to Render with specific Node.js configuration
 
 ## Development Commands

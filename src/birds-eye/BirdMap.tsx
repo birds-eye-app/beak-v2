@@ -37,6 +37,7 @@ import {
   SubLayerIDs,
 } from './constants';
 import { addSourceAndLayer } from './map';
+import { useMapboxToken } from '../mapboxToken';
 
 const MODE: 'development' | 'production' = 'production'; // 'development' or 'production' - hardcoded for Docusaurus
 
@@ -353,13 +354,18 @@ export function BirdMap() {
   const [visibleHotspots, setVisibleHotspots] = useState<PopularHotspot[]>([]);
   const [debouncedVisibleHotspots] = useDebounce(visibleHotspots, 50);
   const [hoveredHotspotId, setHoveredHotspotId] = useState<string | null>(null);
+  const mapboxToken = useMapboxToken();
 
   useEffect(() => {
     if (fileId === '') return;
 
-    // Set Mapbox token - in Docusaurus, we'll use a direct assignment for now
-    mapboxgl.accessToken =
-      'pk.eyJ1IjoiZGF2aWR0bWVhZG93cyIsImEiOiJjbTF0djNteTgwNzYzMnFvbGJrdjU3YzMzIn0.3sZJbLI9SKeK4Zs2ZFsuaA';
+    if (!mapboxToken) {
+      console.warn(
+        'MAPBOX_TOKEN was not set at build time; the map cannot load'
+      );
+      return;
+    }
+    mapboxgl.accessToken = mapboxToken;
 
     if (!homeLocation) {
       console.warn('No home location set, using default initial center');

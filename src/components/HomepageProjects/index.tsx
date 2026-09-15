@@ -38,6 +38,18 @@ const ProjectList: ProjectItem[] = [
     link: '/birds-eye',
   },
   {
+    title: 'Big Days',
+    mediaType: 'image',
+    mediaSrc: '/img/big-days.svg',
+    description: (
+      <>
+        The biggest single-day species counts in eBird for every country, state
+        and county, with the checklists and route behind each one.
+      </>
+    ),
+    link: '/big-days',
+  },
+  {
     title: 'Blog',
     mediaType: 'image',
     mediaSrc: '/img/undraw_docusaurus_tree.svg',
