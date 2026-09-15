@@ -1,0 +1,300 @@
+.big-days {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.big-days-header {
+  margin-bottom: 1.25rem;
+}
+
+.big-days-title {
+  font-weight: 700;
+}
+
+.big-days-search {
+  max-width: 520px;
+  margin-bottom: 1rem;
+}
+
+.big-days-search-hit {
+  display: flex;
+  flex-direction: column;
+}
+
+.big-days-search-meta {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.big-days-level {
+  font-size: 0.55em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+  vertical-align: middle;
+}
+
+.big-days-crumbs {
+  margin: 0.5rem 0;
+}
+
+.big-days-region {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* --- record chart --- */
+.big-days-chart {
+  margin: 0.5rem 0 1rem;
+}
+
+.big-days-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.big-days-chart-grid {
+  stroke: currentColor;
+  stroke-opacity: 0.15;
+  stroke-dasharray: 2 3;
+}
+
+.big-days-chart-label {
+  font-size: 10px;
+  fill: currentColor;
+  opacity: 0.6;
+}
+
+.big-days-chart-bar {
+  fill: #66bb6a;
+  cursor: pointer;
+  transition: opacity 120ms;
+}
+
+.big-days-chart-bar:hover {
+  fill: #2e7d32;
+}
+
+.big-days-chart-bar.is-record {
+  fill: #ef6c00;
+}
+
+.big-days-chart-bar.is-selected {
+  fill: #1565c0;
+}
+
+.big-days-chart-bar.is-dimmed {
+  opacity: 0.35;
+}
+
+.big-days-chart-caption {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  min-height: 1.4em;
+  margin-top: 0.25rem;
+}
+
+/* --- filters --- */
+.big-days-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0.75rem 0 1rem;
+}
+
+/* --- leaderboard --- */
+.big-days-board-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.big-days-table .big-days-row {
+  cursor: pointer;
+}
+
+.big-days-table .big-days-row.is-open > td {
+  border-bottom: none;
+}
+
+.big-days-col-rank {
+  width: 2.5rem;
+  opacity: 0.6;
+}
+
+.big-days-count {
+  font-size: 1.05em;
+}
+
+.big-days-observer {
+  white-space: nowrap;
+}
+
+.big-days-party-icon {
+  margin-left: 0.35rem;
+  vertical-align: -0.1em;
+  opacity: 0.6;
+}
+
+.big-days-party-n {
+  margin-left: 0.35rem;
+  font-size: 0.8em;
+  opacity: 0.6;
+}
+
+.big-days-where {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.big-days-more {
+  opacity: 0.6;
+  font-size: 0.85em;
+}
+
+.big-days-detail-row > td {
+  padding: 0.75rem 1rem 1rem;
+  background: rgba(127, 127, 127, 0.06);
+}
+
+.big-days-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 42%);
+  gap: 1rem;
+}
+
+.big-days-checklists {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem;
+}
+
+.big-days-checklists li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+  border-top: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+.big-days-checklists li:first-child {
+  border-top: none;
+}
+
+.big-days-stop-index,
+.big-days-stop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex: none;
+}
+
+.big-days-stop {
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.big-days-checklist-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.big-days-checklist-meta {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.big-days-hotspot-link {
+  margin-left: 0.5rem;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.big-days-map {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.big-days-map-empty {
+  padding: 1rem;
+  opacity: 0.6;
+  font-size: 0.9em;
+}
+
+.big-days-map .mapboxgl-popup-content {
+  color: #222;
+  font-size: 0.85rem;
+}
+
+/* --- children --- */
+.big-days-children {
+  margin-top: 2rem;
+}
+
+.big-days-children-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.25rem 1.5rem;
+}
+
+.big-days-child {
+  display: flex !important;
+  width: 100%;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.big-days-child-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.big-days-child-best {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+.big-days-footer {
+  margin-top: 2.5rem;
+  border-top: 1px solid rgba(127, 127, 127, 0.25);
+  padding-top: 1rem;
+}
+
+@media (max-width: 760px) {
+  .big-days-col-wide {
+    display: none;
+  }
+
+  .big-days-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .big-days-region {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

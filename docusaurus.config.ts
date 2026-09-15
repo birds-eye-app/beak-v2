@@ -4,6 +4,22 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+// The Mapbox public token (Birds Eye + Big Days maps) comes from the environment at BUILD time —
+// CI sets MAPBOX_TOKEN from a repository secret; locally put `MAPBOX_TOKEN=pk...` in `.env`
+// (gitignored; see .env.example). It is baked into the client bundle through customFields, as any
+// public token must be; keeping it out of the source lets it be rotated without a commit. The
+// token is URL-restricted to dtmeadows.me in the Mapbox dashboard, so the bundled value is not
+// usable from other sites.
+import { existsSync, readFileSync } from 'fs';
+function loadDotEnv(): void {
+  if (!existsSync('.env')) return;
+  for (const line of readFileSync('.env', 'utf8').split('\n')) {
+    const m = /^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/.exec(line);
+    if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2];
+  }
+}
+loadDotEnv();
+
 const config: Config = {
   title: 'David Meadows',
   tagline: 'Dinosaurs are cool',
@@ -21,6 +37,10 @@ const config: Config = {
   baseUrl: '/',
 
   projectName: 'beak-v2', // Usually your repo name.
+
+  customFields: {
+    mapboxToken: process.env.MAPBOX_TOKEN ?? '',
+  },
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
