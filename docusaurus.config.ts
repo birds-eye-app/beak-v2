@@ -4,12 +4,11 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-// The Mapbox public token (Birds Eye + Big Days maps) comes from the environment at BUILD time —
-// CI sets MAPBOX_TOKEN from a repository secret; locally put `MAPBOX_TOKEN=pk...` in `.env`
-// (gitignored; see .env.example). It is baked into the client bundle through customFields, as any
-// public token must be; keeping it out of the source lets it be rotated without a commit. The
-// token is URL-restricted to dtmeadows.me in the Mapbox dashboard, so the bundled value is not
-// usable from other sites.
+// The Mapbox public token (Birds Eye + Big Days maps) comes from the environment at BUILD time
+// and is baked into the client bundle through customFields, as any public token must be. Two
+// separate tokens: CI's MAPBOX_TOKEN secret is the production token (URL-restricted to
+// dtmeadows.me), and `.env` (gitignored; see .env.example) holds a development token restricted
+// to localhost. Neither lives in the source, so either can be rotated without a commit.
 import { existsSync, readFileSync } from 'fs';
 function loadDotEnv(): void {
   if (!existsSync('.env')) return;
