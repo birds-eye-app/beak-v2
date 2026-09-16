@@ -100,36 +100,105 @@ export type Meta = {
   levels?: Record<Level, number>;
 };
 
-async function getJson<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`);
-  if (!res.ok) {
-    let msg = `${res.status}`;
-    try {
-      msg = ((await res.json()) as { error?: string }).error ?? msg;
-    } catch {
-      /* not JSON */
-    }
-    throw new Error(msg);
+export class ApiError extends Error {
+  status: number;
+  /** 502/503/504 or a network failure: the backend is (re)starting, worth retrying. */
+  retryable: boolean;
+  constructor(message: string, status: number, retryable: boolean) {
+    super(message);
+    this.status = status;
+    this.retryable = retryable;
   }
-  return (await res.json()) as T;
+}
+
+/** Back-off between retries while the backend restarts (every deploy bounces it for ~90 s). */
+export const RETRY_DELAYS_MS = [2000, 4000, 8000, 12000, 15000, 20000];
+
+export type RetryNotice = (attempt: number, delayMs: number) => void;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * GET JSON from the API. On 502/503/504 (Caddy while cloaca restarts, or cloaca before its
+ * tables are loaded) or a network failure, retries with RETRY_DELAYS_MS, telling `onRetry`
+ * each time so the page can say "restarting" instead of erroring; other statuses throw at once.
+ */
+export type GetOptions = {
+  onRetry?: RetryNotice;
+  retry?: boolean; // default true
+  fetchImpl?: typeof fetch; // tests
+  delays?: number[]; // tests
+};
+
+export async function getJson<T>(
+  path: string,
+  opts: GetOptions = {}
+): Promise<T> {
+  const fetchImpl = opts.fetchImpl ?? fetch;
+  const delays = opts.retry === false ? [] : (opts.delays ?? RETRY_DELAYS_MS);
+  const onRetry = opts.onRetry;
+  let lastError: ApiError | null = null;
+  for (let attempt = 0; attempt <= delays.length; attempt++) {
+    let res: Awaited<ReturnType<typeof fetch>> | null = null;
+    try {
+      res = await fetchImpl(`${API_BASE}${path}`);
+    } catch (e) {
+      lastError = new ApiError(
+        e instanceof Error ? e.message : 'network error',
+        0,
+        true
+      );
+      res = null;
+    }
+    if (res) {
+      if (res.ok) return (await res.json()) as T;
+      let msg = `${res.status}`;
+      try {
+        const body = (await res.json()) as { error?: string; detail?: string };
+        msg = body.error ?? body.detail ?? msg;
+      } catch {
+        /* not JSON */
+      }
+      lastError = new ApiError(
+        msg,
+        res.status,
+        [502, 503, 504].includes(res.status)
+      );
+      if (!lastError.retryable) throw lastError;
+    }
+    if (attempt < delays.length) {
+      const delay = delays[attempt];
+      onRetry?.(attempt + 1, delay);
+      await sleep(delay);
+    }
+  }
+  throw lastError as ApiError;
 }
 
 export const fetchMeta = () => getJson<Meta>('/meta');
-export const fetchCountries = () =>
-  getJson<{ regions: Region[] }>('/regions').then((r) => r.regions);
-export const fetchRegion = (code: string) =>
-  getJson<RegionResponse>(`/regions/${encodeURIComponent(code)}`);
-export const searchRegions = (q: string) =>
-  getJson<{ results: SearchHit[] }>(`/search?q=${encodeURIComponent(q)}`).then(
-    (r) => r.results
+export const fetchCountries = (onRetry?: RetryNotice) =>
+  getJson<{ regions: Region[] }>('/regions', { onRetry }).then(
+    (r) => r.regions
   );
+export const fetchRegion = (code: string, onRetry?: RetryNotice) =>
+  getJson<RegionResponse>(`/regions/${encodeURIComponent(code)}`, { onRetry });
+// Search does not retry: the user has typed on by the time a retry would land.
+export const searchRegions = (q: string) =>
+  getJson<{ results: SearchHit[] }>(`/search?q=${encodeURIComponent(q)}`, {
+    retry: false,
+  }).then((r) => r.results);
 
-export function fetchTop(code: string, f: Filters, limit = 50) {
+export function fetchTop(
+  code: string,
+  f: Filters,
+  limit = 50,
+  onRetry?: RetryNotice
+) {
   const p = new URLSearchParams({ region: code, limit: String(limit) });
   if (f.year) p.set('year', String(f.year));
   if (f.month) p.set('month', String(f.month));
   if (f.solo) p.set('solo', '1');
-  return getJson<TopResponse>(`/top?${p.toString()}`);
+  return getJson<TopResponse>(`/top?${p.toString()}`, { onRetry });
 }
 
 export const checklistUrl = (id: string) => `https://ebird.org/checklist/${id}`;

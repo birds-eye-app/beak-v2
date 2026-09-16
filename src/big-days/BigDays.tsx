@@ -17,7 +17,13 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useDebounce } from 'use-debounce';
 import type { BigDay, Filters, Region, RegionResponse, SearchHit } from './api';
-import { fetchCountries, fetchRegion, fetchTop, searchRegions } from './api';
+import {
+  ApiError,
+  fetchCountries,
+  fetchRegion,
+  fetchTop,
+  searchRegions,
+} from './api';
 import {
   CHILD_LABEL,
   LEVEL_LABEL,
@@ -61,23 +67,40 @@ export function BigDays({ dark, release }: Props) {
   const [region, setRegion] = useState<RegionResponse | null>(null);
   const [countries, setCountries] = useState<Region[] | null>(null);
   const [regionError, setRegionError] = useState<string | null>(null);
+  // Set while the API client is waiting out a backend restart (see getJson): the page shows
+  // "restarting, retrying" rather than a spinner with no explanation.
+  const [waiting, setWaiting] = useState<string | null>(null);
+  const onRetry = useCallback(
+    (attempt: number, delayMs: number) =>
+      setWaiting(
+        `The data service is restarting — retrying in ${Math.round(delayMs / 1000)}s (attempt ${attempt})…`
+      ),
+    []
+  );
+  const describeError = (e: Error) =>
+    e instanceof ApiError && e.retryable
+      ? 'The data service is restarting and did not come back in time. Reload in a minute.'
+      : e.message;
   useEffect(() => {
     let live = true;
     setRegionError(null);
+    setWaiting(null);
     if (isWorld) {
       setRegion(null);
-      fetchCountries()
+      fetchCountries(onRetry)
         .then((r) => live && setCountries(r))
-        .catch((e: Error) => live && setRegionError(e.message));
+        .catch((e: Error) => live && setRegionError(describeError(e)))
+        .finally(() => live && setWaiting(null));
     } else {
-      fetchRegion(code)
+      fetchRegion(code, onRetry)
         .then((r) => live && setRegion(r))
-        .catch((e: Error) => live && setRegionError(e.message));
+        .catch((e: Error) => live && setRegionError(describeError(e)))
+        .finally(() => live && setWaiting(null));
     }
     return () => {
       live = false;
     };
-  }, [code, isWorld]);
+  }, [code, isWorld, onRetry]);
 
   const [rows, setRows] = useState<BigDay[] | null>(null);
   const [rowsError, setRowsError] = useState<string | null>(null);
@@ -90,13 +113,17 @@ export function BigDays({ dark, release }: Props) {
     let live = true;
     setLoadingRows(true);
     setRowsError(null);
-    fetchTop(code, filters)
+    fetchTop(code, filters, 50, onRetry)
       .then((r) => {
         if (!live) return;
         setRows(r.rows);
       })
-      .catch((e: Error) => live && setRowsError(e.message))
-      .finally(() => live && setLoadingRows(false));
+      .catch((e: Error) => live && setRowsError(describeError(e)))
+      .finally(() => {
+        if (!live) return;
+        setLoadingRows(false);
+        setWaiting(null);
+      });
     return () => {
       live = false;
     };
@@ -123,6 +150,12 @@ export function BigDays({ dark, release }: Props) {
       </header>
 
       <RegionSearch onPick={(r) => navigate({ region: r.code })} />
+
+      {waiting && (
+        <Alert severity="info" sx={{ my: 2 }}>
+          {waiting}
+        </Alert>
+      )}
 
       {regionError && (
         <Alert severity="error" sx={{ my: 2 }}>
