@@ -17,7 +17,7 @@ type Props = { rows: BigDay[]; dark: boolean; record: number };
  */
 export function Leaderboard({ rows, dark, record }: Props) {
   const [open, setOpen] = useState<string | null>(null);
-  const key = (d: BigDay) => `${d.date}/${d.observer_id}`;
+  const key = (d: BigDay) => `${d.date}/${d.rank}`;
   const max = Math.max(record, ...rows.map((r) => r.n_species));
   return (
     <div className="big-days-rows" role="list">
