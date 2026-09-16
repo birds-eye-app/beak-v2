@@ -54,6 +54,10 @@ export type Checklist = {
   minutes: number | null;
   km: number | null;
   n_species: number;
+  /** Species first seen that day on this list (by start time). Absent on older data. */
+  new_species?: number;
+  /** Common names, taxonomic order. Absent on older data. */
+  species?: string[];
   complete: boolean;
   protocol: string;
 };

@@ -673,6 +673,47 @@
   color: var(--bd-muted);
 }
 
+.big-days-list-counts {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.big-days-list-new {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--bd-record);
+  background: var(--bd-record-soft);
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.big-days-list-n.is-button {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: none;
+  border: 1px dashed var(--bd-border);
+  border-radius: 6px;
+  padding: 0.05rem 0.4rem;
+  cursor: pointer;
+}
+
+.big-days-list-n.is-button:hover {
+  border-color: var(--bd-accent);
+}
+
+.big-days-species-row {
+  display: block !important;
+  padding: 0.35rem 0 0.6rem 2.2rem !important;
+  border-top: none !important;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--bd-muted);
+}
+
 .big-days-list-n {
   font-variant-numeric: tabular-nums;
   font-size: 0.85rem;
