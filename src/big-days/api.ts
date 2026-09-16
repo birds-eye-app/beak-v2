@@ -79,6 +79,8 @@ export type Filters = {
   year: number | null;
   month: number | null;
   solo: boolean;
+  /** Show organized big-day runs (30+ checklists in a day); hidden by default. */
+  runs: boolean;
 };
 
 export type TopResponse = {
@@ -177,8 +179,15 @@ export const fetchCountries = (onRetry?: RetryNotice) =>
   getJson<{ regions: Region[] }>('/regions', { onRetry }).then(
     (r) => r.regions
   );
-export const fetchRegion = (code: string, onRetry?: RetryNotice) =>
-  getJson<RegionResponse>(`/regions/${encodeURIComponent(code)}`, { onRetry });
+export const fetchRegion = (
+  code: string,
+  runs = false,
+  onRetry?: RetryNotice
+) =>
+  getJson<RegionResponse>(
+    `/regions/${encodeURIComponent(code)}${runs ? '?include_runs=true' : ''}`,
+    { onRetry }
+  );
 // Search does not retry: the user has typed on by the time a retry would land.
 export const searchRegions = (q: string) =>
   getJson<{ results: SearchHit[] }>(`/search?q=${encodeURIComponent(q)}`, {
@@ -195,6 +204,7 @@ export function fetchTop(
   if (f.year) p.set('year', String(f.year));
   if (f.month) p.set('month', String(f.month));
   if (f.solo) p.set('solo', '1');
+  if (f.runs) p.set('include_runs', 'true');
   return getJson<TopResponse>(`/top?${p.toString()}`, { onRetry });
 }
 

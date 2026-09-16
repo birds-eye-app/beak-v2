@@ -85,7 +85,7 @@ export function BigDays({ dark, release }: Props) {
         .catch((e: Error) => live && setRegionError(describeError(e)))
         .finally(() => live && setWaiting(null));
     } else {
-      fetchRegion(code, onRetry)
+      fetchRegion(code, filters.runs, onRetry)
         .then((r) => live && setRegion(r))
         .catch((e: Error) => live && setRegionError(describeError(e)))
         .finally(() => live && setWaiting(null));
@@ -93,7 +93,7 @@ export function BigDays({ dark, release }: Props) {
     return () => {
       live = false;
     };
-  }, [code, isWorld, onRetry]);
+  }, [code, isWorld, filters.runs, onRetry]);
 
   const [rows, setRows] = useState<BigDay[] | null>(null);
   const [rowsError, setRowsError] = useState<string | null>(null);
@@ -120,7 +120,7 @@ export function BigDays({ dark, release }: Props) {
     return () => {
       live = false;
     };
-  }, [code, filters.year, filters.month, filters.solo]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [code, filters.year, filters.month, filters.solo, filters.runs]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const info = region?.region;
   const years = useMemo(() => region?.years ?? [], [region]);
@@ -128,7 +128,9 @@ export function BigDays({ dark, release }: Props) {
     () => [...years].reverse().map((y) => y.year),
     [years]
   );
-  const hasFilters = Boolean(filters.year || filters.month || filters.solo);
+  const hasFilters = Boolean(
+    filters.year || filters.month || filters.solo || filters.runs
+  );
 
   return (
     <div className="big-days">
@@ -312,13 +314,30 @@ export function BigDays({ dark, release }: Props) {
                   label="Solo only"
                   title="Days where every checklist listed one observer"
                 />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={filters.runs}
+                      onChange={(e) =>
+                        navigate({ filters: { runs: e.target.checked } })
+                      }
+                    />
+                  }
+                  label="Include big-day runs"
+                  title="Organized runs — a team sweeping a region by car, filing 30 or more checklists in a day — are hidden unless this is on"
+                />
                 <span className="big-days-filter-spacer" />
                 {hasFilters && (
                   <Button
                     size="small"
                     onClick={() =>
                       navigate({
-                        filters: { year: null, month: null, solo: false },
+                        filters: {
+                          year: null,
+                          month: null,
+                          solo: false,
+                          runs: false,
+                        },
                       })
                     }
                   >
@@ -387,7 +406,11 @@ export function BigDays({ dark, release }: Props) {
             Shared checklists appear once. &ldquo;Solo&rdquo; means every
             checklist that day listed one observer. Days with more than 24 hours
             of birding on them are left out — those are accounts uploading many
-            people&apos;s lists, not one birder&apos;s day.
+            people&apos;s lists, not one birder&apos;s day. Organized big-day
+            runs — a team sweeping a region by car and filing 30 or more
+            checklists — are hidden unless you switch them on; the ABA&apos;s
+            big-day rules cannot be applied from the data, so the checklist
+            count is the stand-in.
           </p>
           <p>
             <strong>What is shown.</strong> Only what eBird itself makes public:
