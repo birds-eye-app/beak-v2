@@ -67,7 +67,6 @@ export type BigDay = {
   n_checklists: number;
   n_localities: number;
   observers: number; // max "number of observers" across the day's lists (field party size)
-  solo: boolean;
   party_size: number; // eBird accounts sharing exactly these checklists (no ids are sent)
   minutes: number | null;
   km: number | null;
@@ -82,7 +81,6 @@ export type BigDay = {
 export type Filters = {
   year: number | null;
   month: number | null;
-  solo: boolean;
   /** Show shared-account days (lists running at once far apart); hidden by default. */
   shared: boolean;
 };
@@ -207,7 +205,6 @@ export function fetchTop(
   const p = new URLSearchParams({ region: code, limit: String(limit) });
   if (f.year) p.set('year', String(f.year));
   if (f.month) p.set('month', String(f.month));
-  if (f.solo) p.set('solo', '1');
   if (f.shared) p.set('include_shared', 'true');
   return getJson<TopResponse>(`/top?${p.toString()}`, { onRetry });
 }
