@@ -72,6 +72,10 @@ export type BigDay = {
   minutes: number | null;
   km: number | null;
   all_complete: boolean;
+  /** Pairs of the day's checklists that ran at the same time more than 5 km apart. */
+  shared_pairs: number;
+  /** Two or more such pairs: one account used by people in different places. */
+  shared: boolean;
   checklists: Checklist[];
 };
 
@@ -79,8 +83,8 @@ export type Filters = {
   year: number | null;
   month: number | null;
   solo: boolean;
-  /** Show organized big-day runs (30+ checklists in a day); hidden by default. */
-  runs: boolean;
+  /** Show shared-account days (lists running at once far apart); hidden by default. */
+  shared: boolean;
 };
 
 export type TopResponse = {
@@ -181,11 +185,11 @@ export const fetchCountries = (onRetry?: RetryNotice) =>
   );
 export const fetchRegion = (
   code: string,
-  runs = false,
+  shared = false,
   onRetry?: RetryNotice
 ) =>
   getJson<RegionResponse>(
-    `/regions/${encodeURIComponent(code)}${runs ? '?include_runs=true' : ''}`,
+    `/regions/${encodeURIComponent(code)}${shared ? '?include_shared=true' : ''}`,
     { onRetry }
   );
 // Search does not retry: the user has typed on by the time a retry would land.
@@ -204,7 +208,7 @@ export function fetchTop(
   if (f.year) p.set('year', String(f.year));
   if (f.month) p.set('month', String(f.month));
   if (f.solo) p.set('solo', '1');
-  if (f.runs) p.set('include_runs', 'true');
+  if (f.shared) p.set('include_shared', 'true');
   return getJson<TopResponse>(`/top?${p.toString()}`, { onRetry });
 }
 

@@ -3,6 +3,7 @@ import Tooltip from '@mui/material/Tooltip';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
+import CallSplitIcon from '@mui/icons-material/CallSplit';
 import type { BigDay } from './api';
 import { checklistUrl } from './api';
 import { formatDate, formatKm, formatMinutes, partyLabel } from './format';
@@ -73,6 +74,15 @@ export function Leaderboard({ rows, dark, record }: Props) {
               </span>
               <span className="big-days-date">
                 {formatDate(d.date)}
+                {d.shared && (
+                  <Tooltip
+                    title={`Shared account: ${d.shared_pairs} pairs of checklists ran at the same time more than 5 km apart`}
+                  >
+                    <span className="big-days-shared">
+                      <CallSplitIcon fontSize="inherit" /> shared account
+                    </span>
+                  </Tooltip>
+                )}
                 <small>
                   <Tooltip title={partyTooltip(d)}>
                     <span className="big-days-party">

@@ -85,7 +85,7 @@ export function BigDays({ dark, release }: Props) {
         .catch((e: Error) => live && setRegionError(describeError(e)))
         .finally(() => live && setWaiting(null));
     } else {
-      fetchRegion(code, filters.runs, onRetry)
+      fetchRegion(code, filters.shared, onRetry)
         .then((r) => live && setRegion(r))
         .catch((e: Error) => live && setRegionError(describeError(e)))
         .finally(() => live && setWaiting(null));
@@ -93,7 +93,7 @@ export function BigDays({ dark, release }: Props) {
     return () => {
       live = false;
     };
-  }, [code, isWorld, filters.runs, onRetry]);
+  }, [code, isWorld, filters.shared, onRetry]);
 
   const [rows, setRows] = useState<BigDay[] | null>(null);
   const [rowsError, setRowsError] = useState<string | null>(null);
@@ -120,7 +120,7 @@ export function BigDays({ dark, release }: Props) {
     return () => {
       live = false;
     };
-  }, [code, filters.year, filters.month, filters.solo, filters.runs]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [code, filters.year, filters.month, filters.solo, filters.shared]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const info = region?.region;
   const years = useMemo(() => region?.years ?? [], [region]);
@@ -129,7 +129,7 @@ export function BigDays({ dark, release }: Props) {
     [years]
   );
   const hasFilters = Boolean(
-    filters.year || filters.month || filters.solo || filters.runs
+    filters.year || filters.month || filters.solo || filters.shared
   );
 
   return (
@@ -317,14 +317,14 @@ export function BigDays({ dark, release }: Props) {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={filters.runs}
+                      checked={filters.shared}
                       onChange={(e) =>
-                        navigate({ filters: { runs: e.target.checked } })
+                        navigate({ filters: { shared: e.target.checked } })
                       }
                     />
                   }
-                  label="Include big-day runs"
-                  title="Organized runs — a team sweeping a region by car, filing 30 or more checklists in a day — are hidden unless this is on"
+                  label="Include shared accounts"
+                  title="Days where one account filed checklists in different places at the same time — a club or tour company sharing an account — are hidden unless this is on"
                 />
                 <span className="big-days-filter-spacer" />
                 {hasFilters && (
@@ -336,7 +336,7 @@ export function BigDays({ dark, release }: Props) {
                           year: null,
                           month: null,
                           solo: false,
-                          runs: false,
+                          shared: false,
                         },
                       })
                     }
@@ -406,11 +406,13 @@ export function BigDays({ dark, release }: Props) {
             Shared checklists appear once. &ldquo;Solo&rdquo; means every
             checklist that day listed one observer. Days with more than 24 hours
             of birding on them are left out — those are accounts uploading many
-            people&apos;s lists, not one birder&apos;s day. Organized big-day
-            runs — a team sweeping a region by car and filing 30 or more
-            checklists — are hidden unless you switch them on; the ABA&apos;s
-            big-day rules cannot be applied from the data, so the checklist
-            count is the stand-in.
+            people&apos;s lists, not one birder&apos;s day. Days where one
+            account filed checklists in different places at the same time — two
+            lists running concurrently for ten minutes or more while over 5 km
+            apart, twice or more in a day — are hidden unless you switch them
+            on: that is a club or a tour company sharing an account, not a party
+            birding together. The ABA&apos;s big-day rules cannot be applied
+            from the data, so this is the closest honest test.
           </p>
           <p>
             <strong>What is shown.</strong> Only what eBird itself makes public:
