@@ -54,6 +54,10 @@ export type Checklist = {
   minutes: number | null;
   km: number | null;
   n_species: number;
+  /** Species first seen that day on this list (by start time). Absent on older data. */
+  new_species?: number;
+  /** Common names, taxonomic order. Absent on older data. */
+  species?: string[];
   complete: boolean;
   protocol: string;
 };
@@ -67,7 +71,6 @@ export type BigDay = {
   n_checklists: number;
   n_localities: number;
   observers: number; // max "number of observers" across the day's lists (field party size)
-  solo: boolean;
   party_size: number; // eBird accounts sharing exactly these checklists (no ids are sent)
   minutes: number | null;
   km: number | null;
@@ -76,15 +79,18 @@ export type BigDay = {
   shared_pairs: number;
   /** Two or more such pairs: one account used by people in different places. */
   shared: boolean;
+  /** "Global Big Day" / "October Big Day" when the date is one of eBird's count days. */
+  event: string | null;
   checklists: Checklist[];
 };
 
 export type Filters = {
   year: number | null;
   month: number | null;
-  solo: boolean;
   /** Show shared-account days (lists running at once far apart); hidden by default. */
   shared: boolean;
+  /** Only eBird's Global Big Day (May) and October Big Day dates. */
+  event: boolean;
 };
 
 export type TopResponse = {
@@ -207,8 +213,8 @@ export function fetchTop(
   const p = new URLSearchParams({ region: code, limit: String(limit) });
   if (f.year) p.set('year', String(f.year));
   if (f.month) p.set('month', String(f.month));
-  if (f.solo) p.set('solo', '1');
   if (f.shared) p.set('include_shared', 'true');
+  if (f.event) p.set('event', 'true');
   return getJson<TopResponse>(`/top?${p.toString()}`, { onRetry });
 }
 

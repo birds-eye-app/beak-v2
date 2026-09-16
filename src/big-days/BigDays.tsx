@@ -120,7 +120,7 @@ export function BigDays({ dark, release }: Props) {
     return () => {
       live = false;
     };
-  }, [code, filters.year, filters.month, filters.solo, filters.shared]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [code, filters.year, filters.month, filters.shared, filters.event]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const info = region?.region;
   const years = useMemo(() => region?.years ?? [], [region]);
@@ -129,7 +129,7 @@ export function BigDays({ dark, release }: Props) {
     [years]
   );
   const hasFilters = Boolean(
-    filters.year || filters.month || filters.solo || filters.shared
+    filters.year || filters.month || filters.shared || filters.event
   );
 
   return (
@@ -305,14 +305,14 @@ export function BigDays({ dark, release }: Props) {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={filters.solo}
+                      checked={filters.event}
                       onChange={(e) =>
-                        navigate({ filters: { solo: e.target.checked } })
+                        navigate({ filters: { event: e.target.checked } })
                       }
                     />
                   }
-                  label="Solo only"
-                  title="Days where every checklist listed one observer"
+                  label="Big Day events only"
+                  title="Only eBird's Global Big Day (a Saturday in May, since 2015) and October Big Day (since 2018)"
                 />
                 <FormControlLabel
                   control={
@@ -335,8 +335,8 @@ export function BigDays({ dark, release }: Props) {
                         filters: {
                           year: null,
                           month: null,
-                          solo: false,
                           shared: false,
+                          event: false,
                         },
                       })
                     }
@@ -403,9 +403,8 @@ export function BigDays({ dark, release }: Props) {
             and hybrids do not count), approved records only, distinct across
             all of one eBirder&apos;s checklists inside the region on one
             calendar date. A state big day is the union across its counties.
-            Shared checklists appear once. &ldquo;Solo&rdquo; means every
-            checklist that day listed one observer. Days with more than 24 hours
-            of birding on them are left out — those are accounts uploading many
+            Shared checklists appear once. Days with more than 24 hours of
+            birding on them are left out — those are accounts uploading many
             people&apos;s lists, not one birder&apos;s day. Days where one
             account filed checklists in different places at the same time — two
             lists running concurrently for ten minutes or more while over 5 km
