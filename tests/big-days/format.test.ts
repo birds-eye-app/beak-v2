@@ -46,18 +46,20 @@ describe('big days formatting', () => {
 
 describe('big days URL state', () => {
   test('round-trips region and filters', () => {
-    const s = parsePageState('?r=US-NY-005&y=2025&m=5&shared=1');
+    const s = parsePageState('?r=US-NY-005&y=2025&m=5&shared=1&event=1');
     expect(s).toEqual({
       region: 'US-NY-005',
-      filters: { year: 2025, month: 5, shared: true },
+      filters: { year: 2025, month: 5, shared: true, event: true },
     });
-    expect(serializePageState(s)).toBe('?r=US-NY-005&y=2025&m=5&shared=1');
+    expect(serializePageState(s)).toBe(
+      '?r=US-NY-005&y=2025&m=5&shared=1&event=1'
+    );
   });
 
   test('defaults and rejects junk', () => {
     expect(parsePageState('')).toEqual({
       region: 'US',
-      filters: { year: null, month: null, shared: false },
+      filters: { year: null, month: null, shared: false, event: false },
     });
     expect(parsePageState('?r=us-ny').region).toBe('US-NY');
     expect(parsePageState('?r=drop%20table').region).toBe('US');
@@ -66,24 +68,27 @@ describe('big days URL state', () => {
       year: null,
       month: null,
       shared: false,
+      event: false,
     });
     expect(
       serializePageState({
         region: 'US',
-        filters: { year: null, month: null, shared: false },
+        filters: { year: null, month: null, shared: false, event: false },
       })
     ).toBe('');
   });
 
   test('filter description', () => {
-    expect(describeFilters({ year: null, month: null, shared: false })).toBe(
-      'All time'
-    );
-    expect(describeFilters({ year: 2025, month: 5, shared: false })).toBe(
-      'May 2025'
-    );
-    expect(describeFilters({ year: null, month: 1, shared: true })).toBe(
-      'January, any year · incl. shared accounts'
+    expect(
+      describeFilters({ year: null, month: null, shared: false, event: false })
+    ).toBe('All time');
+    expect(
+      describeFilters({ year: 2025, month: 5, shared: false, event: false })
+    ).toBe('May 2025');
+    expect(
+      describeFilters({ year: null, month: 1, shared: true, event: true })
+    ).toBe(
+      'January, any year · Global & October Big Days · incl. shared accounts'
     );
   });
 });

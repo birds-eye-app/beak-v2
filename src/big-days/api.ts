@@ -75,6 +75,8 @@ export type BigDay = {
   shared_pairs: number;
   /** Two or more such pairs: one account used by people in different places. */
   shared: boolean;
+  /** "Global Big Day" / "October Big Day" when the date is one of eBird's count days. */
+  event: string | null;
   checklists: Checklist[];
 };
 
@@ -83,6 +85,8 @@ export type Filters = {
   month: number | null;
   /** Show shared-account days (lists running at once far apart); hidden by default. */
   shared: boolean;
+  /** Only eBird's Global Big Day (May) and October Big Day dates. */
+  event: boolean;
 };
 
 export type TopResponse = {
@@ -206,6 +210,7 @@ export function fetchTop(
   if (f.year) p.set('year', String(f.year));
   if (f.month) p.set('month', String(f.month));
   if (f.shared) p.set('include_shared', 'true');
+  if (f.event) p.set('event', 'true');
   return getJson<TopResponse>(`/top?${p.toString()}`, { onRetry });
 }
 
