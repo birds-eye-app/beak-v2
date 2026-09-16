@@ -485,6 +485,20 @@
   font-size: 0.75rem;
 }
 
+.big-days-event {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--bd-accent-soft);
+  color: var(--bd-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
 .big-days-shared {
   display: inline-flex;
   align-items: center;

@@ -74,6 +74,11 @@ export function Leaderboard({ rows, dark, record }: Props) {
               </span>
               <span className="big-days-date">
                 {formatDate(d.date)}
+                {d.event && (
+                  <Tooltip title={`${d.event}: eBird's worldwide count day`}>
+                    <span className="big-days-event">{d.event}</span>
+                  </Tooltip>
+                )}
                 {d.shared && (
                   <Tooltip
                     title={`Shared account: ${d.shared_pairs} pairs of checklists ran at the same time more than 5 km apart`}

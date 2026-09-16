@@ -120,7 +120,7 @@ export function BigDays({ dark, release }: Props) {
     return () => {
       live = false;
     };
-  }, [code, filters.year, filters.month, filters.shared]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [code, filters.year, filters.month, filters.shared, filters.event]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const info = region?.region;
   const years = useMemo(() => region?.years ?? [], [region]);
@@ -128,7 +128,9 @@ export function BigDays({ dark, release }: Props) {
     () => [...years].reverse().map((y) => y.year),
     [years]
   );
-  const hasFilters = Boolean(filters.year || filters.month || filters.shared);
+  const hasFilters = Boolean(
+    filters.year || filters.month || filters.shared || filters.event
+  );
 
   return (
     <div className="big-days">
@@ -303,6 +305,18 @@ export function BigDays({ dark, release }: Props) {
                 <FormControlLabel
                   control={
                     <Switch
+                      checked={filters.event}
+                      onChange={(e) =>
+                        navigate({ filters: { event: e.target.checked } })
+                      }
+                    />
+                  }
+                  label="Big Day events only"
+                  title="Only eBird's Global Big Day (a Saturday in May, since 2015) and October Big Day (since 2018)"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
                       checked={filters.shared}
                       onChange={(e) =>
                         navigate({ filters: { shared: e.target.checked } })
@@ -322,6 +336,7 @@ export function BigDays({ dark, release }: Props) {
                           year: null,
                           month: null,
                           shared: false,
+                          event: false,
                         },
                       })
                     }
