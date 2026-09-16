@@ -66,9 +66,10 @@ export function formatNumber(n: number | null | undefined): string {
   return n.toLocaleString('en-US');
 }
 
-/** Birders are shown by their pseudonymous eBird id (obsr…); the linked checklists name them. */
-export function observerLabel(id: string): string {
-  return id;
+/** "Solo", "Party of 3" — from the day's max "number of observers"; never a name or an id. */
+export function partyLabel(observers: number): string {
+  if (!observers || observers <= 1) return 'Solo';
+  return `Party of ${observers}`;
 }
 
 export type PageState = { region: string; filters: Filters };

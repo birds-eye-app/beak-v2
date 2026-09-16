@@ -2,19 +2,15 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from '@docusaurus/router';
 import Alert from '@mui/material/Alert';
 import Autocomplete from '@mui/material/Autocomplete';
-import Box from '@mui/material/Box';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputLabel from '@mui/material/InputLabel';
-import Link from '@mui/material/Link';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import { useDebounce } from 'use-debounce';
 import type { BigDay, Filters, Region, RegionResponse, SearchHit } from './api';
 import {
@@ -56,8 +52,6 @@ export function BigDays({ dark, release }: Props) {
         region: next.region ?? code,
         filters: { ...filters, ...(next.filters ?? {}) },
       };
-      // A new region keeps the filters; a year that region never saw is dropped by the API
-      // returning nothing, which the empty state explains.
       history.push({ search: serializePageState(merged) });
     },
     [code, filters, history]
@@ -67,8 +61,7 @@ export function BigDays({ dark, release }: Props) {
   const [region, setRegion] = useState<RegionResponse | null>(null);
   const [countries, setCountries] = useState<Region[] | null>(null);
   const [regionError, setRegionError] = useState<string | null>(null);
-  // Set while the API client is waiting out a backend restart (see getJson): the page shows
-  // "restarting, retrying" rather than a spinner with no explanation.
+  // Set while the API client is waiting out a backend restart (see getJson).
   const [waiting, setWaiting] = useState<string | null>(null);
   const onRetry = useCallback(
     (attempt: number, delayMs: number) =>
@@ -135,237 +128,299 @@ export function BigDays({ dark, release }: Props) {
     () => [...years].reverse().map((y) => y.year),
     [years]
   );
+  const hasFilters = Boolean(filters.year || filters.month || filters.solo);
 
   return (
     <div className="big-days">
-      <header className="big-days-header">
-        <Typography variant="h3" component="h1" className="big-days-title">
-          Big Days
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          The most species one birder has ever recorded in a single day, for
-          every country, state and county in eBird. Pick a place, narrow it
-          down, and open a day to see the checklists and the route.
-        </Typography>
-      </header>
+      <section className="big-days-hero">
+        <div className="big-days-inner">
+          <p className="big-days-eyebrow">eBird records, by place</p>
+          <h1 className="big-days-title">Big Days</h1>
+          <p className="big-days-tagline">
+            The most species one birder has ever recorded in a single day, for
+            every country, state and county in eBird. Pick a place, narrow it
+            down, and open a day to see the checklists and the route.
+          </p>
+          <RegionSearch onPick={(r) => navigate({ region: r.code })} />
+        </div>
+      </section>
 
-      <RegionSearch onPick={(r) => navigate({ region: r.code })} />
+      <div className="big-days-inner big-days-body">
+        {waiting && (
+          <Alert severity="info" sx={{ mb: 2, borderRadius: 3 }}>
+            {waiting}
+          </Alert>
+        )}
 
-      {waiting && (
-        <Alert severity="info" sx={{ my: 2 }}>
-          {waiting}
-        </Alert>
-      )}
+        {regionError && (
+          <Alert severity="error" sx={{ mb: 2, borderRadius: 3 }}>
+            {regionError === 'unknown region'
+              ? `No big days for “${code}” — try another place.`
+              : regionError}
+          </Alert>
+        )}
 
-      {regionError && (
-        <Alert severity="error" sx={{ my: 2 }}>
-          {regionError === 'unknown region'
-            ? `No big days for “${code}” — try another place.`
-            : `Could not load ${code}: ${regionError}`}
-        </Alert>
-      )}
-
-      {isWorld && countries && (
-        <>
-          <Breadcrumbs aria-label="Region" className="big-days-crumbs">
-            <Typography color="text.primary">World</Typography>
-          </Breadcrumbs>
-          <section className="big-days-region">
-            <Typography variant="h4" component="h2">
-              World
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {countries.length} countries. Pick one, or search for a state or
-              county above.
-            </Typography>
-          </section>
-          <ChildRegions
-            label="Countries"
-            regions={countries}
-            onPick={(r) => navigate({ region: r.code })}
-          />
-        </>
-      )}
-
-      {region && info && (
-        <>
-          <Breadcrumbs aria-label="Region" className="big-days-crumbs">
-            <Link
-              component="button"
-              underline="hover"
-              onClick={() => navigate({ region: WORLD })}
-            >
-              World
-            </Link>
-            {region.breadcrumb.map((c, i) => {
-              const last = i === region.breadcrumb.length - 1;
-              return last ? (
-                <Typography key={c.code} color="text.primary">
-                  {c.name}
-                </Typography>
-              ) : (
-                <Link
-                  key={c.code}
-                  component="button"
-                  underline="hover"
-                  onClick={() => navigate({ region: c.code })}
-                >
-                  {c.name}
-                </Link>
-              );
-            })}
-          </Breadcrumbs>
-
-          <section className="big-days-region">
-            <div>
-              <Typography variant="h4" component="h2">
-                {info.name}{' '}
-                <span className="big-days-level">
-                  {LEVEL_LABEL[info.level]}
-                </span>
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Record <strong>{info.best}</strong> species on{' '}
-                {formatDate(info.best_date)} · {formatNumber(info.days)}{' '}
-                birder-days across {formatNumber(info.checklists)} checklists,{' '}
-                {info.first_year}–{info.last_year}
-              </Typography>
+        {isWorld && countries && (
+          <>
+            <div className="big-days-card">
+              <nav aria-label="Region" className="big-days-crumbs">
+                <span className="big-days-crumb-current">World</span>
+              </nav>
+              <h2 className="big-days-region-name">World</h2>
+              <p className="big-days-board-sub">
+                {countries.length} countries with big days on record. Pick one,
+                or search for a state or county above.
+              </p>
             </div>
-          </section>
-
-          <RecordChart
-            years={years}
-            selectedYear={filters.year}
-            onSelectYear={(year) => navigate({ filters: { year } })}
-          />
-
-          <section className="big-days-filters">
-            <FormControl size="small" sx={{ minWidth: 150 }}>
-              <InputLabel id="bd-year">Year</InputLabel>
-              <Select
-                labelId="bd-year"
-                label="Year"
-                value={filters.year ?? ''}
-                onChange={(e) => {
-                  const v = e.target.value as number | '';
-                  navigate({ filters: { year: v === '' ? null : v } });
-                }}
-              >
-                <MenuItem value="">All years</MenuItem>
-                {yearOptions.map((y) => (
-                  <MenuItem key={y} value={y}>
-                    {y}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl size="small" sx={{ minWidth: 150 }}>
-              <InputLabel id="bd-month">Month</InputLabel>
-              <Select
-                labelId="bd-month"
-                label="Month"
-                value={filters.month ?? ''}
-                onChange={(e) => {
-                  const v = e.target.value as number | '';
-                  navigate({ filters: { month: v === '' ? null : v } });
-                }}
-              >
-                <MenuItem value="">Any month</MenuItem>
-                {MONTHS.map((m, i) => (
-                  <MenuItem key={m} value={i + 1}>
-                    {m}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={filters.solo}
-                  onChange={(e) =>
-                    navigate({ filters: { solo: e.target.checked } })
-                  }
-                />
-              }
-              label="Solo only"
-              title="Days where every checklist listed one observer"
-            />
-            {(filters.year || filters.month || filters.solo) && (
-              <Chip
-                label="Clear filters"
-                size="small"
-                onDelete={() =>
-                  navigate({
-                    filters: { year: null, month: null, solo: false },
-                  })
-                }
-                onClick={() =>
-                  navigate({
-                    filters: { year: null, month: null, solo: false },
-                  })
-                }
-              />
-            )}
-          </section>
-
-          <section className="big-days-board">
-            <Typography
-              variant="h6"
-              component="h3"
-              className="big-days-board-title"
-            >
-              Top {rows?.length ?? 50} · {describeFilters(filters)}
-              {loadingRows && (
-                <CircularProgress
-                  size={16}
-                  sx={{ ml: 1 }}
-                  aria-label="Loading"
-                />
-              )}
-            </Typography>
-            {rowsError && <Alert severity="error">{rowsError}</Alert>}
-            {rows && rows.length === 0 && !loadingRows && (
-              <Alert severity="info">
-                No days match these filters in {info.name}.
-              </Alert>
-            )}
-            {rows && rows.length > 0 && <Leaderboard rows={rows} dark={dark} />}
-          </section>
-
-          {CHILD_LABEL[info.level] && region.children.length > 0 && (
             <ChildRegions
-              label={CHILD_LABEL[info.level] as string}
-              regions={region.children}
+              label="Countries, by record"
+              regions={countries}
               onPick={(r) => navigate({ region: r.code })}
             />
-          )}
-        </>
-      )}
+          </>
+        )}
 
-      {!region && !countries && !regionError && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-          <CircularProgress aria-label="Loading" />
-        </Box>
-      )}
+        {region && info && (
+          <>
+            <div className="big-days-card">
+              <nav aria-label="Region" className="big-days-crumbs">
+                <button
+                  type="button"
+                  onClick={() => navigate({ region: WORLD })}
+                >
+                  World
+                </button>
+                {region.breadcrumb.map((c, i) => {
+                  const last = i === region.breadcrumb.length - 1;
+                  return (
+                    <React.Fragment key={c.code}>
+                      <span className="big-days-crumb-sep">/</span>
+                      {last ? (
+                        <span className="big-days-crumb-current">{c.name}</span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => navigate({ region: c.code })}
+                        >
+                          {c.name}
+                        </button>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </nav>
+              <div className="big-days-region-head">
+                <h2 className="big-days-region-name">
+                  {info.name}
+                  <span className="big-days-level">
+                    {LEVEL_LABEL[info.level]}
+                  </span>
+                </h2>
+              </div>
+              <div className="big-days-stats">
+                <Stat
+                  value={info.best}
+                  label={`Record · ${formatDate(info.best_date)}`}
+                  record
+                />
+                <Stat
+                  value={formatNumber(info.days)}
+                  label="Birder-days recorded"
+                />
+                <Stat
+                  value={formatNumber(info.checklists)}
+                  label="Checklists"
+                />
+                <Stat
+                  value={`${info.first_year}–${info.last_year}`}
+                  label="Years with data"
+                />
+              </div>
+            </div>
 
-      <footer className="big-days-footer">
-        <Typography variant="caption" color="text.secondary" component="p">
-          How it is counted: species are eBird&apos;s countable taxa (subspecies
-          roll up to the species; spuhs, slashes and hybrids do not count),
-          approved records only, distinct across all of one eBirder&apos;s
-          checklists inside the region on one calendar date. A state big day is
-          the union across its counties. Shared checklists appear once, under
-          the member with the most species. &ldquo;Solo&rdquo; means every
-          checklist that day listed one observer.
-        </Typography>
-        <Typography variant="caption" color="text.secondary" component="p">
-          Data: eBird Basic Dataset
-          {release ? `, version ${release}` : ''}. Cornell Lab of Ornithology,
-          Ithaca, New York. Birders appear by their eBird observer id; the
-          linked checklists show who they are. Days that eBirders have hidden
-          from output are not in the dataset.
-        </Typography>
-      </footer>
+            {years.length > 1 && (
+              <div className="big-days-card">
+                <h3 className="big-days-section-title">Record by year</h3>
+                <RecordChart
+                  years={years}
+                  selectedYear={filters.year}
+                  onSelectYear={(year) => navigate({ filters: { year } })}
+                />
+              </div>
+            )}
+
+            <div className="big-days-card">
+              <div className="big-days-filters">
+                <FormControl size="small" sx={{ minWidth: 140 }}>
+                  <InputLabel id="bd-year">Year</InputLabel>
+                  <Select
+                    labelId="bd-year"
+                    label="Year"
+                    value={filters.year ?? ''}
+                    onChange={(e) => {
+                      const v = e.target.value as number | '';
+                      navigate({ filters: { year: v === '' ? null : v } });
+                    }}
+                  >
+                    <MenuItem value="">All years</MenuItem>
+                    {yearOptions.map((y) => (
+                      <MenuItem key={y} value={y}>
+                        {y}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <div
+                  className="big-days-months"
+                  role="group"
+                  aria-label="Month"
+                >
+                  <button
+                    type="button"
+                    className={`big-days-month ${filters.month ? '' : 'is-on'}`}
+                    onClick={() => navigate({ filters: { month: null } })}
+                  >
+                    Any month
+                  </button>
+                  {MONTHS.map((m, i) => (
+                    <button
+                      key={m}
+                      type="button"
+                      className={`big-days-month ${filters.month === i + 1 ? 'is-on' : ''}`}
+                      onClick={() =>
+                        navigate({
+                          filters: {
+                            month: filters.month === i + 1 ? null : i + 1,
+                          },
+                        })
+                      }
+                      aria-pressed={filters.month === i + 1}
+                    >
+                      {m.slice(0, 3)}
+                    </button>
+                  ))}
+                </div>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={filters.solo}
+                      onChange={(e) =>
+                        navigate({ filters: { solo: e.target.checked } })
+                      }
+                    />
+                  }
+                  label="Solo only"
+                  title="Days where every checklist listed one observer"
+                />
+                <span className="big-days-filter-spacer" />
+                {hasFilters && (
+                  <Button
+                    size="small"
+                    onClick={() =>
+                      navigate({
+                        filters: { year: null, month: null, solo: false },
+                      })
+                    }
+                  >
+                    Clear
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div className="big-days-card">
+              <div className="big-days-board-head">
+                <h3>
+                  Top {rows?.length ?? 50} · {describeFilters(filters)}
+                  {loadingRows && (
+                    <CircularProgress
+                      size={14}
+                      sx={{ ml: 1 }}
+                      aria-label="Loading"
+                    />
+                  )}
+                </h3>
+                <span className="big-days-board-sub">
+                  Click a day for its checklists and route
+                </span>
+              </div>
+              {rowsError && (
+                <Alert severity="error" sx={{ borderRadius: 3 }}>
+                  {rowsError}
+                </Alert>
+              )}
+              {rows && rows.length === 0 && !loadingRows && (
+                <Alert severity="info" sx={{ borderRadius: 3 }}>
+                  No days match these filters in {info.name}.
+                </Alert>
+              )}
+              {rows && rows.length > 0 && (
+                <Leaderboard rows={rows} dark={dark} record={info.best} />
+              )}
+            </div>
+
+            {CHILD_LABEL[info.level] && region.children.length > 0 && (
+              <ChildRegions
+                label={`${CHILD_LABEL[info.level]}, by record`}
+                regions={region.children}
+                onPick={(r) => navigate({ region: r.code })}
+              />
+            )}
+          </>
+        )}
+
+        {!region && !countries && !regionError && (
+          <div
+            style={{ display: 'flex', justifyContent: 'center', padding: 48 }}
+          >
+            <CircularProgress aria-label="Loading" />
+          </div>
+        )}
+
+        <footer className="big-days-footer">
+          <p>
+            <strong>How it is counted.</strong> Species are eBird&apos;s
+            countable taxa (subspecies roll up to the species; spuhs, slashes
+            and hybrids do not count), approved records only, distinct across
+            all of one eBirder&apos;s checklists inside the region on one
+            calendar date. A state big day is the union across its counties.
+            Shared checklists appear once. &ldquo;Solo&rdquo; means every
+            checklist that day listed one observer. Days with more than 24 hours
+            of birding on them are left out — those are accounts uploading many
+            people&apos;s lists, not one birder&apos;s day.
+          </p>
+          <p>
+            <strong>What is shown.</strong> Only what eBird itself makes public:
+            the eBird Basic Dataset excludes checklists marked not public and
+            sensitive species, so every linked checklist is a public eBird page,
+            and no one is named here.
+          </p>
+          <p>
+            Data: eBird Basic Dataset
+            {release ? `, version ${release}` : ''}. Cornell Lab of Ornithology,
+            Ithaca, New York.
+          </p>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+function Stat({
+  value,
+  label,
+  record,
+}: {
+  value: string | number;
+  label: string;
+  record?: boolean;
+}) {
+  return (
+    <div className="big-days-stat">
+      <div className={`big-days-stat-value ${record ? 'is-record' : ''}`}>
+        {value}
+      </div>
+      <div className="big-days-stat-label">{label}</div>
     </div>
   );
 }
@@ -420,7 +475,7 @@ function RegionSearch({ onPick }: { onPick: (r: SearchHit) => void }) {
             </span>
             <span className="big-days-search-meta">
               {o.breadcrumb.map((c) => c.name).join(' › ')}
-              {o.breadcrumb.length ? ' · ' : ''}best {o.best}
+              {o.breadcrumb.length ? ' · ' : ''}record {o.best}
             </span>
           </div>
         </li>
@@ -428,9 +483,8 @@ function RegionSearch({ onPick }: { onPick: (r: SearchHit) => void }) {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Find a country, state or county"
-          placeholder="Kings, Ontario, Panama…"
-          size="small"
+          placeholder="Search for a country, state or county"
+          size="medium"
         />
       )}
     />
@@ -449,34 +503,31 @@ function ChildRegions({
   const [showAll, setShowAll] = useState(false);
   const shown = showAll ? regions : regions.slice(0, 24);
   return (
-    <section className="big-days-children">
-      <Typography variant="h6" component="h3">
-        {label} by record
-      </Typography>
+    <div className="big-days-card">
+      <h3 className="big-days-section-title">{label}</h3>
       <ul className="big-days-children-list">
         {shown.map((c) => (
           <li key={c.code}>
-            <Link
-              component="button"
-              underline="hover"
-              onClick={() => onPick(c)}
+            <button
+              type="button"
               className="big-days-child"
+              onClick={() => onPick(c)}
             >
               <span className="big-days-child-name">{c.name}</span>
               <span className="big-days-child-best">{c.best}</span>
-            </Link>
+            </button>
           </li>
         ))}
       </ul>
       {regions.length > shown.length && (
-        <Link
-          component="button"
-          underline="hover"
+        <Button
+          size="small"
+          className="big-days-show-all"
           onClick={() => setShowAll(true)}
         >
           Show all {regions.length}
-        </Link>
+        </Button>
       )}
-    </section>
+    </div>
   );
 }
