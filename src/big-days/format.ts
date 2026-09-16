@@ -93,6 +93,7 @@ export function parsePageState(search: string): PageState {
       year: Number.isInteger(y) && y >= 1800 && y <= 2100 ? y : null,
       month: Number.isInteger(m) && m >= 1 && m <= 12 ? m : null,
       solo: p.get('solo') === '1',
+      shared: p.get('shared') === '1',
     },
   };
 }
@@ -103,6 +104,7 @@ export function serializePageState(s: PageState): string {
   if (s.filters.year) p.set('y', String(s.filters.year));
   if (s.filters.month) p.set('m', String(s.filters.month));
   if (s.filters.solo) p.set('solo', '1');
+  if (s.filters.shared) p.set('shared', '1');
   const q = p.toString();
   return q ? `?${q}` : '';
 }
@@ -115,5 +117,6 @@ export function describeFilters(f: Filters): string {
   else if (f.month) parts.push(`${MONTHS[f.month - 1]}, any year`);
   else parts.push('All time');
   if (f.solo) parts.push('solo');
+  if (f.shared) parts.push('incl. shared accounts');
   return parts.join(' · ');
 }

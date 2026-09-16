@@ -46,18 +46,20 @@ describe('big days formatting', () => {
 
 describe('big days URL state', () => {
   test('round-trips region and filters', () => {
-    const s = parsePageState('?r=US-NY-005&y=2025&m=5&solo=1');
+    const s = parsePageState('?r=US-NY-005&y=2025&m=5&solo=1&shared=1');
     expect(s).toEqual({
       region: 'US-NY-005',
-      filters: { year: 2025, month: 5, solo: true },
+      filters: { year: 2025, month: 5, solo: true, shared: true },
     });
-    expect(serializePageState(s)).toBe('?r=US-NY-005&y=2025&m=5&solo=1');
+    expect(serializePageState(s)).toBe(
+      '?r=US-NY-005&y=2025&m=5&solo=1&shared=1'
+    );
   });
 
   test('defaults and rejects junk', () => {
     expect(parsePageState('')).toEqual({
       region: 'US',
-      filters: { year: null, month: null, solo: false },
+      filters: { year: null, month: null, solo: false, shared: false },
     });
     expect(parsePageState('?r=us-ny').region).toBe('US-NY');
     expect(parsePageState('?r=drop%20table').region).toBe('US');
@@ -66,24 +68,25 @@ describe('big days URL state', () => {
       year: null,
       month: null,
       solo: false,
+      shared: false,
     });
     expect(
       serializePageState({
         region: 'US',
-        filters: { year: null, month: null, solo: false },
+        filters: { year: null, month: null, solo: false, shared: false },
       })
     ).toBe('');
   });
 
   test('filter description', () => {
-    expect(describeFilters({ year: null, month: null, solo: false })).toBe(
-      'All time'
-    );
-    expect(describeFilters({ year: 2025, month: 5, solo: true })).toBe(
-      'May 2025 · solo'
-    );
-    expect(describeFilters({ year: null, month: 1, solo: false })).toBe(
-      'January, any year'
-    );
+    expect(
+      describeFilters({ year: null, month: null, solo: false, shared: false })
+    ).toBe('All time');
+    expect(
+      describeFilters({ year: 2025, month: 5, solo: true, shared: false })
+    ).toBe('May 2025 · solo');
+    expect(
+      describeFilters({ year: null, month: 1, solo: false, shared: true })
+    ).toBe('January, any year · incl. shared accounts');
   });
 });
