@@ -5,7 +5,7 @@ import {
   formatKm,
   formatMinutes,
   formatTime,
-  observerLabel,
+  partyLabel,
   parsePageState,
   serializePageState,
 } from '../../src/big-days/format';
@@ -37,8 +37,10 @@ describe('big days formatting', () => {
     expect(formatTime(null)).toBe('');
   });
 
-  test('observer label is the pseudonymous id', () => {
-    expect(observerLabel('obsr59592')).toBe('obsr59592');
+  test('party label never names anyone', () => {
+    expect(partyLabel(1)).toBe('Solo');
+    expect(partyLabel(0)).toBe('Solo');
+    expect(partyLabel(3)).toBe('Party of 3');
   });
 });
 

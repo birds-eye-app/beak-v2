@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { YearRecord } from './api';
-import { formatDate, observerLabel } from './format';
+import { formatDate } from './format';
 
 type Props = {
   years: YearRecord[];
@@ -19,7 +19,7 @@ export function RecordChart({ years, selectedYear, onSelectYear }: Props) {
   if (shown.length < 2) return null;
 
   const width = 720;
-  const height = 150;
+  const height = 160;
   const padL = 34;
   const padB = 22;
   const padT = 8;
@@ -109,9 +109,9 @@ export function RecordChart({ years, selectedYear, onSelectYear }: Props) {
         {hover ? (
           <>
             <strong>{tip.year}</strong>: {tip.best} species on{' '}
-            {formatDate(tip.best_date)} by {observerLabel(tip.observer_id)}
+            {formatDate(tip.best_date)}
             {tip.days
-              ? ` · ${tip.days.toLocaleString('en-US')} birder-days`
+              ? ` · ${tip.days.toLocaleString('en-US')} birder-days that year`
               : ''}
           </>
         ) : (

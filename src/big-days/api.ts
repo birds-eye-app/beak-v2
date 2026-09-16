@@ -32,7 +32,6 @@ export type YearRecord = {
   year: number;
   best: number;
   best_date: string;
-  observer_id: string;
   days: number | null;
   observers: number | null;
 };
@@ -64,14 +63,12 @@ export type BigDay = {
   date: string;
   year: number;
   month: number;
-  observer_id: string; // pseudonymous eBird id (obsr…); the linked checklists show who
   n_species: number;
   n_checklists: number;
   n_localities: number;
   observers: number; // max "number of observers" across the day's lists (field party size)
   solo: boolean;
-  party_size: number; // eBird accounts sharing exactly these checklists
-  members: string[];
+  party_size: number; // eBird accounts sharing exactly these checklists (no ids are sent)
   minutes: number | null;
   km: number | null;
   all_complete: boolean;
